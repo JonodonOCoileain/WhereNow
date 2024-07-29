@@ -28,24 +28,10 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
             }
             task.resume()
-            
-            /* Apple only allows 1 request per minute of geocoding (ridiculous)
-             * This code has been deprecated using TomTom
-            currentLocation?.getPlaces(with: { placemarks in
-                if let placemarks = placemarks {
-                    self.placemarks = placemarks
-                    self.placemarkInfo = placemarks.compactMap({$0.makeAddressString()})
-                    self.addressInfoIsUpdated = true
-                } else {
-                    self.addressInfoIsUpdated = false
-                }
-            })*/
         }
     }
     var countries: [String:String] = [:]
     var manager: CLLocationManager = CLLocationManager()
-    //@Published var placemarks: [CLPlacemark] = []
-    //@Published var placemarkInfo: [String] = [""]
     @Published var addressInfoIsUpdated: Bool = false
     @Published var flag: String = ""
     @Published var addresses: [Address] = [] {
@@ -83,25 +69,6 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     deinit {
         self.timer?.invalidate()
         self.timer = nil
-    }
-    
-    func getFlag(of placemark:CLPlacemark) {
-        var countries: [String:String] = [:]
-        for code in NSLocale.isoCountryCodes {
-            let id: String = Locale.identifier(fromComponents: [
-                NSLocale.Key.countryCode.rawValue : code
-            ])
-            guard let name = (Locale.current as NSLocale).displayName(forKey: .identifier, value: id) else { continue }
-            countries[code] = name
-        }
-        if let countryCode = countries.keys.first(where: { countries[$0] == placemark.country }) {
-            let base : UInt32 = 127397
-            var s = ""
-            for v in countryCode.unicodeScalars {
-                s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
-            }
-            self.flag = String(s)
-        }
     }
     
     func start(slowly: Bool? = nil) {
