@@ -11,7 +11,8 @@ import SwiftUI
 struct WhereNow_Watch_AppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WhereNowView()
+                .environmentObject(LocationDataModel())
         }
     }
 }

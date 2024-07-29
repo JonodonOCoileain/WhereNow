@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>WhereNow Watch App.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>WhereNow.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>WhereNowWidgetExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>FC24914E2C48A63600101DF3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FC2491742C48A63800101DF3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FC2491862C48A63900101DF3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FC2491902C48A63900101DF3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FC2493162C4AF43500101DF3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>

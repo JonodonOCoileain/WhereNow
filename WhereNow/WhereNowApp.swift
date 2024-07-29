@@ -11,7 +11,9 @@ import SwiftUI
 struct WhereNowApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WhereNowView()
+                .environmentObject(LocationDataModel())
+                .preferredColorScheme(.dark)
         }
     }
 }
