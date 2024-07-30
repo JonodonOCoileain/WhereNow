@@ -8,6 +8,7 @@
 import SwiftUI
 import WidgetKit
 import CoreLocation
+import UIKit
 
 struct WhereNowView: View {
     static var countTime:Double = 0.1
@@ -18,7 +19,6 @@ struct WhereNowView: View {
     @State var timeCounter:Double = 0.0
 
     var body: some View {
-        VStack {
             if ([CLAuthorizationStatus.restricted, CLAuthorizationStatus.denied].contains(where: {$0 == data.manager.authorizationStatus})) {
                 Image(systemName: "globe")
                 Text("Location status disabled")
@@ -35,31 +35,45 @@ struct WhereNowView: View {
                 if self.data.addresses.count > 1 {
                     ScrollView() {
                         VStack {
-                            Text(self.data.addresses.compactMap({$0.freeformAddress}).joined(separator: "\n\n"))
+                            Text(self.data.addresses.compactMap({$0.formattedCommon()}).joined(separator: "\n\n"))
                                     .multilineTextAlignment(.center)
                         }
                     }
-                }else {
-                    //if #available(iOS, *) {
-                    Text(self.data.addresses.compactMap({$0.freeformAddress}).joined(separator: "\n\n"))
-                            .multilineTextAlignment(.center)
-                    //} else
+                    .onAppear() {
+                        data.start()
+                        WidgetCenter.shared.reloadTimelines(ofKind: "WhereNowWidget")
+                    }
+                    .onDisappear() {
+                        data.stop()
+                    }
+                    .onReceive(timer) { input in
+                        if timeCounter >= 2.0 {
+                            timeCounter = 0
+                        }
+                        timeCounter = timeCounter + WhereNowView.countTime * 2
+                    }
+                } else {
+                    Text(self.data.addresses.compactMap({$0.formattedCommon()}).joined(separator: "\n\n"))
+                        .multilineTextAlignment(.center)
+                        .onAppear() {
+                            data.start()
+                            WidgetCenter.shared.reloadTimelines(ofKind: "WhereNowWidget")
+                        }
+                        .onDisappear() {
+                            data.stop()
+                        }
+                        .onReceive(timer) { input in
+                            if timeCounter >= 2.0 {
+                                timeCounter = 0
+                            }
+                            timeCounter = timeCounter + WhereNowView.countTime * 2
+                        }
+                }
+                if #available(watchOS 1,*) {
+                    Spacer()
                 }
             }
-        }
-        .onAppear() {
-            data.start()
-            WidgetCenter.shared.reloadTimelines(ofKind: "WhereNowWidget")
-        }
-        .onDisappear() {
-            data.stop()
-        }
-        .onReceive(timer) { input in
-            if timeCounter >= 2.0 {
-                timeCounter = 0
-            }
-            timeCounter = timeCounter + WhereNowView.countTime * 2
-        }
+        
     }
 }
 

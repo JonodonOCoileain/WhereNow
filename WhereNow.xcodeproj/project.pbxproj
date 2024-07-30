@@ -109,7 +109,6 @@
 		FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"CoreLocation+Extensions.swift",
 				LocationDataModel.swift,
 				"String+Extensions.swift",
 				WhereNowView.swift,
@@ -120,6 +119,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				Objects.swift,
 			);
 			target = FC24914E2C48A63600101DF3 /* WhereNow */;
 		};
@@ -133,8 +133,8 @@
 		FC24932D2C4AF6D100101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"CoreLocation+Extensions.swift",
 				LocationDataModel.swift,
+				Objects.swift,
 				"String+Extensions.swift",
 			);
 			target = FC2493162C4AF43500101DF3 /* WhereNowWidgetExtension */;
@@ -729,7 +729,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_PREVIEWS = YES;
@@ -765,7 +765,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_PREVIEWS = YES;
@@ -802,7 +802,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow/Preview Content\"";
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_PREVIEWS = YES;
@@ -843,7 +843,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow/Preview Content\"";
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_PREVIEWS = YES;

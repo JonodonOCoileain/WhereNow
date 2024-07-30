@@ -19,10 +19,15 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
                 guard let data = data else { return }
-                print(String(data: data, encoding: .utf8)!)
+                //print(String(data: data, encoding: .utf8)!)
                 do {
                     let newResponse = try JSONDecoder().decode(Response.self, from: data)
-                    self.addresses = newResponse.addresses.compactMap({$0.address})
+                    let newAddresses = newResponse.addresses.compactMap({$0.address})
+                    if self.addresses != newAddresses {
+                        DispatchQueue.main.sync {
+                            self.addresses = newAddresses
+                        }
+                    }
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -43,7 +48,9 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                 for v in countryCode.unicodeScalars {
                     s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
                 }
-                flag = String(s) //Flag update
+                if flag != String(s) {
+                    flag = String(s) //Flag update
+                }
             }
         }
     }
@@ -86,16 +93,18 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("Total of locations: \(locations.count)")
+        //print("Total of locations: \(locations.count)")
         if readyForUpdate {
             currentLocation = locations.first
             readyForUpdate = false
+            addressInfoIsUpdated = currentLocation != nil
         }
         print(locations)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
         print(error.localizedDescription)
+        addressInfoIsUpdated = false
     }
     
     func stop() {
@@ -121,7 +130,7 @@ struct Addresses: Codable {
     var address: Address?
 }
 
-struct Address: Codable {
+struct Address: Codable, Equatable {
     var buildingNumber: String?
     var streetNumber: String?
     var routeNumbers: [String]?
@@ -142,9 +151,70 @@ struct Address: Codable {
     var countrySubdivisionName:String? //State
     var countrySubdivisionCode:String?
     var localName: String? //Town
+    
+    func formattedLarge() -> String {
+        let addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ",") ?? ""].joined(separator: " "),[municipality ?? "",countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: " "),[extendedPostalCode ?? postalCode ?? "",country ?? ""].joined(separator: " ")]
+        return addressInfo.joined(separator: "\n")
+    }
+    
+    func formattedCommon() -> String {
+        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[localName ?? municipality ?? "",countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        if localName == countrySecondarySubdivision {
+            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        }
+        return addressInfo.joined(separator: "\n")
+    }
+    
+    func formattedCommonWithFlag() -> String {
+        var countries: [String:String] = [:]
+        for code in NSLocale.isoCountryCodes {
+            let id: String = Locale.identifier(fromComponents: [
+                NSLocale.Key.countryCode.rawValue : code
+            ])
+            guard let name = (Locale.current as NSLocale).displayName(forKey: .identifier, value: id) else { continue }
+            countries[code] = name
+        }
+        
+        var flag: String = ""
+        if let countryCode = countries.keys.first(where: { countries[$0] == self.country }) {
+            let base : UInt32 = 127397
+            var s = ""
+            for v in countryCode.unicodeScalars {
+                s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+            }
+            if flag != String(s) {
+                flag = String(s) //Flag update
+            }
+        }
+        
+        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[localName ?? municipality ?? "",countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        if localName == countrySecondarySubdivision {
+            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        }
+        if flag.isEmpty {
+            return addressInfo.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+        } else {
+            return (addressInfo.joined(separator: "\n") + " " + flag).trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
+    
+    func formattedVeryShort() -> String {
+        if var streetArray = streetName?.components(separatedBy: " ") as? [String] {
+            if streetArray.last?.count == 2, streetArray.count > 1 {
+                streetArray.removeLast()
+            }
+            return streetArray.joined(separator: " ") + ", " + (localName ?? municipality ?? "")
+        } else {
+            if (streetName?.count ?? 0) >= 1 {
+                return (streetName ?? "") + ", " + (localName ?? municipality ?? "")
+            } else {
+                return localName ?? municipality ?? ""
+            }
+        }
+    }
 }
 
-struct BoundingBox: Codable {
+struct BoundingBox: Codable, Equatable {
     var northEast: String?
     var southWest: String?
     var entity: String?

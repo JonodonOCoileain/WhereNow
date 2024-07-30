@@ -11,6 +11,6 @@ import SwiftUI
 @main
 struct WhereNowWidgetBundle: WidgetBundle {
     var body: some Widget {
-        WhereNowWidget()
+            WhereNowWidget()
     }
 }

@@ -19,3 +19,17 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     @Parameter(title: "Location", default: "Planet Earth, Milky Way Galaxy")
     var location: String
 }
+
+extension ConfigurationAppIntent {
+    static var smiley: ConfigurationAppIntent {
+        let intent = ConfigurationAppIntent()
+        intent.favoriteEmoji = "😀"
+        return intent
+    }
+    
+    static var starEyes: ConfigurationAppIntent {
+        let intent = ConfigurationAppIntent()
+        intent.favoriteEmoji = "🤩"
+        return intent
+    }
+}
