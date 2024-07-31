@@ -1,6 +1,6 @@
 //
-//  WhereNowWidget.swift
-//  WhereNowWidget
+//  WhereNowWatchWidget.swift
+//  WhereNowWatchWidget
 //
 //  Created by Jon on 7/31/24.
 //
@@ -31,6 +31,11 @@ struct Provider: AppIntentTimelineProvider {
         return Timeline(entries: entries, policy: .atEnd)
     }
 
+    func recommendations() -> [AppIntentRecommendation<ConfigurationAppIntent>] {
+        // Create an array with all the preconfigured widgets to show.
+        [AppIntentRecommendation(intent: ConfigurationAppIntent(), description: "Example Widget")]
+    }
+
 //    func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
 //        // Generate a list containing the contexts this widget is relevant in.
 //    }
@@ -41,24 +46,29 @@ struct SimpleEntry: TimelineEntry {
     let configuration: ConfigurationAppIntent
 }
 
-struct WhereNowWidgetEntryView : View {
+struct WhereNowWatchWidgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        Text("Time:")
-        Text(entry.date, style: .time)
-
-        Text("Favorite Emoji:")
-        Text(entry.configuration.favoriteEmoji)
+        VStack {
+            HStack {
+                Text("Time:")
+                Text(entry.date, style: .time)
+            }
+        
+            Text("Favorite Emoji:")
+            Text(entry.configuration.favoriteEmoji)
+        }
     }
 }
 
-struct WhereNowWidget: Widget {
-    let kind: String = "WhereNowWidget"
+@main
+struct WhereNowWatchWidget: Widget {
+    let kind: String = "WhereNowWatchWidget"
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
-            WhereNowWidgetEntryView(entry: entry)
+            WhereNowWatchWidgetEntryView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
     }
@@ -78,9 +88,9 @@ extension ConfigurationAppIntent {
     }
 }
 
-#Preview(as: .systemSmall) {
-    WhereNowWidget()
+#Preview(as: .accessoryRectangular) {
+    WhereNowWatchWidget()
 } timeline: {
     SimpleEntry(date: .now, configuration: .smiley)
     SimpleEntry(date: .now, configuration: .starEyes)
-}
+}    

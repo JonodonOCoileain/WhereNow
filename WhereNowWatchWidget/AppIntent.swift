@@ -1,6 +1,6 @@
 //
 //  AppIntent.swift
-//  WhereNowWidget
+//  WhereNowWatchWidget
 //
 //  Created by Jon on 7/31/24.
 //

@@ -1,22 +1,16 @@
-//
-//  SnapshotManager.swift
-//  WhereNow
-//
-//  Created by Jon on 7/30/24.
-//
-import SwiftUI
-import MapKit
-import WidgetKit
 
-final class SnapshotManager {
+import Foundation
+import CoreLocation
+import MapKit
+import SwiftUI
+
+final class MapSnapshotManager {
     // MARK: - Types
 
     typealias SnapshotCompletionHandler = (Result<Image, Error>) -> Void
 
     enum SnapshotError: Error {
         case noSnapshotImage
-        case noAddresses
-        case wrongOS
     }
 
     // MARK: - Config
@@ -33,9 +27,6 @@ final class SnapshotManager {
 
     func snapshot(at centerCoordinate: CLLocationCoordinate2D,
                   completionHandler: @escaping SnapshotCompletionHandler) {
-        #if os(watchOS)
-        completionHandler(.failure(SnapshotError.wrongOS))
-        #else
         let coordinateRegion = MKCoordinateRegion(center: centerCoordinate,
                                                   span: Config.coordinateSpan)
 
@@ -55,8 +46,6 @@ final class SnapshotManager {
 
             let image = Image(uiImage: snapshot.image)
             completionHandler(.success(image))
-            
         }
-    #endif
     }
 }
