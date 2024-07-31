@@ -8,9 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		FC2491762C48A63800101DF3 /* WhereNow Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FC2491752C48A63800101DF3 /* WhereNow Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		FC2493182C4AF43600101DF3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; platformFilters = (ios, macos, ); };
-		FC2493192C4AF43600101DF3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
-		FC2493272C4AF43800101DF3 /* WhereNowWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC2493172C4AF43500101DF3 /* WhereNowWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FC5101312C5AC0DB009C5CB4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; };
+		FC5101322C5AC0DB009C5CB4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
+		FC51013D2C5AC0DD009C5CB4 /* WhereNowWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC5101302C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FCE332C12C5A9C240093D3EF /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; platformFilters = (ios, macos, ); };
+		FCE332C22C5A9C240093D3EF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
+		FCE332D02C5A9C260093D3EF /* WhereNowWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,11 +52,18 @@
 			remoteGlobalIDString = FC2491742C48A63800101DF3;
 			remoteInfo = "WhereNow Watch App";
 		};
-		FC2493252C4AF43800101DF3 /* PBXContainerItemProxy */ = {
+		FC51013B2C5AC0DD009C5CB4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FC2491472C48A63600101DF3 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = FC2493162C4AF43500101DF3;
+			remoteGlobalIDString = FC51012F2C5AC0DB009C5CB4;
+			remoteInfo = WhereNowWatchWidgetExtension;
+		};
+		FCE332CE2C5A9C260093D3EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FC2491472C48A63600101DF3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCE332BF2C5A9C240093D3EF;
 			remoteInfo = WhereNowWidgetExtension;
 		};
 /* End PBXContainerItemProxy section */
@@ -76,17 +86,18 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				FC51013D2C5AC0DD009C5CB4 /* WhereNowWatchWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FC24930C2C4AEF8A00101DF3 /* Embed Foundation Extensions */ = {
+		FCE332B72C5A9ABB0093D3EF /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				FC2493272C4AF43800101DF3 /* WhereNowWidgetExtension.appex in Embed Foundation Extensions */,
+				FCE332D02C5A9C260093D3EF /* WhereNowWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -102,7 +113,8 @@
 		FC2491912C48A63900101DF3 /* WhereNow Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WhereNow Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2492C92C494D8800101DF3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FC2492CB2C494D8800101DF3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		FC2493172C4AF43500101DF3 /* WhereNowWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhereNowWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC5101302C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhereNowWatchWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhereNowWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -110,6 +122,8 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				LocationDataModel.swift,
+				LocationManager.swift,
+				Objects.swift,
 				"String+Extensions.swift",
 				WhereNowView.swift,
 			);
@@ -119,36 +133,53 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				Objects.swift,
 			);
 			target = FC24914E2C48A63600101DF3 /* WhereNow */;
 		};
-		FC24932B2C4AF43800101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		FC5101412C5AC0DD009C5CB4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = FC2493162C4AF43500101DF3 /* WhereNowWidgetExtension */;
+			target = FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */;
 		};
-		FC24932D2C4AF6D100101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		FC5101442C5AC16D009C5CB4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				LocationDataModel.swift,
+				LocationManager.swift,
 				Objects.swift,
 				"String+Extensions.swift",
 			);
-			target = FC2493162C4AF43500101DF3 /* WhereNowWidgetExtension */;
+			target = FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */;
+		};
+		FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */;
+		};
+		FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				LocationManager.swift,
+				MapSnapshotManager.swift,
+				Objects.swift,
+				"String+Extensions.swift",
+			);
+			target = FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		FC2491512C48A63600101DF3 /* WhereNow */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC2492ED2C4ABCB400101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC24932D2C4AF6D100101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNow; sourceTree = "<group>"; };
+		FC2491512C48A63600101DF3 /* WhereNow */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC2492ED2C4ABCB400101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC5101442C5AC16D009C5CB4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNow; sourceTree = "<group>"; };
 		FC2491622C48A63800101DF3 /* WhereNowTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WhereNowTests; sourceTree = "<group>"; };
 		FC24916C2C48A63800101DF3 /* WhereNowUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WhereNowUITests; sourceTree = "<group>"; };
 		FC2491792C48A63800101DF3 /* WhereNow Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch App"; sourceTree = "<group>"; };
 		FC24918A2C48A63900101DF3 /* WhereNow Watch AppTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch AppTests"; sourceTree = "<group>"; };
 		FC2491942C48A63900101DF3 /* WhereNow Watch AppUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch AppUITests"; sourceTree = "<group>"; };
-		FC24931A2C4AF43600101DF3 /* WhereNowWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC24932B2C4AF43800101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWidget; sourceTree = "<group>"; };
+		FC5101332C5AC0DB009C5CB4 /* WhereNowWatchWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC5101412C5AC0DD009C5CB4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWatchWidget; sourceTree = "<group>"; };
+		FCE332C32C5A9C240093D3EF /* WhereNowWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWidget; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,12 +225,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FC2493142C4AF43500101DF3 /* Frameworks */ = {
+		FC51012D2C5AC0DB009C5CB4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FC2493192C4AF43600101DF3 /* SwiftUI.framework in Frameworks */,
-				FC2493182C4AF43600101DF3 /* WidgetKit.framework in Frameworks */,
+				FC5101322C5AC0DB009C5CB4 /* SwiftUI.framework in Frameworks */,
+				FC5101312C5AC0DB009C5CB4 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCE332BD2C5A9C240093D3EF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCE332C22C5A9C240093D3EF /* SwiftUI.framework in Frameworks */,
+				FCE332C12C5A9C240093D3EF /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,7 +255,8 @@
 				FC2491792C48A63800101DF3 /* WhereNow Watch App */,
 				FC24918A2C48A63900101DF3 /* WhereNow Watch AppTests */,
 				FC2491942C48A63900101DF3 /* WhereNow Watch AppUITests */,
-				FC24931A2C4AF43600101DF3 /* WhereNowWidget */,
+				FCE332C32C5A9C240093D3EF /* WhereNowWidget */,
+				FC5101332C5AC0DB009C5CB4 /* WhereNowWatchWidget */,
 				FC2492C82C494D8800101DF3 /* Frameworks */,
 				FC2491502C48A63600101DF3 /* Products */,
 			);
@@ -230,7 +271,8 @@
 				FC2491752C48A63800101DF3 /* WhereNow Watch App.app */,
 				FC2491872C48A63900101DF3 /* WhereNow Watch AppTests.xctest */,
 				FC2491912C48A63900101DF3 /* WhereNow Watch AppUITests.xctest */,
-				FC2493172C4AF43500101DF3 /* WhereNowWidgetExtension.appex */,
+				FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */,
+				FC5101302C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -255,13 +297,13 @@
 				FC24914C2C48A63600101DF3 /* Frameworks */,
 				FC24914D2C48A63600101DF3 /* Resources */,
 				FC24919E2C48A63900101DF3 /* Embed Watch Content */,
-				FC24930C2C4AEF8A00101DF3 /* Embed Foundation Extensions */,
+				FCE332B72C5A9ABB0093D3EF /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				FC2491782C48A63800101DF3 /* PBXTargetDependency */,
-				FC2493262C4AF43800101DF3 /* PBXTargetDependency */,
+				FCE332CF2C5A9C260093D3EF /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				FC2491512C48A63600101DF3 /* WhereNow */,
@@ -331,6 +373,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				FC51013C2C5AC0DD009C5CB4 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				FC2491792C48A63800101DF3 /* WhereNow Watch App */,
@@ -388,26 +431,48 @@
 			productReference = FC2491912C48A63900101DF3 /* WhereNow Watch AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		FC2493162C4AF43500101DF3 /* WhereNowWidgetExtension */ = {
+		FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FC2493282C4AF43800101DF3 /* Build configuration list for PBXNativeTarget "WhereNowWidgetExtension" */;
+			buildConfigurationList = FC51013E2C5AC0DD009C5CB4 /* Build configuration list for PBXNativeTarget "WhereNowWatchWidgetExtension" */;
 			buildPhases = (
-				FC2493132C4AF43500101DF3 /* Sources */,
-				FC2493142C4AF43500101DF3 /* Frameworks */,
-				FC2493152C4AF43500101DF3 /* Resources */,
+				FC51012C2C5AC0DB009C5CB4 /* Sources */,
+				FC51012D2C5AC0DB009C5CB4 /* Frameworks */,
+				FC51012E2C5AC0DB009C5CB4 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				FC24931A2C4AF43600101DF3 /* WhereNowWidget */,
+				FC5101332C5AC0DB009C5CB4 /* WhereNowWatchWidget */,
+			);
+			name = WhereNowWatchWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = WhereNowWatchWidgetExtension;
+			productReference = FC5101302C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCE332D12C5A9C260093D3EF /* Build configuration list for PBXNativeTarget "WhereNowWidgetExtension" */;
+			buildPhases = (
+				FCE332BC2C5A9C240093D3EF /* Sources */,
+				FCE332BD2C5A9C240093D3EF /* Frameworks */,
+				FCE332BE2C5A9C240093D3EF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				FCE332C32C5A9C240093D3EF /* WhereNowWidget */,
 			);
 			name = WhereNowWidgetExtension;
 			packageProductDependencies = (
 			);
 			productName = WhereNowWidgetExtension;
-			productReference = FC2493172C4AF43500101DF3 /* WhereNowWidgetExtension.appex */;
+			productReference = FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -442,7 +507,10 @@
 						CreatedOnToolsVersion = 16.0;
 						TestTargetID = FC2491742C48A63800101DF3;
 					};
-					FC2493162C4AF43500101DF3 = {
+					FC51012F2C5AC0DB009C5CB4 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					FCE332BF2C5A9C240093D3EF = {
 						CreatedOnToolsVersion = 16.0;
 					};
 				};
@@ -466,7 +534,8 @@
 				FC2491742C48A63800101DF3 /* WhereNow Watch App */,
 				FC2491862C48A63900101DF3 /* WhereNow Watch AppTests */,
 				FC2491902C48A63900101DF3 /* WhereNow Watch AppUITests */,
-				FC2493162C4AF43500101DF3 /* WhereNowWidgetExtension */,
+				FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */,
+				FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -514,7 +583,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FC2493152C4AF43500101DF3 /* Resources */ = {
+		FC51012E2C5AC0DB009C5CB4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCE332BE2C5A9C240093D3EF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -566,7 +642,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FC2493132C4AF43500101DF3 /* Sources */ = {
+		FC51012C2C5AC0DB009C5CB4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCE332BC2C5A9C240093D3EF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -601,10 +684,15 @@
 			target = FC2491742C48A63800101DF3 /* WhereNow Watch App */;
 			targetProxy = FC2491922C48A63900101DF3 /* PBXContainerItemProxy */;
 		};
-		FC2493262C4AF43800101DF3 /* PBXTargetDependency */ = {
+		FC51013C2C5AC0DD009C5CB4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FC2493162C4AF43500101DF3 /* WhereNowWidgetExtension */;
-			targetProxy = FC2493252C4AF43800101DF3 /* PBXContainerItemProxy */;
+			target = FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */;
+			targetProxy = FC51013B2C5AC0DD009C5CB4 /* PBXContainerItemProxy */;
+		};
+		FCE332CF2C5A9C260093D3EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */;
+			targetProxy = FCE332CE2C5A9C260093D3EF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -727,7 +815,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = WhereNowComplication;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow Watch App/Preview Content\"";
@@ -736,6 +826,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "WhereNow-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = ComplicationController;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app can show you its location using GPS-derived data.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
@@ -763,7 +854,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = WhereNowComplication;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow Watch App/Preview Content\"";
@@ -772,6 +865,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "WhereNow-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = ComplicationController;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app can show you its location using GPS-derived data.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
@@ -801,6 +895,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = WhereNow/WhereNow.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow/Preview Content\"";
@@ -842,6 +938,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = WhereNow/WhereNow.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow/Preview Content\"";
@@ -1039,7 +1137,68 @@
 			};
 			name = Release;
 		};
-		FC2493292C4AF43800101DF3 /* Debug */ = {
+		FC51013F2C5AC0DD009C5CB4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KB8WXAHJCD;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WhereNowWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WhereNowWatchWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		FC5101402C5AC0DD009C5CB4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KB8WXAHJCD;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WhereNowWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WhereNowWatchWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		FCE332D22C5A9C260093D3EF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1052,10 +1211,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhereNowWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WhereNowWidget;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Jonathan Lavallee Collins and Family";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "The widget is designed to display the user's current location.";
-				INFOPLIST_KEY_NSLocationUsageDescription = "The widget is designed to display the current location.";
-				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app can show you its location using GPS-derived data.";
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1074,16 +1233,15 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx watchos watchsimulator xros xrsimulator";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,4,7";
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
-		FC24932A2C4AF43800101DF3 /* Release */ = {
+		FCE332D32C5A9C260093D3EF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1096,10 +1254,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhereNowWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WhereNowWidget;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Jonathan Lavallee Collins and Family";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "The widget is designed to display the user's current location.";
-				INFOPLIST_KEY_NSLocationUsageDescription = "The widget is designed to display the current location.";
-				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app can show you its location using GPS-derived data.";
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1118,11 +1276,10 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx watchos watchsimulator xros xrsimulator";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,4,7";
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
@@ -1193,11 +1350,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FC2493282C4AF43800101DF3 /* Build configuration list for PBXNativeTarget "WhereNowWidgetExtension" */ = {
+		FC51013E2C5AC0DD009C5CB4 /* Build configuration list for PBXNativeTarget "WhereNowWatchWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				FC2493292C4AF43800101DF3 /* Debug */,
-				FC24932A2C4AF43800101DF3 /* Release */,
+				FC51013F2C5AC0DD009C5CB4 /* Debug */,
+				FC5101402C5AC0DD009C5CB4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCE332D12C5A9C260093D3EF /* Build configuration list for PBXNativeTarget "WhereNowWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCE332D22C5A9C260093D3EF /* Debug */,
+				FCE332D32C5A9C260093D3EF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

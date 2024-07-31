@@ -1,3 +1,13 @@
+//
+//  LocationManager.swift
+//  WhereNow
+//
+//  Created by Jon on 7/31/24.
+//
+
+import Foundation
+import CoreLocation
+
 final class LocationManager: NSObject {
     // MARK: - Config
 
@@ -55,7 +65,7 @@ final class LocationManager: NSObject {
     }
     
     func immediateLocation() -> CLLocation? {
-        return locationManager?.location ?? locationStorageManager.location(forKey: Config.storageKey) as? CLLocation
+        return locationManager?.location ?? locationStorageManager.location(forKey: Config.storageKey)
     }
 
     // MARK: - Private properties

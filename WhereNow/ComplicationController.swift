@@ -4,7 +4,7 @@
 //
 //  Created by Jon on 7/11/24.
 //
-/*
+#if(watchOS)
 import ClockKit
 import SwiftUI
 
@@ -14,7 +14,7 @@ final class ComplicationController: NSObject, CLKComplicationDataSource {
 
     func getComplicationDescriptors(handler: @escaping ([CLKComplicationDescriptor]) -> Void) {
         //
-        let location = [CLKComplicationDescriptor(identifier: "whereNow-complication", displayName: "Where Now!", supportedFamilies: [CLKComplicationFamily.circularSmall, CLKComplicationFamily.extraLarge, CLKComplicationFamily.graphicBezel, CLKComplicationFamily.graphicCircular, CLKComplicationFamily.graphicCorner, CLKComplicationFamily.graphicExtraLarge,   CLKComplicationFamily.graphicRectangular, CLKComplicationFamily.modularLarge, CLKComplicationFamily.modularSmall, CLKComplicationFamily.utilitarianLarge, CLKComplicationFamily.utilitarianSmall, CLKComplicationFamily.utilitarianSmallFlat])]
+        let location = [CLKComplicationDescriptor(identifier: "WhereNowComplication", displayName: "Where Now!", supportedFamilies: [CLKComplicationFamily.circularSmall, CLKComplicationFamily.extraLarge, CLKComplicationFamily.graphicBezel, CLKComplicationFamily.graphicCircular, CLKComplicationFamily.graphicCorner, CLKComplicationFamily.graphicExtraLarge,   CLKComplicationFamily.graphicRectangular, CLKComplicationFamily.modularLarge, CLKComplicationFamily.modularSmall, CLKComplicationFamily.utilitarianLarge, CLKComplicationFamily.utilitarianSmall, CLKComplicationFamily.utilitarianSmallFlat])]
         return handler(location)
     }
 
@@ -29,13 +29,13 @@ final class ComplicationController: NSObject, CLKComplicationDataSource {
         var template: CLKComplicationTemplate!
         data.start()
         
-        guard let placemark = data.placemarks.first else {
+        guard let placemark = data.addresses.first else {
             handler(nil)
             return
         }
         switch complication.family {
         case .circularSmall:
-            template = CLKComplicationTemplateCircularSmallStackText(line1TextProvider: CLKSimpleTextProvider(text: placemark.thoroughfares()), line2TextProvider: CLKSimpleTextProvider(text: placemark.localityAndAdministrativeArea() + (placemark.country ?? ""), shortText: placemark.localityAndAdministrativeArea()))
+            template = CLKComplicationTemplateCircularSmallStackText(line1TextProvider: CLKSimpleTextProvider(text: placemark.formattedVeryShort()), line2TextProvider: CLKSimpleTextProvider(text: (placemark.localName ?? ""), shortText: placemark.flag()))
             //template = CLKComplicationTemplateCircularSmallStackImage()
             //template = CLKComplicationTemplateCircularSmallSimpleText()
             //template = CLKComplicationTemplateCircularSmallSimpleImage()
@@ -44,7 +44,7 @@ final class ComplicationController: NSObject, CLKComplicationDataSource {
 
             break;
         case .extraLarge:
-            template = CLKComplicationTemplateExtraLargeStackText(line1TextProvider: CLKSimpleTextProvider(text: placemark.thoroughfares()), line2TextProvider: CLKSimpleTextProvider(text: placemark.localityAndAdministrativeArea() + (placemark.country ?? ""), shortText: placemark.localityAndAdministrativeArea()))
+            template = CLKComplicationTemplateExtraLargeStackText(line1TextProvider: CLKSimpleTextProvider(text: placemark.streetNameAndNumber ?? ""), line2TextProvider: CLKSimpleTextProvider(text: placemark.formattedVeryShort() ?? ""), shortText: placemark.flag())
             //template = CLKComplicationTemplateExtraLargeStackImage()
             //template = CLKComplicationTemplateExtraLargeSimpleText()
             //template = CLKComplicationTemplateExtraLargeSimpleImage()
@@ -53,7 +53,7 @@ final class ComplicationController: NSObject, CLKComplicationDataSource {
             //template = CLKComplicationTemplateExtraLargeColumnsText()
             break;
         case .modularSmall:
-            template = CLKComplicationTemplateModularSmallStackText(line1TextProvider: CLKSimpleTextProvider(text: placemark.thoroughfares()), line2TextProvider: CLKSimpleTextProvider(text: placemark.localityAndAdministrativeArea() + (placemark.country ?? ""), shortText: placemark.localityAndAdministrativeArea()))
+            template = CLKComplicationTemplateModularSmallStackText(line1TextProvider: CLKSimpleTextProvider(text: placemark.formattedVeryShort()), line2TextProvider: CLKSimpleTextProvider(text: placemark.flag(), shortText: placemark.flag()))
             //emplate = CLKComplicationTemplateModularSmallStackImage()
             //template = CLKComplicationTemplateModularSmallSimpleText()
             //template = CLKComplicationTemplateModularSmallSimpleImage()
@@ -62,27 +62,27 @@ final class ComplicationController: NSObject, CLKComplicationDataSource {
             //template = CLKComplicationTemplateModularSmallColumnsText()
             break;
         case .modularLarge:
-            template = CLKComplicationTemplateModularLargeTable(headerTextProvider: CLKSimpleTextProvider(text: placemark.thoroughfares()), row1Column1TextProvider: CLKSimpleTextProvider(text:placemark.localityAndAdministrativeArea()), row1Column2TextProvider: CLKSimpleTextProvider(text:placemark.postalCode ?? ""), row2Column1TextProvider: CLKSimpleTextProvider(text:placemark.country ?? ""), row2Column2TextProvider: CLKSimpleTextProvider(text:data.flag))
+            template = CLKComplicationTemplateModularLargeTable(headerTextProvider: CLKSimpleTextProvider(text: placemark.localName ?? ""), row1Column1TextProvider: CLKSimpleTextProvider(text:placemark.streetNameAndNumber ?? ""), row1Column2TextProvider: CLKSimpleTextProvider(text:placemark.municipality ?? ""), row2Column1TextProvider: CLKSimpleTextProvider(text:placemark.country ?? ""), row2Column2TextProvider: CLKSimpleTextProvider(text:data.flag))
             //template = CLKComplicationTemplateModularLargeColumns()
             //template = CLKComplicationTemplateModularLargeTallBody()
             //template = CLKComplicationTemplateModularLargeStandardBody()
             break;
         case .utilitarianSmall:
-            template = CLKComplicationTemplateUtilitarianSmallFlat(textProvider: CLKSimpleTextProvider(text:placemark.makeAddressString()), imageProvider: CLKImageProvider(onePieceImage: data.flag.toImage()))
+            template = CLKComplicationTemplateUtilitarianSmallFlat(textProvider: CLKSimpleTextProvider(text:placemark.formattedVeryShort()), imageProvider: CLKImageProvider(onePieceImage: placemark.flag().toImage()))
             //template = CLKComplicationTemplateUtilitarianSmallSquare()
             //template = CLKComplicationTemplateUtilitarianSmallRingText()
             //emplate = CLKComplicationTemplateUtilitarianSmallRingImage()
             break;
         case .utilitarianSmallFlat:
-            template = CLKComplicationTemplateUtilitarianSmallFlat(textProvider: CLKSimpleTextProvider(text: placemark.localityAndAdministrativeArea(), shortText: placemark.locality ?? placemark.thoroughfare ?? placemark.country ?? "") , imageProvider: CLKImageProvider(onePieceImage: data.flag.toImage()))
+            template = CLKComplicationTemplateUtilitarianSmallFlat(textProvider: CLKSimpleTextProvider(text: placemark.formattedVeryShort(), shortText: placemark.formattedVeryShort()) , imageProvider: CLKImageProvider(onePieceImage: placemark.flag().toImage()))
         case .utilitarianLarge:
-            template = CLKComplicationTemplateUtilitarianLargeFlat(textProvider:CLKSimpleTextProvider(text: placemark.localityAndAdministrativeArea(), shortText: placemark.locality ?? placemark.thoroughfare ?? placemark.country ?? "") , imageProvider: CLKImageProvider(onePieceImage: data.flag.toImage()))
+            template = CLKComplicationTemplateUtilitarianLargeFlat(textProvider:CLKSimpleTextProvider(text: placemark.localName ?? "", shortText: placemark.formattedVeryShort()) , imageProvider: CLKImageProvider(onePieceImage: data.flag.toImage()))
             break;
         case .graphicCorner:
             //template = CLKComplicationTemplateGraphicCornerCircularImage()
             //template = CLKComplicationTemplateGraphicCornerGaugeText()
             //template = CLKComplicationTemplateGraphicCornerGaugeImage()
-            template = CLKComplicationTemplateGraphicCornerStackText(innerTextProvider: CLKSimpleTextProvider(text: placemark.thoroughfares()), outerTextProvider: CLKSimpleTextProvider(text: placemark.localityAndAdministrativeArea() + (placemark.country ?? ""), shortText: placemark.localityAndAdministrativeArea()))
+            template = CLKComplicationTemplateGraphicCornerStackText(innerTextProvider: CLKSimpleTextProvider(text: placemark.localName ?? ""), outerTextProvider: CLKSimpleTextProvider(text: placemark.formattedVeryShort()), shortText: placemark.flag())
             //template = CLKComplicationTemplateGraphicCornerTextImage()
             break;
         case .graphicCircular:
@@ -94,16 +94,16 @@ final class ComplicationController: NSObject, CLKComplicationDataSource {
             //template = CLKComplicationTemplateGraphicCircularClosedGaugeImage()
             break;
         case .graphicBezel:
-            template = CLKComplicationTemplateGraphicBezelCircularText(circularTemplate: CLKComplicationTemplateGraphicCircularImage(imageProvider: CLKFullColorImageProvider(fullColorImage: data.flag.toImage())), textProvider: CLKSimpleTextProvider(text:placemark.thoroughfaresAndLocality()))
+            template = CLKComplicationTemplateGraphicBezelCircularText(circularTemplate: CLKComplicationTemplateGraphicCircularImage(imageProvider: CLKFullColorImageProvider(fullColorImage: placemark.flag().toImage())), textProvider: CLKSimpleTextProvider(text:placemark.formattedVeryShort()))
             break;
         case .graphicRectangular:
-            template = CLKComplicationTemplateGraphicRectangularLargeImage(textProvider: CLKSimpleTextProvider(text: placemark.makeAddressString(), shortText: placemark.thoroughfaresAndLocality()), imageProvider: CLKFullColorImageProvider(fullColorImage: data.flag.toImage()))
+            template = CLKComplicationTemplateGraphicRectangularLargeImage(textProvider: CLKSimpleTextProvider(text: placemark.freeformAddress ?? "", shortText: placemark.formattedVeryShort()), imageProvider: CLKFullColorImageProvider(fullColorImage: placemark.flag().toImage()))
             //template = CLKComplicationTemplateGraphicRectangularStandardBody()
             //template = CLKComplicationTemplateGraphicRectangularTextGauge
             break;
         case .graphicExtraLarge:
             //template = CLKComplicationTemplateGraphicExtraLargeCircularImage()
-            template = CLKComplicationTemplateGraphicExtraLargeCircularStackText(line1TextProvider: CLKSimpleTextProvider(text: placemark.thoroughfaresAndLocality(), shortText: placemark.thoroughfares()), line2TextProvider: CLKSimpleTextProvider(text: placemark.codeAndCountry()))
+            template = CLKComplicationTemplateGraphicExtraLargeCircularStackText(line1TextProvider: CLKSimpleTextProvider(text: placemark.formattedCommonVeryLongFlag(), shortText: placemark.formattedVeryShort()), line2TextProvider: CLKSimpleTextProvider(text: "DEVELOPER, ADD MORE HERE!"))
             //template = CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeImage()
             //template = CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeRangeText()
         @unknown default:
@@ -250,6 +250,4 @@ struct ComplicationController_Previews: PreviewProvider {
         }
     }
 }
-
-
-*/
+#endif

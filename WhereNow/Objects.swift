@@ -11,7 +11,11 @@ import SwiftUI
 import MapKit
 import WidgetKit
 
-public struct MapSnapshot {
+public enum AnError: Error {
+    case Unknown
+}
+
+public struct LocationInformation {
     /// The resolved user location.
     let userLocation: CLLocation
 
@@ -23,7 +27,7 @@ public struct MapSnapshot {
 }
 
 
-struct SimpleEntry: TimelineEntry {
+struct LocationInformationEntry: TimelineEntry {
     // MARK: - Types
 
     enum State {
@@ -31,7 +35,7 @@ struct SimpleEntry: TimelineEntry {
         case placeholder
 
         /// We resolved a user-location and successfully created the map-snapshot.
-        case success(MapSnapshot)
+        case success(LocationInformation)
 
         /// An error occurred.
         case failure(Error)
@@ -44,6 +48,18 @@ struct SimpleEntry: TimelineEntry {
 
     /// The current state of our entry.
     let state: State
+    
+    var shortDescription: String {
+        switch self.state {
+        case .placeholder:
+            return "Planet Earth, Milky Way Galaxy"
+        case .success(let locationInformation):
+            let shortAddressArray: [String] = locationInformation.addresses?.compactMap({$0.formattedVeryShort()}) ?? ["Planet Earth, Milky Way Galaxy"]
+            return shortAddressArray.joined(separator: "\n")
+        case .failure(let error):
+            return error.localizedDescription
+        }
+    }
 }
 
 public struct ErrorView: View {
@@ -110,137 +126,6 @@ extension UserDefaults: LocationStorageManaging {
 
 // MARK: - Helpers
 
-final class LocationManager: NSObject {
-    // MARK: - Config
-
-    private enum Config {
-        /// The type of user activity associated with the location updates.
-        static let activityType: CLActivityType = .otherNavigation
-
-        /// The accuracy of the location data we want to receive.
-        static let desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-
-        /// The key we use to store the last known user location.
-        static let storageKey = "MapWidgetExample.lastKnownUserLocation"
-    }
-
-    // MARK: - Types
-
-    typealias RequestLocationCompletionHandler = (Result<CLLocation, Error>) -> Void
-
-    // MARK: - Private properties
-
-    private var requestLocationCompletionHandlers = [RequestLocationCompletionHandler]()
-
-    // MARK: - Dependencies
-
-    private var locationManager: CLLocationManager?
-    private let locationStorageManager: LocationStorageManaging
-
-    // MARK: - Initializer
-
-    init(locationStorageManager: LocationStorageManaging) {
-        self.locationStorageManager = locationStorageManager
-
-        super.init()
-
-        setupLocationManager()
-    }
-
-    // MARK: - Public methods
-
-    func requestLocation(_ completionHandler: @escaping RequestLocationCompletionHandler) {
-        requestLocationCompletionHandlers.append(completionHandler)
-
-        guard let locationManager = locationManager else {
-            "Expect to have a valid `locationManager` instance at this point!"
-                .log(level: .error)
-
-            return
-        }
-
-        if locationManager.authorizationStatus.isAuthorized {
-            locationManager.requestLocation()
-        } else {
-            locationManager.requestWhenInUseAuthorization()
-        }
-    }
-
-    // MARK: - Private properties
-
-    private func setupLocationManager() {
-        // We have to explicitly make sure to intialize the location manger on the main thread.
-        // This is not happening per default when instantiating the widget.
-        DispatchQueue.main.async {
-            let locationManager = CLLocationManager()
-            self.locationManager = locationManager
-
-            locationManager.activityType = Config.activityType
-            locationManager.desiredAccuracy = Config.desiredAccuracy
-            locationManager.delegate = self
-        }
-    }
-
-    private func resolveRequestLocationCompletionHandlers(with result: Result<CLLocation, Error>) {
-        requestLocationCompletionHandlers.forEach { $0(result) }
-        requestLocationCompletionHandlers.removeAll()
-    }
-}
-
-// MARK: - CLLocationManagerDelegate
-
-extension LocationManager: CLLocationManagerDelegate {
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        guard manager.authorizationStatus.isAuthorized else {
-            // Ignore authorization changes where we loose access to location data.
-            return
-        }
-
-        guard !requestLocationCompletionHandlers.isEmpty else {
-            // Ignore changes where we don't have any pending completion handlers.
-            return
-        }
-
-        locationManager?.requestLocation()
-    }
-
-    func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        // We explicitly ask for the `first` location here, as with `requestLocation()` only one location fix is reported to the delegate.
-        // https://developer.apple.com/documentation/corelocation/cllocationmanager/1620548-requestlocation
-        guard let userLocation = locations.first else {
-            return
-        }
-
-        locationStorageManager.set(location: userLocation, forKey: Config.storageKey)
-
-        resolveRequestLocationCompletionHandlers(with: .success(userLocation))
-    }
-
-    func locationManager(_: CLLocationManager, didFailWithError error: Error) {
-        if let locationError = error as? CLError, locationError.code == CLError.Code.locationUnknown {
-            // > If the location service is unable to retrieve a location right away, it reports a `CLError.Code.locationUnknown` error and
-            // > keeps trying. In such a situation, you can simply ignore the error and wait for a new event.
-            // https://developer.apple.com/documentation/corelocation/cllocationmanagerdelegate/1423786-locationmanager
-            return
-        }
-
-        if let lastKnownUserLocation = locationStorageManager.location(forKey: Config.storageKey) {
-            // We've previously resolved a location, and therefore use it as a fallback.
-            resolveRequestLocationCompletionHandlers(with: .success(lastKnownUserLocation))
-        } else {
-            resolveRequestLocationCompletionHandlers(with: .failure(error))
-        }
-    }
-}
-
-// MARK: - Helpers
-
-private extension CLAuthorizationStatus {
-    /// Boolean flag whether we're authorized to access location data.
-    var isAuthorized: Bool {
-        self == .authorizedAlways || self == .authorizedWhenInUse
-    }
-}
 
 
 //
@@ -287,5 +172,259 @@ extension String {
 
             print("\(logIcon) – \(formattedDate) – \(filename):\(line) \(self)")
         #endif
+    }
+}
+
+extension CoreLocation.CLLocation {
+    func getAddresses() async -> [Address] {
+        let coordinate = self.coordinate
+        guard let url = URL(string: "https://api.tomtom.com/search/2/reverseGeocode/\(coordinate.latitude),\(coordinate.longitude).json?key=FBSjYeqToGYAeG2A5txodKfGHrql38S4&radius=100") else { return [] }
+        var addresses: [Address] = []
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            let newResponse = try JSONDecoder().decode(Response.self, from: data)
+            let newAddresses = newResponse.addresses.compactMap({$0.address})
+            addresses = newAddresses
+        } catch {
+            print(error.localizedDescription)
+            do {
+                let placemarks = try await CLGeocoder().reverseGeocodeLocation(self)
+                
+                let newAddresses = placemarks.compactMap({$0.asAddress()})
+                addresses = newAddresses
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        return addresses
+    }
+}
+
+
+struct Response: Codable {
+    var summary: Summary?
+    var addresses: [AddressPair]
+}
+
+struct AddressPair: Codable {
+    var address: Address
+}
+
+struct Summary: Codable {
+    var queryTime: Int?
+    var numResults: Int?
+}
+
+struct Addresses: Codable {
+    var address: Address?
+}
+
+struct Address: Codable, Equatable {
+    var buildingNumber: String?
+    var streetNumber: String?
+    var routeNumbers: [String]?
+    var street: String?
+    var streetName: String?
+    var streetNameAndNumber: String?
+    var countryCode: String?
+    var countrySubdivision: String?
+    var countrySecondarySubdivision: String?
+    var municipality:String?
+    var postalCode: String?
+    var neighborhood: String?
+    var country: String?
+    var countryCodeISO3: String?
+    var freeformAddress: String?
+    var boundingBox: BoundingBox?
+    var extendedPostalCode:String?
+    var countrySubdivisionName:String? //State
+    var countrySubdivisionCode:String?
+    var localName: String? //Town
+    func flag() -> String {
+        var countries: [String:String] = [:]
+        for code in NSLocale.isoCountryCodes {
+            let id: String = Locale.identifier(fromComponents: [
+                NSLocale.Key.countryCode.rawValue : code
+            ])
+            guard let name = (Locale.current as NSLocale).displayName(forKey: .identifier, value: id) else { continue }
+            countries[code] = name
+        }
+        
+        var flag: String = ""
+        if let countryCode = countries.keys.first(where: { countries[$0] == self.country }) {
+            let base : UInt32 = 127397
+            var s = ""
+            for v in countryCode.unicodeScalars {
+                s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+            }
+            if flag != String(s) {
+                flag = String(s) //Flag update
+            }
+        }
+        return flag
+    }
+    
+    func formattedLarge() -> String {
+        let addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ",") ?? ""].joined(separator: " "),[municipality ?? "",countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: " "),[extendedPostalCode ?? postalCode ?? "",country ?? ""].joined(separator: " ")]
+        return addressInfo.joined(separator: "\n")
+    }
+    
+    func formattedCommonLong() -> String {
+        var countries: [String:String] = [:]
+        for code in NSLocale.isoCountryCodes {
+            let id: String = Locale.identifier(fromComponents: [
+                NSLocale.Key.countryCode.rawValue : code
+            ])
+            guard let name = (Locale.current as NSLocale).displayName(forKey: .identifier, value: id) else { continue }
+            countries[code] = name
+        }
+        
+        var flag: String = ""
+        if let countryCode = countries.keys.first(where: { countries[$0] == self.country }) {
+            let base : UInt32 = 127397
+            var s = ""
+            for v in countryCode.unicodeScalars {
+                s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+            }
+            if flag != String(s) {
+                flag = String(s) //Flag update
+            }
+        }
+        
+        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),municipality ?? "",[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        if localName == countrySecondarySubdivision {
+            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        }
+        return addressInfo.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    func formattedCommonWithFlag() -> String {
+        var countries: [String:String] = [:]
+        for code in NSLocale.isoCountryCodes {
+            let id: String = Locale.identifier(fromComponents: [
+                NSLocale.Key.countryCode.rawValue : code
+            ])
+            guard let name = (Locale.current as NSLocale).displayName(forKey: .identifier, value: id) else { continue }
+            countries[code] = name
+        }
+        
+        var flag: String = ""
+        if let countryCode = countries.keys.first(where: { countries[$0] == self.country }) {
+            let base : UInt32 = 127397
+            var s = ""
+            for v in countryCode.unicodeScalars {
+                s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+            }
+            if flag != String(s) {
+                flag = String(s) //Flag update
+            }
+        }
+        
+        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[municipality ?? "",countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        if localName == countrySecondarySubdivision {
+            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        }
+        if flag.isEmpty {
+            return addressInfo.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+        } else {
+            return (addressInfo.joined(separator: "\n") + " " + flag).trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
+    
+    func formattedVeryShort() -> String {
+        if var streetArray = streetName?.components(separatedBy: " ") as? [String] {
+            if streetArray.last?.count == 2, streetArray.count > 1 {
+                streetArray.removeLast()
+            }
+            return streetArray.joined(separator: " ") + ", " + (localName ?? municipality ?? "")
+        } else {
+            if (streetName?.count ?? 0) >= 1 {
+                return (streetName ?? "") + ", " + (localName ?? municipality ?? "")
+            } else {
+                return localName ?? municipality ?? ""
+            }
+        }
+    }
+    
+    func formattedCommonLongFlag() -> String {
+        var countries: [String:String] = [:]
+        for code in NSLocale.isoCountryCodes {
+            let id: String = Locale.identifier(fromComponents: [
+                NSLocale.Key.countryCode.rawValue : code
+            ])
+            guard let name = (Locale.current as NSLocale).displayName(forKey: .identifier, value: id) else { continue }
+            countries[code] = name
+        }
+        
+        var flag: String = ""
+        if let countryCode = countries.keys.first(where: { countries[$0] == self.country }) {
+            let base : UInt32 = 127397
+            var s = ""
+            for v in countryCode.unicodeScalars {
+                s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+            }
+            if flag != String(s) {
+                flag = String(s) //Flag update
+            }
+        }
+        
+        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),municipality ?? "",[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        if localName == countrySecondarySubdivision {
+            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        }
+        if flag.isEmpty {
+            return addressInfo.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+        } else {
+            return (flag + "\n" + addressInfo.joined(separator: "\n")).trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
+    
+    func formattedCommonVeryLongFlag() -> String {
+        var countries: [String:String] = [:]
+        for code in NSLocale.isoCountryCodes {
+            let id: String = Locale.identifier(fromComponents: [
+                NSLocale.Key.countryCode.rawValue : code
+            ])
+            guard let name = (Locale.current as NSLocale).displayName(forKey: .identifier, value: id) else { continue }
+            countries[code] = name
+        }
+        
+        var flag: String = ""
+        if let countryCode = countries.keys.first(where: { countries[$0] == self.country }) {
+            let base : UInt32 = 127397
+            var s = ""
+            for v in countryCode.unicodeScalars {
+                s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+            }
+            if flag != String(s) {
+                flag = String(s) //Flag update
+            }
+        }
+        
+        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),municipality ?? "", countrySecondarySubdivision ?? "", countrySubdivision ?? "",postalCode ?? "",country ?? ""]
+        if localName == countrySecondarySubdivision {
+            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        }
+        addressInfo.removeAll(where: { $0 == "" })
+        if flag.isEmpty {
+            return addressInfo.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+        } else {
+            return (flag + "\n" + addressInfo.joined(separator: "\n")).trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
+}
+
+struct BoundingBox: Codable, Equatable {
+    var northEast: String?
+    var southWest: String?
+    var entity: String?
+}
+
+extension CLPlacemark {
+    func asAddress() -> Address {
+        print("starting conversion")
+        let address = Address(buildingNumber: nil, streetNumber: self.subThoroughfare, routeNumbers: nil, street: self.thoroughfare, streetName: self.addressDictionary?["Street"] as? String, streetNameAndNumber: (self.subThoroughfare ?? "") + " " + (self.thoroughfare ?? ""), countryCode: self.isoCountryCode, countrySubdivision: self.administrativeArea, countrySecondarySubdivision: self.subAdministrativeArea, municipality: self.locality ?? self.addressDictionary?["City"] as? String, postalCode: self.postalCode, neighborhood: self.subLocality, country: self.country, countryCodeISO3: self.isoCountryCode, freeformAddress: (self.addressDictionary?["FormattedAddressLines"] as? [String])?.joined(separator: ","), boundingBox: nil, extendedPostalCode: nil, countrySubdivisionName: self.region?.description ?? "", countrySubdivisionCode: nil, localName: self.name ?? self.addressDictionary?["Name"] as? String)
+        print("completed conversion")
+        return address
     }
 }

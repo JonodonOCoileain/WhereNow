@@ -12,7 +12,6 @@ struct WhereNow_Watch_AppApp: App {
     var body: some Scene {
         WindowGroup {
             WhereNowView()
-                .environmentObject(LocationDataModel())
         }
     }
 }

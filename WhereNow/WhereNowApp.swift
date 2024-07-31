@@ -12,7 +12,6 @@ struct WhereNowApp: App {
     var body: some Scene {
         WindowGroup {
             WhereNowView()
-                .environmentObject(LocationDataModel())
                 .preferredColorScheme(.dark)
         }
     }
