@@ -80,9 +80,18 @@ struct Provider: AppIntentTimelineProvider {
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<LocationInformationEntry> {
         if let location = locationManager.immediateLocation() {
-        let addresses = await location.getAddresses()
-            let entries = addresses.compactMap({ LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: [$0]))) })
-            return Timeline(entries: entries, policy: .atEnd)
+            let snapshots = MapSnapshotManager()
+            let snapshotResult = await snapshots.snapshot(of: location.coordinate)
+            let addresses = await location.getAddresses()
+            var locationInformationEntry: LocationInformationEntry
+            switch snapshotResult {
+            case .success(let image):
+                locationInformationEntry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: image, addresses: addresses)))
+            case .failure(_):
+                locationInformationEntry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses)))
+            }
+            
+            return Timeline(entries: [locationInformationEntry], policy: .after(.now + 60*19.5))
         } else {
             return Timeline(entries: [], policy: .after(.now + 60*10))
         }
@@ -116,7 +125,7 @@ struct WhereNowTextWidget: Widget {
     }
 }
 
-struct WhereNowMapWidgetView : View {
+struct WhereNowMapWidgetViewX : View {
     // MARK: - Config
 
     private enum Config {
@@ -160,10 +169,90 @@ struct WhereNowMapWidgetView : View {
                 .frame(width: Config.userLocationDotSize,
                        height: Config.userLocationDotSize)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .top) {
+            Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
+                .multilineTextAlignment(.center)
+                .lineLimit(0)
+                .background(.white)
+        }
     }
 }
 
+struct WhereNowMapWidgetView : View {
+    
+    @Environment(\.widgetFamily) var widgetFamily
+    // MARK: - Config
+
+    private enum Config {
+        /// The size of the blue dot reflecting the user location.
+        static let userLocationDotSize: CGFloat = 20
+
+        /// If a user-location is older then the given time interval we assume it's outdated and therefore
+        /// apply another `foregroundColor` to the dot, reflecting the user-location.
+        static let validUserLocationTimeInterval: TimeInterval = 5 * 60
+    }
+
+    // MARK: - Public properties
+
+    let info: LocationInformation
+
+    // MARK: - Private properties
+
+    var circleFillColor: Color {
+        info.userLocation.timestamp > Date(timeIntervalSinceNow: -Config.validUserLocationTimeInterval)
+            ? .blue
+            : .gray
+    }
+
+    // MARK: - Render
+
+    var body: some View {
+        HStack(spacing: 0) {
+            ZStack {
+                info.image?
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
+                
+                // The map is centered on the user location, therefore we can simply draw the blue dot in the
+                // center of our view to simulate the user coordinate.
+                Circle()
+                    .foregroundColor(circleFillColor)
+                    .overlay(
+                        Circle()
+                            .stroke(Color.white, lineWidth: 3)
+                    )
+                    .frame(width: Config.userLocationDotSize,
+                           height: Config.userLocationDotSize)
+                
+                Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
+                        .multilineTextAlignment(.center)
+                        .lineLimit(8)
+                        .font(.caption)
+                        .foregroundColor(Color(red: 0.4, green: 0, blue: 0.7))
+                        .frame(minWidth: 80, maxWidth: 85, maxHeight: .infinity)
+                        .bold()
+                        .opacity(widgetFamily != .systemMedium ? 1 : 0)
+            }
+            .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
+            
+            if widgetFamily == .systemMedium {
+                Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
+                    .multilineTextAlignment(.center)
+                    .lineLimit(100)
+                    .font(.caption)
+                    .frame(minWidth: 80, maxWidth: 185, maxHeight: .infinity)
+            }
+        }
+        .ignoresSafeArea()
+        .padding(-16)
+    }
+}
+
+
 struct WhereNowMapWidget: Widget {
+    @Environment(\.widgetFamily) var widgetFamily
     let kind: String = "WhereNowMapWidget"
 
     var body: some WidgetConfiguration {
@@ -171,7 +260,7 @@ struct WhereNowMapWidget: Widget {
             switch entry.state {
                 case .success(let locationInfo):
                     WhereNowMapWidgetView(info: locationInfo)
-                    .containerBackground(.fill.tertiary, for: .widget)
+                        .containerBackground(LinearGradient(colors: [Color.pink, Color.purple], startPoint: .bottomLeading, endPoint: .topTrailing), for: .widget)
                 case .placeholder:
                     WhereNowMapWidgetView(info: LocationInformation(userLocation: CLLocation(latitude: 37.333424329435715, longitude: -122.00546584232792), image: Image("MapApplePark"), addresses: [Address(localName: "Apple")]))
                     .containerBackground(.fill.tertiary, for: .widget)
