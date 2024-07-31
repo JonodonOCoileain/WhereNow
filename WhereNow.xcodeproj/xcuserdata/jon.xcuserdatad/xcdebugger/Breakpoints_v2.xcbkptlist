@@ -14,8 +14,8 @@
             filePath = "WhereNow/Objects.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "409"
-            endingLineNumber = "409"
+            startingLineNumber = "424"
+            endingLineNumber = "424"
             landmarkName = "formattedCommonVeryLongFlag()"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "WhereNow/Objects.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "375"
-            endingLineNumber = "375"
+            startingLineNumber = "390"
+            endingLineNumber = "390"
             landmarkName = "formattedCommonLongFlag()"
             landmarkType = "7">
          </BreakpointContent>

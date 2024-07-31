@@ -331,15 +331,30 @@ struct Address: Codable, Equatable {
         }
     }
     
+    func checkNumeric(S: String) -> Bool {
+       return Double(S) != nil
+    }
+    
     func formattedVeryShort() -> String {
         if var streetArray = streetName?.components(separatedBy: " ") as? [String] {
             if streetArray.last?.count == 2, streetArray.count > 1 {
                 streetArray.removeLast()
             }
-            return streetArray.joined(separator: " ") + ", " + (localName ?? municipality ?? "")
+            if streetArray.last?.count == 2, let number = streetArray.first, checkNumeric(S: number) {
+                streetArray.removeFirst()
+            }
+            if let streetName = streetName, localName?.contains(streetName) != true {
+                return streetArray.joined(separator: " ") + ", " + (localName ?? municipality ?? "")
+            } else {
+                return streetArray.joined(separator: " ") + ", " + (municipality ?? "")
+            }
         } else {
             if (streetName?.count ?? 0) >= 1 {
-                return (streetName ?? "") + ", " + (localName ?? municipality ?? "")
+                if let streetName = streetName, localName?.contains(streetName) != true {
+                    return (streetName ?? "") + ", " + (localName ?? municipality ?? "")
+                } else {
+                    return (streetName ?? "") + ", " + (municipality ?? "")
+                }
             } else {
                 return localName ?? municipality ?? ""
             }
