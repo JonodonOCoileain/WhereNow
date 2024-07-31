@@ -60,6 +60,41 @@ struct LocationInformationEntry: TimelineEntry {
             return error.localizedDescription
         }
     }
+    
+    var flagAndFreeformDescription: String {
+        switch self.state {
+        case .placeholder:
+            return "Planet Earth, Milky Way Galaxy"
+        case .success(let locationInformation):
+            let freeformAddressArray: [String] = locationInformation.addresses?.compactMap({$0.flag() + " " + ($0.freeformAddress ?? "")}) ?? ["Planet Earth, Milky Way Galaxy"]
+            return freeformAddressArray.joined(separator: "\n")
+        case .failure(let error):
+            return error.localizedDescription
+        }
+    }
+    
+    var flagDescription: String {
+        switch self.state {
+        case .placeholder:
+            return "🌍"
+        case .success(let locationInformation):
+            let freeformAddressArray: [String] = locationInformation.addresses?.compactMap({$0.flag()}) ?? ["🌍"]
+            return freeformAddressArray.joined(separator: "\n")
+        case .failure(let error):
+            return error.localizedDescription
+        }
+    }
+    var townStateDescription: String {
+        switch self.state {
+        case .placeholder:
+            return "Planet\nEarth"
+        case .success(let locationInformation):
+            let freeformAddressArray: [String] = locationInformation.addresses?.compactMap({ ($0.municipality ?? "") + "\n" + ($0.countrySubdivision ?? "")}) ?? ["Planet\nEarth"]
+            return freeformAddressArray.joined(separator: "\n")
+        case .failure(let error):
+            return error.localizedDescription
+        }
+    }
 }
 
 public struct ErrorView: View {
@@ -337,21 +372,22 @@ struct Address: Codable, Equatable {
     
     func formattedVeryShort() -> String {
         if var streetArray = streetName?.components(separatedBy: " ") as? [String] {
-            if streetArray.last?.count == 2, streetArray.count > 1 {
+            if (streetArray.last?.count ?? 5) <= 4, streetArray.count > 1 {
                 streetArray.removeLast()
             }
-            if streetArray.last?.count == 2, let number = streetArray.first, checkNumeric(S: number) {
+            if let number = streetArray.first, checkNumeric(S: number) {
                 streetArray.removeFirst()
             }
-            if let streetName = streetName, localName?.contains(streetName) != true {
+            let street = streetArray.joined(separator: " ")
+            if localName?.contains(street) != true {
                 return streetArray.joined(separator: " ") + ", " + (localName ?? municipality ?? "")
             } else {
-                return streetArray.joined(separator: " ") + ", " + (municipality ?? "")
+                return street + ", " + (municipality ?? "")
             }
         } else {
             if (streetName?.count ?? 0) >= 1 {
                 if let streetName = streetName, localName?.contains(streetName) != true {
-                    return (streetName ?? "") + ", " + (localName ?? municipality ?? "")
+                    return streetName + ", " + (localName ?? municipality ?? "")
                 } else {
                     return (streetName ?? "") + ", " + (municipality ?? "")
                 }

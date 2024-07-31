@@ -104,10 +104,42 @@ struct SimpleEntry: TimelineEntry {
 }
 
 struct WhereNowWidgetTextView : View {
+    @Environment(\.widgetFamily) var widgetFamily
     var entry: Provider.Entry
 
     var body: some View {
-        Text(entry.shortDescription)
+        switch widgetFamily {
+        case .accessoryInline:
+            Text(entry.shortDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        case .accessoryRectangular:
+            Text(entry.flagAndFreeformDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        case .accessoryCircular:
+            VStack {
+                Text(entry.townStateDescription)
+                    .font(.caption)
+                    .multilineTextAlignment(.center)
+                Text(entry.flagDescription)
+                    .font(.caption)
+            }
+                .containerBackground(.fill.tertiary, for: .widget)
+        case .systemSmall:
+            Text(entry.flagAndFreeformDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        case .systemMedium:
+            Text(entry.flagAndFreeformDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        case .systemLarge:
+            Text(entry.flagAndFreeformDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        case .systemExtraLarge:
+            Text(entry.flagAndFreeformDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        @unknown default:
+            Text(entry.flagAndFreeformDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
     }
 }
 
@@ -231,7 +263,7 @@ struct WhereNowMapWidgetView : View {
                         .lineLimit(8)
                         .font(.caption)
                         .foregroundColor(Color(red: 0.4, green: 0, blue: 0.7))
-                        .frame(minWidth: 80, maxWidth: 85, maxHeight: .infinity)
+                        .frame(minWidth: 80, maxWidth: .infinity, maxHeight: .infinity)
                         .bold()
                         .opacity(widgetFamily != .systemMedium ? 1 : 0)
             }
@@ -307,8 +339,14 @@ extension ConfigurationAppIntent {
                                                     state: .success(info))
 
             return Group {
-                WhereNowMapWidgetView(info: info)
-                    .previewContext(WidgetPreviewContext(family: .systemSmall))
+                WhereNowWidgetTextView(entry: informationEntry)
+                    .previewContext(WidgetPreviewContext(family: .accessoryRectangular))
+                
+                WhereNowWidgetTextView(entry: informationEntry)
+                    .previewContext(WidgetPreviewContext(family: .accessoryInline))
+                
+                WhereNowWidgetTextView(entry: informationEntry)
+                    .previewContext(WidgetPreviewContext(family: .accessoryCircular))
             }
         }
     }
