@@ -11,6 +11,7 @@
 		FC5101312C5AC0DB009C5CB4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; };
 		FC5101322C5AC0DB009C5CB4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
 		FC51013D2C5AC0DD009C5CB4 /* WhereNowWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC5101302C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FC8F8AC72C5B1EBC00667073 /* NationalWeatherService in Frameworks */ = {isa = PBXBuildFile; productRef = FC8F8AC62C5B1EBC00667073 /* NationalWeatherService */; };
 		FCE332C12C5A9C240093D3EF /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; platformFilters = (ios, macos, ); };
 		FCE332C22C5A9C240093D3EF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
 		FCE332D02C5A9C260093D3EF /* WhereNowWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -114,6 +115,7 @@
 		FC2492C92C494D8800101DF3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FC2492CB2C494D8800101DF3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		FC5101302C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhereNowWatchWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC8F8AC82C5B1FAB00667073 /* NationalWeatherService-Swift */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "NationalWeatherService-Swift"; path = "/Users/jon/Library/Developer/Xcode/DerivedData/WhereNow-ajpyiqyoiywvjkgkhedqoxmuhnse/SourcePackages/checkouts/NationalWeatherService-Swift"; sourceTree = "<absolute>"; };
 		FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhereNowWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -126,6 +128,7 @@
 				Objects.swift,
 				"String+Extensions.swift",
 				WhereNowView.swift,
+				WidgetKinds.swift,
 			);
 			target = FC2491742C48A63800101DF3 /* WhereNow Watch App */;
 		};
@@ -149,6 +152,7 @@
 				LocationManager.swift,
 				Objects.swift,
 				"String+Extensions.swift",
+				WidgetKinds.swift,
 			);
 			target = FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */;
 		};
@@ -166,6 +170,7 @@
 				MapSnapshotManager.swift,
 				Objects.swift,
 				"String+Extensions.swift",
+				WidgetKinds.swift,
 			);
 			target = FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */;
 		};
@@ -187,6 +192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC8F8AC72C5B1EBC00667073 /* NationalWeatherService in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +287,7 @@
 			isa = PBXGroup;
 			children = (
 				FC2492C92C494D8800101DF3 /* WidgetKit.framework */,
+				FC8F8AC82C5B1FAB00667073 /* NationalWeatherService-Swift */,
 				FC2492CB2C494D8800101DF3 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
@@ -310,6 +317,7 @@
 			);
 			name = WhereNow;
 			packageProductDependencies = (
+				FC8F8AC62C5B1EBC00667073 /* NationalWeatherService */,
 			);
 			productName = WhereNow;
 			productReference = FC24914F2C48A63600101DF3 /* WhereNow.app */;
@@ -524,6 +532,9 @@
 				Base,
 			);
 			mainGroup = FC2491462C48A63600101DF3;
+			packageReferences = (
+				FC8F8AC52C5B1EBC00667073 /* XCRemoteSwiftPackageReference "NationalWeatherService-Swift" */,
+			);
 			productRefGroup = FC2491502C48A63600101DF3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1141,7 +1152,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
@@ -1171,7 +1182,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
@@ -1369,6 +1380,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FC8F8AC52C5B1EBC00667073 /* XCRemoteSwiftPackageReference "NationalWeatherService-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JonodonOCoileain/NationalWeatherService-Swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FC8F8AC62C5B1EBC00667073 /* NationalWeatherService */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC8F8AC52C5B1EBC00667073 /* XCRemoteSwiftPackageReference "NationalWeatherService-Swift" */;
+			productName = NationalWeatherService;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FC2491472C48A63600101DF3 /* Project object */;
 }

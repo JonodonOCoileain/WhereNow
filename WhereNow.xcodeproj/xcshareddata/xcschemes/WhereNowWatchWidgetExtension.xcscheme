@@ -16,23 +16,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FC2493162C4AF43500101DF3"
-               BuildableName = "WhereNowWidgetExtension - Broken.appex"
-               BlueprintName = "WhereNowWidgetExtension - Broken"
-               ReferencedContainer = "container:WhereNow.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FC24914E2C48A63600101DF3"
-               BuildableName = "WhereNow.app"
-               BlueprintName = "WhereNow"
+               BlueprintIdentifier = "FC51012F2C5AC0DB009C5CB4"
+               BuildableName = "WhereNowWatchWidgetExtension.appex"
+               BlueprintName = "WhereNowWatchWidgetExtension"
                ReferencedContainer = "container:WhereNow.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -50,6 +36,20 @@
                ReferencedContainer = "container:WhereNow.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "FC24914E2C48A63600101DF3"
+               BuildableName = "WhereNow.app"
+               BlueprintName = "WhereNow"
+               ReferencedContainer = "container:WhereNow.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -58,30 +58,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FC2491682C48A63800101DF3"
-               BuildableName = "WhereNowUITests.xctest"
-               BlueprintName = "WhereNowUITests"
-               ReferencedContainer = "container:WhereNow.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FC24915E2C48A63800101DF3"
-               BuildableName = "WhereNowTests.xctest"
-               BlueprintName = "WhereNowTests"
-               ReferencedContainer = "container:WhereNow.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -95,23 +71,22 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
-      <RemoteRunnable
-         runnableDebuggingMode = "2"
-         BundleIdentifier = "com.apple.springboard">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FC2493162C4AF43500101DF3"
-            BuildableName = "WhereNowWidgetExtension - Broken.appex"
-            BlueprintName = "WhereNowWidgetExtension - Broken"
+            BlueprintIdentifier = "FC51012F2C5AC0DB009C5CB4"
+            BuildableName = "WhereNowWatchWidgetExtension.appex"
+            BlueprintName = "WhereNowWatchWidgetExtension"
             ReferencedContainer = "container:WhereNow.xcodeproj">
          </BuildableReference>
-      </RemoteRunnable>
+      </BuildableProductRunnable>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FC24914E2C48A63600101DF3"
-            BuildableName = "WhereNow.app"
-            BlueprintName = "WhereNow"
+            BlueprintIdentifier = "FC2491742C48A63800101DF3"
+            BuildableName = "WhereNow Watch App.app"
+            BlueprintName = "WhereNow Watch App"
             ReferencedContainer = "container:WhereNow.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -142,16 +117,14 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      debugDocumentVersioning = "YES"
-      askForAppToLaunch = "Yes"
-      launchAutomaticallySubstyle = "2">
+      debugDocumentVersioning = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FC24914E2C48A63600101DF3"
-            BuildableName = "WhereNow.app"
-            BlueprintName = "WhereNow"
+            BlueprintIdentifier = "FC51012F2C5AC0DB009C5CB4"
+            BuildableName = "WhereNowWatchWidgetExtension.appex"
+            BlueprintName = "WhereNowWatchWidgetExtension"
             ReferencedContainer = "container:WhereNow.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

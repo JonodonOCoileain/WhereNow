@@ -216,7 +216,7 @@ extension CoreLocation.CLLocation {
         guard let url = URL(string: "https://api.tomtom.com/search/2/reverseGeocode/\(coordinate.latitude),\(coordinate.longitude).json?key=FBSjYeqToGYAeG2A5txodKfGHrql38S4&radius=100") else { return [] }
         var addresses: [Address] = []
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
+            let (data, _) = try await URLSession.shared.data(from: url)
             let newResponse = try JSONDecoder().decode(Response.self, from: data)
             let newAddresses = newResponse.addresses.compactMap({$0.address})
             addresses = newAddresses
@@ -275,89 +275,53 @@ struct Address: Codable, Equatable {
     var countrySubdivisionName:String? //State
     var countrySubdivisionCode:String?
     var localName: String? //Town
+    
     func flag() -> String {
-        var countries: [String:String] = [:]
-        for code in NSLocale.isoCountryCodes {
-            let id: String = Locale.identifier(fromComponents: [
-                NSLocale.Key.countryCode.rawValue : code
-            ])
-            guard let name = (Locale.current as NSLocale).displayName(forKey: .identifier, value: id) else { continue }
-            countries[code] = name
-        }
-        
         var flag: String = ""
-        if let countryCode = countries.keys.first(where: { countries[$0] == self.country }) {
+        if let countryCode = self.countryCode {
             let base : UInt32 = 127397
-            var s = ""
             for v in countryCode.unicodeScalars {
-                s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
-            }
-            if flag != String(s) {
-                flag = String(s) //Flag update
+                flag.unicodeScalars.append(UnicodeScalar(base + v.value)!)
             }
         }
         return flag
     }
     
     func formattedLarge() -> String {
-        let addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ",") ?? ""].joined(separator: " "),[municipality ?? "",countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: " "),[extendedPostalCode ?? postalCode ?? "",country ?? ""].joined(separator: " ")]
+        let addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ",") ?? ""].joined(separator: " "),[municipality ?? "",countrySecondarySubdivision ?? "",countrySubdivisionName ?? ""].joined(separator: " "),[extendedPostalCode ?? postalCode ?? "",country ?? ""].joined(separator: " ")]
         return addressInfo.joined(separator: "\n")
     }
     
     func formattedCommonLong() -> String {
-        var countries: [String:String] = [:]
-        for code in NSLocale.isoCountryCodes {
-            let id: String = Locale.identifier(fromComponents: [
-                NSLocale.Key.countryCode.rawValue : code
-            ])
-            guard let name = (Locale.current as NSLocale).displayName(forKey: .identifier, value: id) else { continue }
-            countries[code] = name
-        }
         
         var flag: String = ""
-        if let countryCode = countries.keys.first(where: { countries[$0] == self.country }) {
+        if let countryCode = self.countryCode {
             let base : UInt32 = 127397
-            var s = ""
             for v in countryCode.unicodeScalars {
-                s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
-            }
-            if flag != String(s) {
-                flag = String(s) //Flag update
+                flag.unicodeScalars.append(UnicodeScalar(base + v.value)!)
             }
         }
         
-        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),municipality ?? "",[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),municipality ?? "",[countrySecondarySubdivision ?? "",countrySubdivisionName ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
         if localName == countrySecondarySubdivision {
-            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivisionName ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
         }
         return addressInfo.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     func formattedCommonWithFlag() -> String {
-        var countries: [String:String] = [:]
-        for code in NSLocale.isoCountryCodes {
-            let id: String = Locale.identifier(fromComponents: [
-                NSLocale.Key.countryCode.rawValue : code
-            ])
-            guard let name = (Locale.current as NSLocale).displayName(forKey: .identifier, value: id) else { continue }
-            countries[code] = name
-        }
         
         var flag: String = ""
-        if let countryCode = countries.keys.first(where: { countries[$0] == self.country }) {
+        if let countryCode = self.countryCode {
             let base : UInt32 = 127397
-            var s = ""
             for v in countryCode.unicodeScalars {
-                s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
-            }
-            if flag != String(s) {
-                flag = String(s) //Flag update
+                flag.unicodeScalars.append(UnicodeScalar(base + v.value)!)
             }
         }
         
-        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[municipality ?? "",countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[municipality ?? "",countrySecondarySubdivision ?? "",countrySubdivisionName ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
         if localName == countrySecondarySubdivision {
-            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivisionName ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
         }
         if flag.isEmpty {
             return addressInfo.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
@@ -378,6 +342,10 @@ struct Address: Codable, Equatable {
             if let number = streetArray.first, checkNumeric(S: number) {
                 streetArray.removeFirst()
             }
+            if ["street", "avenue", "drive", "lane"].contains(streetArray.last?.lowercased()) {
+                streetArray.removeLast()
+            }
+                
             let street = streetArray.joined(separator: " ")
             if localName?.contains(street) != true {
                 return streetArray.joined(separator: " ") + ", " + (localName ?? municipality ?? "")
@@ -392,36 +360,23 @@ struct Address: Codable, Equatable {
                     return (streetName ?? "") + ", " + (municipality ?? "")
                 }
             } else {
-                return localName ?? municipality ?? ""
+                return localName ?? municipality ?? "" + ", " + (countrySubdivisionName ?? "")
             }
         }
     }
     
     func formattedCommonLongFlag() -> String {
-        var countries: [String:String] = [:]
-        for code in NSLocale.isoCountryCodes {
-            let id: String = Locale.identifier(fromComponents: [
-                NSLocale.Key.countryCode.rawValue : code
-            ])
-            guard let name = (Locale.current as NSLocale).displayName(forKey: .identifier, value: id) else { continue }
-            countries[code] = name
-        }
-        
         var flag: String = ""
-        if let countryCode = countries.keys.first(where: { countries[$0] == self.country }) {
+        if let countryCode = self.countryCode {
             let base : UInt32 = 127397
-            var s = ""
             for v in countryCode.unicodeScalars {
-                s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
-            }
-            if flag != String(s) {
-                flag = String(s) //Flag update
+                flag.unicodeScalars.append(UnicodeScalar(base + v.value)!)
             }
         }
         
-        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),municipality ?? "",[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),municipality ?? "",[countrySecondarySubdivision ?? "",countrySubdivisionName ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
         if localName == countrySecondarySubdivision {
-            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivisionName ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
         }
         if flag.isEmpty {
             return addressInfo.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
@@ -431,30 +386,17 @@ struct Address: Codable, Equatable {
     }
     
     func formattedCommonVeryLongFlag() -> String {
-        var countries: [String:String] = [:]
-        for code in NSLocale.isoCountryCodes {
-            let id: String = Locale.identifier(fromComponents: [
-                NSLocale.Key.countryCode.rawValue : code
-            ])
-            guard let name = (Locale.current as NSLocale).displayName(forKey: .identifier, value: id) else { continue }
-            countries[code] = name
-        }
-        
         var flag: String = ""
-        if let countryCode = countries.keys.first(where: { countries[$0] == self.country }) {
+        if let countryCode = countryCode {
             let base : UInt32 = 127397
-            var s = ""
             for v in countryCode.unicodeScalars {
-                s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
-            }
-            if flag != String(s) {
-                flag = String(s) //Flag update
+                flag.unicodeScalars.append(UnicodeScalar(base + v.value)!)
             }
         }
         
-        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),municipality ?? "", countrySecondarySubdivision ?? "", countrySubdivision ?? "",postalCode ?? "",country ?? ""]
+        var addressInfo: [String] = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),municipality ?? "", countrySecondarySubdivision ?? "", countrySubdivisionName ?? "",postalCode ?? "",country ?? ""]
         if localName == countrySecondarySubdivision {
-            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivision ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
+            addressInfo = [[streetNameAndNumber ?? "", routeNumbers?.joined(separator: ", ") ?? ""].joined(separator: " "),[countrySecondarySubdivision ?? "",countrySubdivisionName ?? ""].joined(separator: ", "),postalCode ?? "",country ?? ""]
         }
         addressInfo.removeAll(where: { $0 == "" })
         if flag.isEmpty {
@@ -477,5 +419,34 @@ extension CLPlacemark {
         let address = Address(buildingNumber: nil, streetNumber: self.subThoroughfare, routeNumbers: nil, street: self.thoroughfare, streetName: self.addressDictionary?["Street"] as? String, streetNameAndNumber: (self.subThoroughfare ?? "") + " " + (self.thoroughfare ?? ""), countryCode: self.isoCountryCode, countrySubdivision: self.administrativeArea, countrySecondarySubdivision: self.subAdministrativeArea, municipality: self.locality ?? self.addressDictionary?["City"] as? String, postalCode: self.postalCode, neighborhood: self.subLocality, country: self.country, countryCodeISO3: self.isoCountryCode, freeformAddress: (self.addressDictionary?["FormattedAddressLines"] as? [String])?.joined(separator: ","), boundingBox: nil, extendedPostalCode: nil, countrySubdivisionName: self.region?.description ?? "", countrySubdivisionCode: nil, localName: self.name ?? self.addressDictionary?["Name"] as? String)
         print("completed conversion")
         return address
+    }
+}
+
+struct fading: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .mask(
+                HStack(spacing: 0) {
+
+                    // Left gradient
+                    LinearGradient(gradient:
+                       Gradient(
+                           colors: [Color.black.opacity(0), Color.black]),
+                           startPoint: .leading, endPoint: .trailing
+                       )
+                       .frame(width: 50)
+
+                    // Middle
+                    Rectangle().fill(Color.black)
+
+                    // Right gradient
+                    LinearGradient(gradient:
+                       Gradient(
+                           colors: [Color.black, Color.black.opacity(0)]),
+                           startPoint: .leading, endPoint: .trailing
+                       )
+                       .frame(width: 50)
+                }
+             )
     }
 }

@@ -9,84 +9,199 @@ import SwiftUI
 import WidgetKit
 import CoreLocation
 import UIKit
-import WeatherKit
 
 struct WhereNowView: View {
+#if os(watchOS)
+#else
+    @State private var orientation = UIDeviceOrientation.portrait
+#endif
     static var countTime:Double = 0.1
     @ObservedObject var data: LocationDataModel = LocationDataModel()
-    @State var placemarkInfo: String = ""
-    var weatherInfo: WeatherService = WeatherService()
+    
+    var body: some View {
+        if ([CLAuthorizationStatus.restricted, CLAuthorizationStatus.denied].contains(where: {$0 == data.manager.authorizationStatus})) {
+            Image(systemName: "globe")
+            Text("Location status disabled")
+        } else {
+            Group {
+                #if os(watchOS)
+                    WhereNowPortraitView(data: data)
+                #else
+                if orientation.isPortrait {
+                    WhereNowPortraitView(data: data)
+                } else if orientation.isLandscape {
+                    WhereNowLandscapeView(data: data)
+                }
+                #endif
+            }
+            .onAppear() {
+                data.start()
+            }
+            .onDisappear() {
+                data.stop()
+                WidgetCenter.shared.reloadAllTimelines()
+            }
+            #if os(iOS)
+            .onRotate { newOrientation in
+                if !newOrientation.isFlat {
+                    orientation = newOrientation
+                } else if orientation == .unknown {
+                    orientation = .portrait
+                }
+            }
+            #endif
+        }
+    }
+}
+#if os(iOS)
+struct DeviceRotationViewModifier: ViewModifier {
+    let action: (UIDeviceOrientation) -> Void
+    
+    func body(content: Content) -> some View {
+        content
+            .onAppear()
+            .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+                action(UIDevice.current.orientation)
+            }
+    }
+}
+
+
+extension View {
+    func onRotate(perform action: @escaping (UIDeviceOrientation) -> Void) -> some View {
+        self.modifier(DeviceRotationViewModifier(action: action))
+    }
+}
+#endif
+
+struct WhereNowPortraitView: View {
+    static var countTime:Double = 0.1
+    @ObservedObject var data: LocationDataModel
     
     let timer = Timer.publish(every: WhereNowView.countTime, on: .main, in: .common).autoconnect()
     @State var timeCounter:Double = 0.0
-
+    
     var body: some View {
-            if ([CLAuthorizationStatus.restricted, CLAuthorizationStatus.denied].contains(where: {$0 == data.manager.authorizationStatus})) {
-                Image(systemName: "globe")
-                Text("Location status disabled")
-            } else {
-                Image("LOCATION")
-                    .resizable(resizingMode: .stretch)
-                    .frame(width: 10, height: 10)
-                    .scaledToFit()
-                    .opacity(data.addressInfoIsUpdated ? 0 : 1-timeCounter)
-                
-                Text(self.data.flag)
+        Image("LOCATION")
+            .resizable(resizingMode: .stretch)
+            .frame(width: 10, height: 10)
+            .scaledToFit()
+            .opacity(data.addressInfoIsUpdated ? 0 : 1-timeCounter)
+        
+        ScrollView() {
+            VStack {
+                Text(self.data.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
                     .multilineTextAlignment(.center)
-                    .font(.system(size: 20))
-                    ScrollView() {
-                        VStack {
-                            Text(self.data.addresses.compactMap({$0.formattedCommonLong()}).joined(separator: "\n\n"))
-                                    .multilineTextAlignment(.center)
-                            if let image = self.data.image {
-                                ZStack {
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                        .edgesIgnoringSafeArea(.all)
-                                        .cornerRadius(20)
-                                        .clipped()
-                                    
-                                    // The map is centered on the user location, therefore we can simply draw the blue dot in the
-                                    // center of our view to simulate the user coordinate.
-                                    Circle()
-                                        .foregroundColor(.blue)
-                                        .overlay(
-                                            Circle()
-                                                .stroke(Color.white, lineWidth: 3)
-                                        )
-                                        .frame(width: 15,
-                                               height: 15)
-                                }
-                            }
-                        }
-                    }
-                    .onAppear() {
-                        data.start()
-                        WidgetCenter.shared.reloadTimelines(ofKind: "WhereNowWidget")
-                    }
-                    .onDisappear() {
-                        data.stop()
-                    }
-                    .onReceive(timer) { input in
-                        if timeCounter >= 2.0 {
-                            timeCounter = 0
-                        }
-                        timeCounter = timeCounter + WhereNowView.countTime * 2
-                    }
+                if let image = self.data.image {
+                    MapSnapshotView(image: image)
+                }
 #if os(watchOS)
-                    Spacer()
+#else
+                LazyVStack(alignment:.leading) {
+                    ForEach(data.timesAndForecasts, id: \.self) { element in
+                        LazyVStack(alignment:.leading) {
+                            Text(element.time)
+                                    .font(.caption2)
+                                    .padding([.leading, .trailing])
+                                    .multilineTextAlignment(.center)
+                            Text(element.forecast)
+                                .font(.caption2)
+                                .padding([.leading, .trailing, .bottom])
+                                .multilineTextAlignment(.leading)
+                        }
+                    }
+                }
 #endif
             }
-        
+        }
+        .onReceive(timer) { input in
+            if timeCounter >= 2.0 {
+                timeCounter = 0
+            }
+            timeCounter = timeCounter + WhereNowView.countTime * 2
+        }
+#if os(watchOS)
+        Spacer()
+#else
+#endif
+    }
+}
+#if os(watchOS)
+#else
+struct WhereNowLandscapeView: View {
+    static var countTime:Double = 0.1
+    @ObservedObject var data: LocationDataModel
+    
+    var body: some View {
+        ScrollView(.horizontal) {
+            //LazyHStack {
+                Text(self.data.addressesVeryLongFlag)
+                    .multilineTextAlignment(.center)
+                if let image = self.data.image {
+                    MapSnapshotView(image: image)
+                }
+                WhereNowWeatherHStackView(data: data)
+            //}
+        }
+    }
+}
+
+struct WhereNowWeatherHStackView: View {
+    @ObservedObject var data: LocationDataModel
+    
+    var body: some View {
+        Group {
+            LazyHStack(alignment: .center) {
+                ForEach(data.timesAndForecasts, id: \.self) { element in
+                    VStack {
+                        
+                        Text(element.time)
+                                .font(.caption2)
+                                .padding([.top, .trailing])
+                                .multilineTextAlignment(.center)
+                        Text(element.forecast)
+                            .font(.caption2)
+                            .padding([.trailing, .bottom])
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: 100, maxHeight: .infinity)
+                    }
+                }
+            }
+        }
+    }
+}
+#endif
+
+struct MapSnapshotView: View {
+    var image: Image
+    var body: some View {
+        ZStack {
+            image
+                .resizable()
+                .scaledToFill()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .edgesIgnoringSafeArea(.all)
+                .cornerRadius(20)
+                .clipped()
+                .padding()
+            
+            // The map is centered on the user location, therefore we can simply draw the blue dot in the
+            // center of our view to simulate the user coordinate.
+            Circle()
+                .foregroundColor(.blue)
+                .overlay(
+                    Circle()
+                        .stroke(Color.white, lineWidth: 3)
+                )
+                .frame(width: 15,
+                       height: 15)
+        }.padding()
     }
 }
 
 #if DEBUG
 struct WhereNowView_Previews: PreviewProvider {
     static var previews: some View {
-        
         return Group {
             WhereNowView()
         }

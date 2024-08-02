@@ -1,0 +1,33 @@
+{
+  "originHash" : "5ba24a127b34fb477b75de6e891e60f8dadc878d1ca8502de2faef4959616f87",
+  "pins" : [
+    {
+      "identity" : "geos",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/GEOSwift/geos.git",
+      "state" : {
+        "revision" : "f510e634c822116fca615064d889300dba40d761",
+        "version" : "8.1.0"
+      }
+    },
+    {
+      "identity" : "geoswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/GEOSwift/GEOSwift.git",
+      "state" : {
+        "revision" : "1fee0146ee06ca2d1e83070320b95526f3690f9d",
+        "version" : "10.2.0"
+      }
+    },
+    {
+      "identity" : "nationalweatherservice-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/JonodonOCoileain/NationalWeatherService-Swift",
+      "state" : {
+        "branch" : "master",
+        "revision" : "5bd22fea25f08a42b5385c80c9874eae46e648bd"
+      }
+    }
+  ],
+  "version" : 3
+}

@@ -100,7 +100,7 @@ struct WhereNowTextWidgetView : View {
 }
 @main
 struct WhereNowTextWidget: Widget {
-    let kind: String = "WhereNowTextWidget"
+    let kind: String = WidgetKinds.WhereNowTextWidget.description
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
