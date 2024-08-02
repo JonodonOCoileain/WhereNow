@@ -212,13 +212,14 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                 let times = dateIntervals.compactMap({ $0.start.description() + " - " + ($0.start.addingTimeInterval($0.duration).description()) })
                 var timesAndForecasts: [ForecastInfo] = []
                 for (index, element) in times.enumerated() {
-                    var detailsString = allDetails[index]
+                    let detailsString = allDetails[index]
                     var details = detailsString.split(separator:" ")
                     for (index, detailElement) in details.enumerated() {
                         if index < (details.count - 1), details[index+1].contains("km") {
                             let mph = Int(round((Float(detailElement) ?? 0) * 0.621371))
                             details[index] = "\(mph)"
-                            details[index+1] = "miles per hour"
+                            let addPeriod = details[index+1].contains(".")
+                            details[index+1] = "miles per hour" + (addPeriod ? "." : "")
                             if details[index-1] == "to" {
                                 let otherMph = Int(round((Float(details[index-2]) ?? 0) * 0.621371))
                                 details[index-2] = "\(otherMph)"
