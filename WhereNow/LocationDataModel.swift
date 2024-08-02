@@ -212,7 +212,8 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                 let times = dateIntervals.compactMap({ $0.start.description() + " - " + ($0.start.addingTimeInterval($0.duration).description()) })
                 var timesAndForecasts: [ForecastInfo] = []
                 for (index, element) in times.enumerated() {
-                    var details = allDetails[index].split(separator:" ")
+                    var detailsString = allDetails[index]
+                    var details = detailsString.split(separator:" ")
                     for (index, detailElement) in details.enumerated() {
                         if index < (details.count - 1), details[index+1].contains("km") {
                             let mph = Int(round((Float(detailElement) ?? 0) * 0.621371))
@@ -240,13 +241,16 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 let hadColon = detailElement.contains(":")
                                 details[index] = "\(temp)°F" + (hadComma ? "," : "") + (hadPeriod ? "." : "") + (hadSemicolon ? ";" : "") + (hadColon ? ":" : "")
                             }
-                        } else if [3,4].contains(detailElement.count) && detailElement.last == "m", ["p"].contains(Array(detailElement)[Array(detailElement).count - 3]), detailElement.components(separatedBy: CharacterSet.decimalDigits.inverted).first?.count ?? 0 > 0 {
-                            var newElementArray: [String] = []
-                            for element in Array(detailElement) {
-                                newElementArray.append(element.uppercased())
-                            }
-                            let newElement = newElementArray.joined(separator:"")
-                            details[index] = "\(newElement)"
+                        } else if detailElement.contains("pm"), detailElement.components(separatedBy: CharacterSet.decimalDigits.inverted).count > 1 {
+                            let regex = try! NSRegularExpression(pattern: "([0-9])pm")
+                            let range = NSMakeRange(0, detailElement.count)
+                            let modString = regex.stringByReplacingMatches(in: String(detailElement), options: [], range: range, withTemplate: "$1PM")
+                            details[index] = "\(modString)"
+                        } else if detailElement.contains("am"), detailElement.components(separatedBy: CharacterSet.decimalDigits.inverted).count > 1 {
+                            let regex = try! NSRegularExpression(pattern: "([0-9])am")
+                            let range = NSMakeRange(0, detailElement.count)
+                            let modString = regex.stringByReplacingMatches(in: String(detailElement), options: [], range: range, withTemplate: "$1AM")
+                            details[index] = "\(modString)"
                         }
                     }
                     timesAndForecasts.append(ForecastInfo(time: element, forecast: details.joined(separator: " ")))
