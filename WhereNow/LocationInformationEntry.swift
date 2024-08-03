@@ -1,3 +1,13 @@
+//
+//  LocationInformationEntry.swift
+//  WhereNow
+//
+//  Created by Jon on 8/2/24.
+//
+import Foundation
+import CoreLocation
+import WidgetKit
+
 struct LocationInformationEntry: TimelineEntry {
     // MARK: - Types
 

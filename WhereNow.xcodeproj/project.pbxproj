@@ -11,6 +11,7 @@
 		FC5101312C5AC0DB009C5CB4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; };
 		FC5101322C5AC0DB009C5CB4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
 		FC51013D2C5AC0DD009C5CB4 /* WhereNowWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC5101302C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FC5CF0832C5DB844004A18D7 /* NationalWeatherService in Frameworks */ = {isa = PBXBuildFile; productRef = FC5CF0822C5DB844004A18D7 /* NationalWeatherService */; };
 		FC8F8AC72C5B1EBC00667073 /* NationalWeatherService in Frameworks */ = {isa = PBXBuildFile; productRef = FC8F8AC62C5B1EBC00667073 /* NationalWeatherService */; };
 		FCE332C12C5A9C240093D3EF /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; platformFilters = (ios, macos, ); };
 		FCE332C22C5A9C240093D3EF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
@@ -123,10 +124,14 @@
 		FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				ErrorCases.swift,
+				ForecastInfo.swift,
 				LocationDataModel.swift,
+				LocationInformationEntry.swift,
 				LocationManager.swift,
 				Objects.swift,
 				"String+Extensions.swift",
+				USAWeatherService.swift,
 				WhereNowView.swift,
 				WidgetKinds.swift,
 			);
@@ -149,9 +154,14 @@
 		FC5101442C5AC16D009C5CB4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				ErrorCases.swift,
+				ForecastInfo.swift,
+				LocationDataModel.swift,
+				LocationInformationEntry.swift,
 				LocationManager.swift,
 				Objects.swift,
 				"String+Extensions.swift",
+				USAWeatherService.swift,
 				WidgetKinds.swift,
 			);
 			target = FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */;
@@ -166,10 +176,15 @@
 		FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				ErrorCases.swift,
+				ForecastInfo.swift,
+				LocationDataModel.swift,
+				LocationInformationEntry.swift,
 				LocationManager.swift,
 				MapSnapshotManager.swift,
 				Objects.swift,
 				"String+Extensions.swift",
+				USAWeatherService.swift,
 				WidgetKinds.swift,
 			);
 			target = FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */;
@@ -214,6 +229,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC5CF0832C5DB844004A18D7 /* NationalWeatherService in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,6 +404,7 @@
 			);
 			name = "WhereNow Watch App";
 			packageProductDependencies = (
+				FC5CF0822C5DB844004A18D7 /* NationalWeatherService */,
 			);
 			productName = "WhereNow Watch App";
 			productReference = FC2491752C48A63800101DF3 /* WhereNow Watch App.app */;
@@ -1393,6 +1410,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		FC5CF0822C5DB844004A18D7 /* NationalWeatherService */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC8F8AC52C5B1EBC00667073 /* XCRemoteSwiftPackageReference "NationalWeatherService-Swift" */;
+			productName = NationalWeatherService;
+		};
 		FC8F8AC62C5B1EBC00667073 /* NationalWeatherService */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FC8F8AC52C5B1EBC00667073 /* XCRemoteSwiftPackageReference "NationalWeatherService-Swift" */;

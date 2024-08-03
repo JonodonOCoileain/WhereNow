@@ -5,8 +5,6 @@
 //  Created by Jon on 7/31/24.
 //
 
-
-
 import Foundation
 import CoreLocation
 import MapKit

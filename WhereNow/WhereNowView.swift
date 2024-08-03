@@ -98,7 +98,7 @@ struct WhereNowPortraitView: View {
 #if os(watchOS)
 #else
                 LazyVStack(alignment:.leading) {
-                    ForEach(data.timesAndForecasts, id: \.self) { element in
+                    ForEach(data.weatherData.timesAndForecasts, id: \.self) { element in
                         LazyVStack(alignment:.leading) {
                             Text(element.time)
                                     .font(.caption2)
@@ -152,7 +152,7 @@ struct WhereNowWeatherHStackView: View {
     var body: some View {
         Group {
             LazyHStack(alignment: .center) {
-                ForEach(data.timesAndForecasts, id: \.self) { element in
+                ForEach(data.weatherData.timesAndForecasts, id: \.self) { element in
                     VStack {
                         
                         Text(element.time)

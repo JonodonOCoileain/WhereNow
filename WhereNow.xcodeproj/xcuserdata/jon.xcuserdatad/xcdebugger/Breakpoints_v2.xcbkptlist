@@ -14,8 +14,8 @@
             filePath = "WhereNow/Objects.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "381"
-            endingLineNumber = "381"
+            startingLineNumber = "308"
+            endingLineNumber = "308"
             landmarkName = "formattedCommonLongFlag()"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,10 +30,40 @@
             filePath = "WhereNow/Objects.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "326"
-            endingLineNumber = "326"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
             landmarkName = "formattedCommonWithFlag()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "652ACCD6-D4A3-4CBC-98C5-07E475E59F66 - d7dfbf40eb87bc55"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WhereNow.Addresses.init() -&gt; WhereNow.Addresses"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///%3Ccompiler-generated%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "652ACCD6-D4A3-4CBC-98C5-07E475E59F66 - 35036f464f8d9d7d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WhereNow.Addresses.init(address: Swift.Optional&lt;WhereNow.Address&gt;) -&gt; WhereNow.Addresses"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Desktop/WhereNow/%3Cstdin%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -46,8 +76,8 @@
             filePath = "WhereNow/Objects.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "419"
-            endingLineNumber = "419"
+            startingLineNumber = "346"
+            endingLineNumber = "346"
             landmarkName = "asAddress()"
             landmarkType = "7">
          </BreakpointContent>
@@ -55,17 +85,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "317EC285-CFBD-4D73-B239-0DE2E6779C51"
+            uuid = "5C4ECC0B-18C4-4345-B277-9DF4E8B272E7"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "WhereNow/LocationDataModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "223"
-            endingLineNumber = "223"
-            landmarkName = "getWeather()"
-            landmarkType = "7">
+            startingLineNumber = "2"
+            endingLineNumber = "2"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

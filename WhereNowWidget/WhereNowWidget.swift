@@ -21,6 +21,17 @@ private enum MapWidgetConfig {
     static let supportedFamilies: [WidgetFamily] = [.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge]
 }
 
+private enum MapAndWeatherWidgetConfig {
+    /// The name shown for a widget when a user adds or edits it.
+    static let displayName = "Map and Weather Widget"
+
+    /// The description shown for a widget when a user adds or edits it.
+    static let description = "This is a widget showing a map and reported weather for the same location."
+
+    /// The sizes that our widget supports.
+    static let supportedFamilies: [WidgetFamily] = [.systemLarge, .systemExtraLarge]
+}
+
 private enum TextWidgetConfig {
     /// The name shown for a widget when a user adds or edits it.
     static let displayName = "Text Widget"
@@ -282,6 +293,78 @@ struct WhereNowMapWidgetView : View {
     }
 }
 
+struct WhereNowMapAndWeatherWidgetView : View {
+    
+    @Environment(\.widgetFamily) var widgetFamily
+    // MARK: - Config
+
+    private enum Config {
+        /// The size of the blue dot reflecting the user location.
+        static let userLocationDotSize: CGFloat = 20
+
+        /// If a user-location is older then the given time interval we assume it's outdated and therefore
+        /// apply another `foregroundColor` to the dot, reflecting the user-location.
+        static let validUserLocationTimeInterval: TimeInterval = 5 * 60
+    }
+
+    // MARK: - Public properties
+
+    let info: LocationInformation
+
+    // MARK: - Private properties
+
+    var circleFillColor: Color {
+        info.userLocation.timestamp > Date(timeIntervalSinceNow: -Config.validUserLocationTimeInterval)
+            ? .blue
+            : .gray
+    }
+
+    // MARK: - Render
+
+    var body: some View {
+        HStack(spacing: 0) {
+            ZStack {
+                info.image?
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
+                
+                // The map is centered on the user location, therefore we can simply draw the blue dot in the
+                // center of our view to simulate the user coordinate.
+                Circle()
+                    .foregroundColor(circleFillColor)
+                    .overlay(
+                        Circle()
+                            .stroke(Color.white, lineWidth: 3)
+                    )
+                    .frame(width: Config.userLocationDotSize,
+                           height: Config.userLocationDotSize)
+                
+                Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
+                        .multilineTextAlignment(.center)
+                        .lineLimit(8)
+                        .font(.caption)
+                        .foregroundColor(Color(red: 0.4, green: 0, blue: 0.7))
+                        .frame(minWidth: 80, maxWidth: .infinity, maxHeight: .infinity)
+                        .bold()
+                        .opacity(widgetFamily != .systemMedium ? 1 : 0)
+            }
+            .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
+            
+            if widgetFamily == .systemMedium {
+                Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
+                    .multilineTextAlignment(.center)
+                    .lineLimit(100)
+                    .font(.caption)
+                    .frame(minWidth: 80, maxWidth: 185, maxHeight: .infinity)
+            }
+        }
+        .ignoresSafeArea()
+        .padding(-16)
+    }
+}
+
+
 
 struct WhereNowMapWidget: Widget {
     @Environment(\.widgetFamily) var widgetFamily
@@ -295,6 +378,31 @@ struct WhereNowMapWidget: Widget {
                         .containerBackground(LinearGradient(colors: [Color.pink, Color.purple], startPoint: .bottomLeading, endPoint: .topTrailing), for: .widget)
                 case .placeholder:
                     WhereNowMapWidgetView(info: LocationInformation(userLocation: CLLocation(latitude: 37.333424329435715, longitude: -122.00546584232792), image: Image("MapApplePark"), addresses: [Address(localName: "Apple")]))
+                    .containerBackground(.fill.tertiary, for: .widget)
+                case .failure(let error):
+                    ErrorView(errorMessage: error.localizedDescription)
+                    .containerBackground(.fill.tertiary, for: .widget)
+            }
+                
+        }
+        .configurationDisplayName(MapWidgetConfig.displayName)
+        .description(MapWidgetConfig.description)
+        .supportedFamilies(MapWidgetConfig.supportedFamilies)
+    }
+}
+
+struct WhereNowMapAndWeatherWidget: Widget {
+    @Environment(\.widgetFamily) var widgetFamily
+    let kind: String = WidgetKinds.WhereNowMapAndWeatherWidget.description
+
+    var body: some WidgetConfiguration {
+        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
+            switch entry.state {
+                case .success(let locationInfo):
+                    WhereNowMapAndWeatherWidgetView(info: locationInfo)
+                        .containerBackground(LinearGradient(colors: [Color.pink, Color.purple], startPoint: .bottomLeading, endPoint: .topTrailing), for: .widget)
+                case .placeholder:
+                    WhereNowMapAndWeatherWidgetView(info: LocationInformation(userLocation: CLLocation(latitude: 37.333424329435715, longitude: -122.00546584232792), image: Image("MapApplePark"), addresses: [Address(localName: "Apple")]))
                     .containerBackground(.fill.tertiary, for: .widget)
                 case .failure(let error):
                     ErrorView(errorMessage: error.localizedDescription)
