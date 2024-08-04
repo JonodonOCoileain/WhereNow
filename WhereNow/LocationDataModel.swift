@@ -148,18 +148,9 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         //print("Total of locations: \(locations.count)")
         if readyForUpdate {
             if let currentLocation = locations.first, currentLocation != self.currentLocation {
-                let wasNotUpdated = self.currentLocation == CLLocation(latitude: 37.333424329435715, longitude: -122.00546584232792)
                 self.currentLocation = currentLocation
                 readyForUpdate = false
                 addressInfoIsUpdated = true
-                #if os(watchOS)
-                #else
-                /*if wasNotUpdated {
-                    DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-                        self?.weatherData.getWeather(of: CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude))
-                    }
-                }*/
-                #endif
             }
         }
         print(locations)

@@ -5,9 +5,6 @@
 //  Created by Jon on 8/2/24.
 //
 
-
-#if os(watchOS)
-#else
 import Foundation
 import SwiftUI
 import CoreLocation
@@ -146,9 +143,6 @@ class USAWeatherService: ObservableObject {
         }
     }*/
 }
-#endif
-
-
 // Gets the forecast, organized into hours.
 /*nws.hourlyForecast(for: location) { result in
  switch result {

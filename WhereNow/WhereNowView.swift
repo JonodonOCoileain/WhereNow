@@ -16,7 +16,9 @@ struct WhereNowView: View {
     @State private var orientation = UIDeviceOrientation.portrait
 #endif
     static var countTime:Double = 0.1
+    @State var gotWeather:Bool = false
     @ObservedObject var data: LocationDataModel = LocationDataModel()
+    @ObservedObject var weatherData: USAWeatherService = USAWeatherService()
     
     var body: some View {
         if ([CLAuthorizationStatus.restricted, CLAuthorizationStatus.denied].contains(where: {$0 == data.manager.authorizationStatus})) {
@@ -25,18 +27,25 @@ struct WhereNowView: View {
         } else {
             Group {
                 #if os(watchOS)
-                    WhereNowPortraitView(data: data)
+                WhereNowPortraitView(data: data, weatherData: weatherData)
                 #else
                 if orientation.isPortrait {
-                    WhereNowPortraitView(data: data)
+                    WhereNowPortraitView(data: data, weatherData: weatherData)
                 } else if orientation.isLandscape {
-                    WhereNowLandscapeView(data: data)
+                    WhereNowLandscapeView(data: data, weatherData: weatherData)
                 }
                 #endif
             }
             .onAppear() {
                 data.start()
+                
             }
+            .onChange(of: data.currentLocation, { oldValue, newValue in
+                if !gotWeather {
+                    weatherData.getWeather(of: newValue.coordinate)
+                    gotWeather.toggle()
+                }
+            })
             .onDisappear() {
                 data.stop()
                 WidgetCenter.shared.reloadAllTimelines()
@@ -77,10 +86,7 @@ extension View {
 struct WhereNowPortraitView: View {
     static var countTime:Double = 0.1
     @ObservedObject var data: LocationDataModel
-    #if os(watchOS)
-    #else
-    @ObservedObject var weatherData = USAWeatherService()
-    #endif
+    @ObservedObject var weatherData: USAWeatherService
     
     let timer = Timer.publish(every: WhereNowView.countTime, on: .main, in: .common).autoconnect()
     @State var timeCounter:Double = 0.0
@@ -101,7 +107,7 @@ struct WhereNowPortraitView: View {
                 if let image = self.data.image {
                     MapSnapshotView(image: image)
                 }
-
+#endif
                 LazyVStack(alignment:.leading) {
                     ForEach(weatherData.timesAndForecasts, id: \.self) { element in
                         LazyVStack(alignment:.leading) {
@@ -116,7 +122,6 @@ struct WhereNowPortraitView: View {
                         }
                     }
                 }
-#endif
             }
         }
         .onReceive(timer) { input in
@@ -136,6 +141,7 @@ struct WhereNowPortraitView: View {
 struct WhereNowLandscapeView: View {
     static var countTime:Double = 0.1
     @ObservedObject var data: LocationDataModel
+    @ObservedObject var weatherData: USAWeatherService = USAWeatherService()
     
     var body: some View {
         ScrollView(.horizontal) {
