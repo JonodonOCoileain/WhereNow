@@ -77,6 +77,10 @@ extension View {
 struct WhereNowPortraitView: View {
     static var countTime:Double = 0.1
     @ObservedObject var data: LocationDataModel
+    #if os(watchOS)
+    #else
+    @ObservedObject var weatherData = USAWeatherService()
+    #endif
     
     let timer = Timer.publish(every: WhereNowView.countTime, on: .main, in: .common).autoconnect()
     @State var timeCounter:Double = 0.0
@@ -92,13 +96,14 @@ struct WhereNowPortraitView: View {
             VStack {
                 Text(self.data.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
                     .multilineTextAlignment(.center)
+#if os(watchOS)
+#else
                 if let image = self.data.image {
                     MapSnapshotView(image: image)
                 }
-#if os(watchOS)
-#else
+
                 LazyVStack(alignment:.leading) {
-                    ForEach(data.weatherData.timesAndForecasts, id: \.self) { element in
+                    ForEach(weatherData.timesAndForecasts, id: \.self) { element in
                         LazyVStack(alignment:.leading) {
                             Text(element.time)
                                     .font(.caption2)
@@ -148,11 +153,14 @@ struct WhereNowLandscapeView: View {
 
 struct WhereNowWeatherHStackView: View {
     @ObservedObject var data: LocationDataModel
-    
+#if os(watchOS)
+#else
+@ObservedObject var weatherData = USAWeatherService()
+#endif
     var body: some View {
         Group {
             LazyHStack(alignment: .center) {
-                ForEach(data.weatherData.timesAndForecasts, id: \.self) { element in
+                ForEach(weatherData.timesAndForecasts, id: \.self) { element in
                     VStack {
                         
                         Text(element.time)

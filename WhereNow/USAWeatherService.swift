@@ -5,7 +5,7 @@
 //  Created by Jon on 8/2/24.
 //
 
-/*
+
 #if os(watchOS)
 #else
 import Foundation
@@ -173,4 +173,4 @@ class USAWeatherService: ObservableObject {
  case .failure(let error):     print(error)
  }
  }*/
-*/
+
