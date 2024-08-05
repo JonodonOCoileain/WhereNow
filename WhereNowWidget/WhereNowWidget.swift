@@ -62,6 +62,8 @@ struct Provider: AppIntentTimelineProvider {
     // MARK: - Dependencies
 
     private let locationManager: LocationManager = LocationManager(locationStorageManager: UserDefaults.standard)
+    
+    private let weatherManager: USAWeatherService = USAWeatherService()
     //private let mapSnapshotManager: MapSnapshotManager
     
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> LocationInformationEntry {
@@ -79,14 +81,15 @@ struct Provider: AppIntentTimelineProvider {
             let snapshots = MapSnapshotManager()
             let snapshotResult = await snapshots.snapshot(of: coordinate)
             let addresses = await location.getAddresses()
+            let forecastInfos = await weatherManager.getForecasts(using: coordinate)
         
         switch snapshotResult {
         case .success(let image):
-            return LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: image, addresses: addresses)))
+            return LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: image, addresses: addresses, weather: forecastInfos)))
         case .failure(_):
-            return LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses)))
+            return LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: forecastInfos)))
         }
-#endif
+        #endif
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<LocationInformationEntry> {
@@ -94,12 +97,13 @@ struct Provider: AppIntentTimelineProvider {
             let snapshots = MapSnapshotManager()
             let snapshotResult = await snapshots.snapshot(of: location.coordinate)
             let addresses = await location.getAddresses()
+            let forecastInfos = await weatherManager.getForecasts(using: location.coordinate)
             var locationInformationEntry: LocationInformationEntry
             switch snapshotResult {
             case .success(let image):
-                locationInformationEntry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: image, addresses: addresses)))
+                locationInformationEntry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: image, addresses: addresses, weather: forecastInfos)))
             case .failure(_):
-                locationInformationEntry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses)))
+                locationInformationEntry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: forecastInfos)))
             }
             
             return Timeline(entries: [locationInformationEntry], policy: .after(.now + 60*19.5))
@@ -322,25 +326,26 @@ struct WhereNowMapAndWeatherWidgetView : View {
     // MARK: - Render
 
     var body: some View {
-        HStack(spacing: 0) {
-            ZStack {
-                info.image?
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
-                
-                // The map is centered on the user location, therefore we can simply draw the blue dot in the
-                // center of our view to simulate the user coordinate.
-                Circle()
-                    .foregroundColor(circleFillColor)
-                    .overlay(
-                        Circle()
-                            .stroke(Color.white, lineWidth: 3)
-                    )
-                    .frame(width: Config.userLocationDotSize,
-                           height: Config.userLocationDotSize)
-                
-                Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
+        VStack {
+            HStack(spacing: 0) {
+                ZStack {
+                    info.image?
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
+                    
+                    // The map is centered on the user location, therefore we can simply draw the blue dot in the
+                    // center of our view to simulate the user coordinate.
+                    Circle()
+                        .foregroundColor(circleFillColor)
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white, lineWidth: 3)
+                        )
+                        .frame(width: Config.userLocationDotSize,
+                               height: Config.userLocationDotSize)
+                    
+                    Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
                         .multilineTextAlignment(.center)
                         .lineLimit(8)
                         .font(.caption)
@@ -348,16 +353,36 @@ struct WhereNowMapAndWeatherWidgetView : View {
                         .frame(minWidth: 80, maxWidth: .infinity, maxHeight: .infinity)
                         .bold()
                         .opacity(widgetFamily != .systemMedium ? 1 : 0)
+                }
+                .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
+                
+                if [WidgetFamily.systemLarge, WidgetFamily.systemExtraLarge].contains(widgetFamily) {
+                    Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
+                        .multilineTextAlignment(.center)
+                        .lineLimit(100)
+                        .font(.caption)
+                        .frame(minWidth: 80, maxWidth: 185, maxHeight: .infinity)
+                }
             }
-            .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
-            
-            if widgetFamily == .systemMedium {
-                Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
+            if let weather = info.weather, let first = weather.first {
+                Text(first.name ?? first.time ?? "")
                     .multilineTextAlignment(.center)
                     .lineLimit(100)
                     .font(.caption)
-                    .frame(minWidth: 80, maxWidth: 185, maxHeight: .infinity)
+                Text(first.forecast)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(100)
+                    .font(.caption)
+                Text(weather[1].name ?? weather[1].time ?? "")
+                    .multilineTextAlignment(.center)
+                    .lineLimit(100)
+                    .font(.caption)
+                Text(weather[1].forecast)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(100)
+                    .font(.caption)
             }
+            
         }
         .ignoresSafeArea()
         .padding(-16)
@@ -410,9 +435,9 @@ struct WhereNowMapAndWeatherWidget: Widget {
             }
                 
         }
-        .configurationDisplayName(MapWidgetConfig.displayName)
-        .description(MapWidgetConfig.description)
-        .supportedFamilies(MapWidgetConfig.supportedFamilies)
+        .configurationDisplayName(MapAndWeatherWidgetConfig.displayName)
+        .description(MapAndWeatherWidgetConfig.description)
+        .supportedFamilies(MapAndWeatherWidgetConfig.supportedFamilies)
     }
 }
 

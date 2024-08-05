@@ -11,6 +11,10 @@ import SwiftUI
 import MapKit
 import WidgetKit
 
+public class Fun {
+    static var emojis: [String] = ["😀","😃","😁","😄","🥹","😆","😊","☺️","😇","🙂","😉","😉","😌","🥳","🤩","🥸","😎","😋","😍","🥰"]
+}
+
 public struct LocationInformation {
     /// The resolved user location.
     let userLocation: CLLocation
@@ -375,5 +379,16 @@ struct fading: ViewModifier {
                        .frame(width: 50)
                 }
              )
+    }
+}
+
+extension Data {
+    func convertToDictionary() -> [String: Any]? {
+        do {
+            return try JSONSerialization.jsonObject(with: self, options: []) as? [String: Any]
+        } catch {
+            print(error.localizedDescription)
+        }
+        return nil
     }
 }

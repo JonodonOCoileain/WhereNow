@@ -13,5 +13,6 @@ struct WhereNowWidgetBundle: WidgetBundle {
     var body: some Widget {
         WhereNowTextWidget()
         WhereNowMapWidget()
+        WhereNowMapAndWeatherWidget()
     }
 }

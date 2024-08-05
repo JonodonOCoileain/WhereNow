@@ -16,7 +16,6 @@ struct WhereNowView: View {
     @State private var orientation = UIDeviceOrientation.portrait
 #endif
     static var countTime:Double = 0.1
-    @State var gotWeather:Bool = false
     @ObservedObject var data: LocationDataModel = LocationDataModel()
     @ObservedObject var weatherData: USAWeatherService = USAWeatherService()
     
@@ -38,14 +37,7 @@ struct WhereNowView: View {
             }
             .onAppear() {
                 data.start()
-                
             }
-            .onChange(of: data.currentLocation, { oldValue, newValue in
-                if !gotWeather {
-                    weatherData.getWeather(of: newValue.coordinate)
-                    gotWeather.toggle()
-                }
-            })
             .onDisappear() {
                 data.stop()
                 WidgetCenter.shared.reloadAllTimelines()
@@ -111,7 +103,10 @@ struct WhereNowPortraitView: View {
                 LazyVStack(alignment:.leading) {
                     ForEach(weatherData.timesAndForecasts, id: \.self) { element in
                         LazyVStack(alignment:.leading) {
-                            Text(element.time)
+                            Text(Fun.emojis.randomElement() ?? "")
+                                .font(.caption2)
+                                .multilineTextAlignment(.center)
+                            Text(element.name ?? "")
                                     .font(.caption2)
                                     .padding([.leading, .trailing])
                                     .multilineTextAlignment(.center)
@@ -122,8 +117,20 @@ struct WhereNowPortraitView: View {
                         }
                     }
                 }
+                
+                Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
+                    .multilineTextAlignment(.center)
+                    .font(.caption2)
+                Text(weatherData.forecastOffice?.description() ?? "")
+                    .multilineTextAlignment(.center)
+                    .font(.caption2)
             }
         }
+        .onChange(of: data.currentLocation, { oldValue, newValue in
+            if weatherData.timesAndForecasts.count == 0 {
+                weatherData.cacheForecasts(using: newValue.coordinate)
+            }
+        })
         .onReceive(timer) { input in
             if timeCounter >= 2.0 {
                 timeCounter = 0
@@ -145,40 +152,22 @@ struct WhereNowLandscapeView: View {
     
     var body: some View {
         ScrollView(.horizontal) {
-            //LazyHStack {
+            LazyHStack {
                 Text(self.data.addressesVeryLongFlag)
                     .multilineTextAlignment(.center)
                 if let image = self.data.image {
                     MapSnapshotView(image: image)
                 }
-                WhereNowWeatherHStackView(data: data)
-            //}
-        }
-    }
-}
-
-struct WhereNowWeatherHStackView: View {
-    @ObservedObject var data: LocationDataModel
-#if os(watchOS)
-#else
-@ObservedObject var weatherData = USAWeatherService()
-#endif
-    var body: some View {
-        Group {
-            LazyHStack(alignment: .center) {
-                ForEach(weatherData.timesAndForecasts, id: \.self) { element in
-                    VStack {
-                        
-                        Text(element.time)
-                                .font(.caption2)
-                                .padding([.top, .trailing])
-                                .multilineTextAlignment(.center)
-                        Text(element.forecast)
-                            .font(.caption2)
-                            .padding([.trailing, .bottom])
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: 100, maxHeight: .infinity)
-                    }
+                WhereNowWeatherHStackView(data: data, weatherData: weatherData)
+                
+                VStack {
+                    Spacer()
+                    Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
+                        .font(.caption2)
+                        .multilineTextAlignment(.leading)
+                    Text(weatherData.forecastOffice?.description() ?? "")
+                        .multilineTextAlignment(.leading)
+                        .font(.caption2)
                 }
             }
         }
@@ -186,6 +175,43 @@ struct WhereNowWeatherHStackView: View {
 }
 #endif
 
+struct WhereNowWeatherHStackView: View {
+    @ObservedObject var data: LocationDataModel
+    @ObservedObject var weatherData = USAWeatherService()
+    var body: some View {
+        Group {
+            LazyHStack(alignment: .center) {
+                ForEach(weatherData.timesAndForecasts, id: \.self) { element in
+                    LazyVStack {
+                        Text(Fun.emojis.randomElement() ?? "")
+                            .font(.caption2)
+                            .multilineTextAlignment(.center)
+                        Text(element.name ?? "")
+                            .font(.caption2)
+                            .padding([.top])
+                            .multilineTextAlignment(.center)
+                        /*Text(element.time ?? "")
+                            .font(.caption2)
+                            .padding([.top, .trailing])
+                            .multilineTextAlignment(.center)
+                            .frame(minWidth: 120, maxWidth: 140, maxHeight: .infinity)*/
+                        Text(element.forecast)
+                            .font(.caption2)
+                            .padding([.bottom])
+                            .multilineTextAlignment(.leading)
+                    }.frame(width: 200, alignment: .center)
+                }
+            }
+        }
+        .onChange(of: data.currentLocation, { oldValue, newValue in
+            if weatherData.timesAndForecasts.count == 0 {
+                weatherData.cacheForecasts(using: newValue.coordinate)
+            }
+        })
+    }
+}
+#if os(watchOS)
+#else
 struct MapSnapshotView: View {
     var image: Image
     var body: some View {
@@ -212,6 +238,7 @@ struct MapSnapshotView: View {
         }.padding()
     }
 }
+#endif
 
 #if DEBUG
 struct WhereNowView_Previews: PreviewProvider {

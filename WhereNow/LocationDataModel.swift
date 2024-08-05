@@ -12,7 +12,6 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
 #if os(watchOS)
 #else
-    //let weatherData = USAWeatherService()
     var snapshotManager: MapSnapshotManager = MapSnapshotManager()
     #endif
     @Published var image: Image?
@@ -22,15 +21,6 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @objc func fireTimer() {
         counter += 2
         self.readyForUpdate = true
-#if os(watchOS)
-#else
-        /*if !(weatherData.timesAndForecasts.isEmpty || counter > 60*60*5) {
-            let currentLocation = currentLocation.coordinate
-            let location = CLLocationCoordinate2D(latitude: currentLocation.latitude, longitude: currentLocation.longitude)
-            counter = 0
-            weatherData.getWeather(of: location)
-        }*/
-#endif
     }
     @Published var currentLocation: CLLocation = CLLocation(latitude: 37.333424329435715, longitude: -122.00546584232792)
     {
@@ -52,8 +42,11 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             let coordinate = currentLocation.coordinate
             guard let url = URL(string: "https://api.tomtom.com/search/2/reverseGeocode/\(coordinate.latitude),\(coordinate.longitude).json?key=FBSjYeqToGYAeG2A5txodKfGHrql38S4&radius=100") else { return }
             
-            let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
-                guard let data = data else {
+            let task = URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
+                guard let self = self, let data = data else {
+                    guard let self = self else {
+                        return
+                    }
                     CLGeocoder().reverseGeocodeLocation(self.currentLocation, completionHandler: {(placemarks, error) -> Void in
                         guard error == nil else {
                             print("Reverse geocoder failed with error" + (error?.localizedDescription ?? "undescribed error"))
@@ -145,7 +138,6 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        //print("Total of locations: \(locations.count)")
         if readyForUpdate {
             if let currentLocation = locations.first, currentLocation != self.currentLocation {
                 self.currentLocation = currentLocation
@@ -153,7 +145,6 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                 addressInfoIsUpdated = true
             }
         }
-        print(locations)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
