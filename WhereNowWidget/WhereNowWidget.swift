@@ -344,15 +344,6 @@ struct WhereNowMapAndWeatherWidgetView : View {
                         )
                         .frame(width: Config.userLocationDotSize,
                                height: Config.userLocationDotSize)
-                    
-                    Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
-                        .multilineTextAlignment(.center)
-                        .lineLimit(8)
-                        .font(.caption)
-                        .foregroundColor(Color(red: 0.4, green: 0, blue: 0.7))
-                        .frame(minWidth: 80, maxWidth: .infinity, maxHeight: .infinity)
-                        .bold()
-                        .opacity(widgetFamily != .systemMedium ? 1 : 0)
                 }
                 .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
                 
@@ -365,7 +356,7 @@ struct WhereNowMapAndWeatherWidgetView : View {
                 }
             }
             if let weather = info.weather, let first = weather.first {
-                Text(first.name ?? first.time ?? "")
+                Text(("\(Fun.emojis.randomElement() ?? "") ") + (first.name ?? ""))
                     .multilineTextAlignment(.center)
                     .lineLimit(100)
                     .font(.caption)
@@ -373,7 +364,7 @@ struct WhereNowMapAndWeatherWidgetView : View {
                     .multilineTextAlignment(.center)
                     .lineLimit(100)
                     .font(.caption)
-                Text(weather[1].name ?? weather[1].time ?? "")
+                Text(("\(Fun.emojis.randomElement() ?? "") ") + (weather[1].name ?? ""))
                     .multilineTextAlignment(.center)
                     .lineLimit(100)
                     .font(.caption)
