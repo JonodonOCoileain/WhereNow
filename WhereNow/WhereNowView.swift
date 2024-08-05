@@ -104,14 +104,14 @@ struct WhereNowPortraitView: View {
                     ForEach(weatherData.timesAndForecasts, id: \.self) { element in
                         LazyVStack(alignment:.leading) {
                             Text(Fun.emojis.randomElement() ?? "")
-                                .font(.caption2)
+                                .font(.title)
                                 .multilineTextAlignment(.center)
                             Text(element.name ?? "")
-                                    .font(.caption2)
+                                .font(.subheadline)
                                     .padding([.leading, .trailing])
                                     .multilineTextAlignment(.center)
                             Text(element.forecast)
-                                .font(.caption2)
+                                .font(.subheadline)
                                 .padding([.leading, .trailing, .bottom])
                                 .multilineTextAlignment(.leading)
                         }
@@ -184,10 +184,10 @@ struct WhereNowWeatherHStackView: View {
                 ForEach(weatherData.timesAndForecasts, id: \.self) { element in
                     LazyVStack {
                         Text(Fun.emojis.randomElement() ?? "")
-                            .font(.caption2)
+                            .font(.title)
                             .multilineTextAlignment(.center)
                         Text(element.name ?? "")
-                            .font(.caption2)
+                            .font(.subheadline)
                             .padding([.top])
                             .multilineTextAlignment(.center)
                         /*Text(element.time ?? "")
@@ -196,7 +196,7 @@ struct WhereNowWeatherHStackView: View {
                             .multilineTextAlignment(.center)
                             .frame(minWidth: 120, maxWidth: 140, maxHeight: .infinity)*/
                         Text(element.forecast)
-                            .font(.caption2)
+                            .font(.subheadline)
                             .padding([.bottom])
                             .multilineTextAlignment(.leading)
                     }.frame(width: 200, alignment: .center)
