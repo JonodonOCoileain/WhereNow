@@ -102,7 +102,7 @@ struct WhereNowPortraitView: View {
 #endif
                 LazyVStack(alignment:.leading) {
                     ForEach(weatherData.timesAndForecasts, id: \.self) { element in
-                        LazyVStack(alignment:.leading) {
+                        LazyVStack(alignment:.center) {
                             Text(Fun.emojis.randomElement() ?? "")
                                 .font(.title)
                                 .multilineTextAlignment(.center)
@@ -182,7 +182,7 @@ struct WhereNowWeatherHStackView: View {
         Group {
             LazyHStack(alignment: .center) {
                 ForEach(weatherData.timesAndForecasts, id: \.self) { element in
-                    LazyVStack {
+                    LazyVStack() {
                         Text(Fun.emojis.randomElement() ?? "")
                             .font(.title)
                             .multilineTextAlignment(.center)
@@ -199,7 +199,7 @@ struct WhereNowWeatherHStackView: View {
                             .font(.subheadline)
                             .padding([.bottom])
                             .multilineTextAlignment(.leading)
-                    }.frame(width: 200, alignment: .center)
+                    }.frame(width: 250, alignment: .center)
                 }
             }
         }
