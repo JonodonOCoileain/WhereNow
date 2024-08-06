@@ -12,6 +12,7 @@ import SwiftUI
 struct WhereNowWidgetBundle: WidgetBundle {
     var body: some Widget {
         WhereNowTextWidget()
+        WhereNowWeatherTextWidget()
         WhereNowMapWidget()
         WhereNowMapAndWeatherWidget()
     }

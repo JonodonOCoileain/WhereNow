@@ -43,6 +43,17 @@ private enum TextWidgetConfig {
     static let supportedFamilies: [WidgetFamily] = [.accessoryInline, .accessoryCircular, .accessoryRectangular]
 }
 
+private enum WeatherTextWidgetConfig {
+    /// The name shown for a widget when a user adds or edits it.
+    static let displayName = "Weather Text Widget"
+
+    /// The description shown for a widget when a user adds or edits it.
+    static let description = "This is a widget to show weather data."
+
+    /// The sizes that our widget supports.
+    static let supportedFamilies: [WidgetFamily] = [.accessoryRectangular]
+}
+
 struct Provider: AppIntentTimelineProvider {
     
     typealias Entry = LocationInformationEntry
@@ -171,6 +182,46 @@ struct WhereNowTextWidget: Widget {
         .supportedFamilies(TextWidgetConfig.supportedFamilies)
     }
 }
+
+struct WhereNowWidgetWeatherTextView : View {
+    @Environment(\.widgetFamily) var widgetFamily
+    var entry: Provider.Entry
+
+    var body: some View {
+        switch widgetFamily {
+        case .accessoryRectangular:
+            switch entry.state {
+            case .success(let info):
+                Text((Fun.emojis.randomElement() ?? "") + " " + (info.weather?.first?.forecast ?? ""))
+                    .containerBackground(.fill.tertiary, for: .widget)
+            case .failure(let error):
+                Text(error.localizedDescription)
+                    .containerBackground(.fill.tertiary, for: .widget)
+            case .placeholder:
+                Text((Fun.emojis.randomElement() ?? "") + " Where Now!")
+            }
+        case .systemSmall,.systemMedium, .systemLarge, .systemExtraLarge, .accessoryCircular, .accessoryInline:
+            Text((Fun.emojis.randomElement() ?? "") + " Where Now!")
+        @unknown default:
+            Text((Fun.emojis.randomElement() ?? "") + " Where Now!")
+        }
+    }
+}
+
+struct WhereNowWeatherTextWidget: Widget {
+    let kind: String = WidgetKinds.WhereNowWeatherTextWidget.description
+
+    var body: some WidgetConfiguration {
+        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
+            WhereNowWidgetWeatherTextView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName(WeatherTextWidgetConfig.displayName)
+        .description(WeatherTextWidgetConfig.description)
+        .supportedFamilies(WeatherTextWidgetConfig.supportedFamilies)
+    }
+}
+
 
 struct WhereNowMapWidgetViewX : View {
     // MARK: - Config
