@@ -80,13 +80,28 @@ struct Provider: AppIntentTimelineProvider {
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> LocationInformationEntry {
         #if TARGET_OS_WATCH
             print("watchOS")
-            let location = locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
+            var location: CLLocation
+            if let locationIntent = configuration.locationIntent {
+                let placemark = await locationManager.locationFrom(postalCode: locationIntent)
+                let userRequestedLocation = placemark?.location
+                location = userRequestedLocation ?? locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
+            } else {
+                location = locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
+            }
             let addresses = await location.getAddresses()
-            let entry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses)))
+            let forecastInfos = await weatherManager.getForecasts(using: coordinate)
+            let entry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, forecasts: forecastInfos)))
             return entry
         #else
             print("Not watchOS")
-            let location = locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
+            var location: CLLocation
+            if let locationIntent = configuration.locationIntent {
+                let placemark = await locationManager.locationFrom(postalCode: locationIntent)
+                let userRequestedLocation = placemark?.location
+                location = userRequestedLocation ?? locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
+            } else {
+                location = locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
+            }
             let coordinate = location.coordinate
         
             let snapshots = MapSnapshotManager()
@@ -170,6 +185,7 @@ struct WhereNowWidgetTextView : View {
 }
 
 struct WhereNowTextWidget: Widget {
+    
     let kind: String = WidgetKinds.WhereNowTextWidget.description
 
     var body: some WidgetConfiguration {
@@ -377,54 +393,58 @@ struct WhereNowMapAndWeatherWidgetView : View {
     // MARK: - Render
 
     var body: some View {
-        VStack {
-            HStack(spacing: 0) {
-                ZStack {
-                    info.image?
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
+        GeometryReader { geometry in
+            VStack {
+                HStack(spacing: 0) {
+                    ZStack {
+                        info.image?
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: geometry.size.width / 2, height: geometry.size.width / 2)
+                            .cornerRadius(10)
+                            .clipped()
+                        
+                        // The map is centered on the user location, therefore we can simply draw the blue dot in the
+                        // center of our view to simulate the user coordinate.
+                        Circle()
+                            .foregroundColor(circleFillColor)
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.white, lineWidth: 3)
+                            )
+                            .frame(width: Config.userLocationDotSize,
+                                   height: Config.userLocationDotSize)
+                    }
+                    .frame(width: geometry.size.width / 2, height: geometry.size.width / 2)
                     
-                    // The map is centered on the user location, therefore we can simply draw the blue dot in the
-                    // center of our view to simulate the user coordinate.
-                    Circle()
-                        .foregroundColor(circleFillColor)
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white, lineWidth: 3)
-                        )
-                        .frame(width: Config.userLocationDotSize,
-                               height: Config.userLocationDotSize)
+                    if [WidgetFamily.systemLarge, WidgetFamily.systemExtraLarge].contains(widgetFamily) {
+                        Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
+                            .multilineTextAlignment(.center)
+                            .lineLimit(100)
+                            .font(.caption)
+                            .frame(minWidth: 80, maxWidth: 185, maxHeight: .infinity)
+                    }
                 }
-                .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
-                
-                if [WidgetFamily.systemLarge, WidgetFamily.systemExtraLarge].contains(widgetFamily) {
-                    Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
+                if let weather = info.weather, let first = weather.first {
+                    Text(("\(Fun.emojis.randomElement() ?? "") ") + (first.name ?? ""))
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
-                        .frame(minWidth: 80, maxWidth: 185, maxHeight: .infinity)
+                    Text(first.forecast)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(100)
+                        .font(.caption)
+                    Text(("\(Fun.emojis.randomElement() ?? "") ") + (weather[1].name ?? ""))
+                        .multilineTextAlignment(.center)
+                        .lineLimit(100)
+                        .font(.caption)
+                    Text(weather[1].forecast)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(100)
+                        .font(.caption)
                 }
+                
             }
-            if let weather = info.weather, let first = weather.first {
-                Text(("\(Fun.emojis.randomElement() ?? "") ") + (first.name ?? ""))
-                    .multilineTextAlignment(.center)
-                    .lineLimit(100)
-                    .font(.caption)
-                Text(first.forecast)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(100)
-                    .font(.caption)
-                Text(("\(Fun.emojis.randomElement() ?? "") ") + (weather[1].name ?? ""))
-                    .multilineTextAlignment(.center)
-                    .lineLimit(100)
-                    .font(.caption)
-                Text(weather[1].forecast)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(100)
-                    .font(.caption)
-            }
-            
         }
         .ignoresSafeArea()
         .padding(-16)
@@ -486,13 +506,13 @@ struct WhereNowMapAndWeatherWidget: Widget {
 extension ConfigurationAppIntent {
     fileprivate static var SpartaNJ: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        intent.location = "07871"
+        intent.locationIntent = "07871"
         return intent
     }
     
     fileprivate static var CurrentLocation: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        intent.location = "Current Location"
+        intent.locationIntent = "Current Location"
         return intent
     }
 }
@@ -508,7 +528,8 @@ extension ConfigurationAppIntent {
         static var previews: some View {
             let appleParkLocation = CLLocation(latitude: 37.333424329435715, longitude: -122.00546584232792)
             let info = LocationInformation(userLocation: appleParkLocation,
-                                          image: Image("MapApplePark"))
+                                          image: Image("MapApplePark"),
+                                           weather: [ForecastInfo(forecast: "Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! ")])
 
             let informationEntry = LocationInformationEntry(date: Date(),
                                                     state: .success(info))

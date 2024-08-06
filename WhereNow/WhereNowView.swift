@@ -76,6 +76,11 @@ extension View {
 #endif
 
 struct WhereNowPortraitView: View {
+    #if os(watchOS)
+        let reversePadding = true
+    #else
+        let reversePadding = false
+    #endif
     static var countTime:Double = 0.1
     @ObservedObject var data: LocationDataModel
     @ObservedObject var weatherData: USAWeatherService
@@ -84,11 +89,14 @@ struct WhereNowPortraitView: View {
     @State var timeCounter:Double = 0.0
     
     var body: some View {
-        Image("LOCATION")
-            .resizable(resizingMode: .stretch)
-            .frame(width: 10, height: 10)
-            .scaledToFit()
-            .opacity(data.addressInfoIsUpdated ? 0 : 1-timeCounter)
+        if !data.addressInfoIsUpdated {
+            Image("LOCATION")
+                .resizable(resizingMode: .stretch)
+                .frame(width: 7, height: 7)
+                .scaledToFit()
+                .opacity(data.addressInfoIsUpdated ? 0 : 1-timeCounter)
+                .padding([.top,.bottom], reversePadding ? -25 : 0)
+        }
         
         ScrollView() {
             VStack {
@@ -131,6 +139,7 @@ struct WhereNowPortraitView: View {
                 weatherData.cacheForecasts(using: newValue.coordinate)
             }
         })
+        .padding([.top, .bottom], reversePadding ? -25 : 0)
         .onReceive(timer) { input in
             if timeCounter >= 2.0 {
                 timeCounter = 0

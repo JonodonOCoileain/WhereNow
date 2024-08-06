@@ -124,7 +124,6 @@
 				ErrorCases.swift,
 				ForecastInfo.swift,
 				LocationDataModel.swift,
-				LocationInformationEntry.swift,
 				LocationManager.swift,
 				Objects.swift,
 				"String+Extensions.swift",
@@ -138,6 +137,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				LocationInformationEntry.swift,
 			);
 			target = FC24914E2C48A63600101DF3 /* WhereNow */;
 		};
@@ -160,6 +160,13 @@
 				"String+Extensions.swift",
 				USAWeatherService.swift,
 				WidgetKinds.swift,
+			);
+			target = FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */;
+		};
+		FCD5739B2C62B054006BFA85 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppIntent.swift,
 			);
 			target = FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */;
 		};
@@ -196,7 +203,7 @@
 		FC24918A2C48A63900101DF3 /* WhereNow Watch AppTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch AppTests"; sourceTree = "<group>"; };
 		FC2491942C48A63900101DF3 /* WhereNow Watch AppUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch AppUITests"; sourceTree = "<group>"; };
 		FC5101332C5AC0DB009C5CB4 /* WhereNowWatchWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC5101412C5AC0DD009C5CB4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWatchWidget; sourceTree = "<group>"; };
-		FCE332C32C5A9C240093D3EF /* WhereNowWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWidget; sourceTree = "<group>"; };
+		FCE332C32C5A9C240093D3EF /* WhereNowWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCD5739B2C62B054006BFA85 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWidget; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */

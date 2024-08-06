@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreLocation
+import Contacts
 
 final class LocationManager: NSObject {
     // MARK: - Config
@@ -65,7 +66,19 @@ final class LocationManager: NSObject {
     }
     
     func immediateLocation() -> CLLocation? {
+        self.locationManager?.requestWhenInUseAuthorization()
         return locationManager?.location ?? locationStorageManager.location(forKey: Config.storageKey)
+    }
+    
+    func locationFrom(postalCode: String) async -> CLPlacemark? {
+        let geoCoder = CLGeocoder()
+        do {
+            let location = try await geoCoder.geocodeAddressString(postalCode).first
+            return location
+        } catch {
+            print(error)
+            return nil
+        }
     }
 
     // MARK: - Private properties
@@ -80,6 +93,7 @@ final class LocationManager: NSObject {
             locationManager.activityType = Config.activityType
             locationManager.desiredAccuracy = Config.desiredAccuracy
             locationManager.delegate = self
+            self.locationManager?.requestWhenInUseAuthorization()
         }
     }
 

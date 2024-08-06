@@ -9,6 +9,7 @@ import CoreLocation
 import WidgetKit
 
 struct LocationInformationEntry: TimelineEntry {
+    let configuration: ConfigurationAppIntent? = nil
     // MARK: - Types
 
     enum State {
@@ -36,6 +37,18 @@ struct LocationInformationEntry: TimelineEntry {
             return "Planet Earth, Milky Way Galaxy"
         case .success(let locationInformation):
             let shortAddressArray: [String] = locationInformation.addresses?.compactMap({$0.formattedVeryShort()}) ?? ["Planet Earth, Milky Way Galaxy"]
+            return shortAddressArray.joined(separator: "\n")
+        case .failure(let error):
+            return error.localizedDescription
+        }
+    }
+    
+    var mediumLocationDescription: String {
+        switch self.state {
+        case .placeholder:
+            return "Planet Earth, Milky Way Galaxy"
+        case .success(let locationInformation):
+            let shortAddressArray: [String] = locationInformation.addresses?.compactMap({$0.formattedShort()}) ?? ["Planet Earth, Milky Way Galaxy"]
             return shortAddressArray.joined(separator: "\n")
         case .failure(let error):
             return error.localizedDescription
@@ -72,6 +85,48 @@ struct LocationInformationEntry: TimelineEntry {
         case .success(let locationInformation):
             let freeformAddressArray: [String] = locationInformation.addresses?.compactMap({ ($0.municipality ?? "") + "\n" + ($0.countrySubdivision ?? "")}) ?? ["Planet\nEarth"]
             return freeformAddressArray.joined(separator: "\n")
+        case .failure(let error):
+            return error.localizedDescription
+        }
+    }
+    var locationPlusWeatherDescription: String {
+        switch self.state {
+        case .placeholder:
+            return "Planet Earth, Milky Way Galaxy\nWeather Now!"
+        case .success(let locationInformation):
+            let shortAddressArray: [String] = locationInformation.addresses?.compactMap({$0.formattedVeryShort()}) ?? ["Planet Earth, Milky Way Galaxy"]
+            return shortAddressArray.joined(separator: "\n") + "\n" + (locationInformation.weather?.first?.forecast ?? "")
+        case .failure(let error):
+            return error.localizedDescription
+        }
+    }
+    var locationPlusWeatherDescriptionPlusEmoji: String {
+        switch self.state {
+        case .placeholder:
+            return "Planet Earth, Milky Way Galaxy\nWeather Now!"
+        case .success(let locationInformation):
+            let shortAddressArray: [String] = locationInformation.addresses?.compactMap({$0.formattedVeryShort()}) ?? ["Planet Earth, Milky Way Galaxy"]
+            return shortAddressArray.joined(separator: "\n") + "\n" + (locationInformation.weather?.first?.forecast ?? "") + (Fun.emojis.randomElement() ?? "")
+        case .failure(let error):
+            return error.localizedDescription
+        }
+    }
+    var weatherDescription: String {
+        switch self.state {
+        case .placeholder:
+            return "Weather Now!"
+        case .success(let locationInformation):
+            return (locationInformation.weather?.first?.forecast ?? "")
+        case .failure(let error):
+            return error.localizedDescription
+        }
+    }
+    var weatherPlusEmojiDescription: String {
+        switch self.state {
+        case .placeholder:
+            return "Weather Now!"
+        case .success(let locationInformation):
+            return (locationInformation.weather?.first?.forecast ?? "") + (Fun.emojis.randomElement() ?? "")
         case .failure(let error):
             return error.localizedDescription
         }

@@ -299,6 +299,27 @@ struct Address: Codable, Equatable {
         }
     }
     
+    func formattedShort() -> String {
+        if var streetArray = streetName?.components(separatedBy: " ") as? [String] {
+            let street = streetArray.joined(separator: " ")
+            if localName?.contains(street) != true {
+                return streetArray.joined(separator: " ") + ", " + (localName ?? municipality ?? "")
+            } else {
+                return street + ", " + (municipality ?? "")
+            }
+        } else {
+            if (streetName?.count ?? 0) >= 1 {
+                if let streetName = streetName, localName?.contains(streetName) != true {
+                    return streetName + ", " + (localName ?? municipality ?? "")
+                } else {
+                    return (streetName ?? "") + ", " + (municipality ?? "")
+                }
+            } else {
+                return localName ?? municipality ?? "" + ", " + (countrySubdivisionName ?? "")
+            }
+        }
+    }
+    
     func formattedCommonLongFlag() -> String {
         var flag: String = ""
         if let countryCode = self.countryCode {
