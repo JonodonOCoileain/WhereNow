@@ -53,6 +53,7 @@ struct ForecastOffice: Codable {
     let approvedObservationStations: [String]?
     let address: ForecastOfficeAddress?
     let parentOrganization: String?
+    let telephone: String?
     let email: String?
     let responsibleFireZones: [String]?
     let responsibleForecastZones: [String]?
@@ -65,7 +66,8 @@ struct ForecastOffice: Codable {
         let address = address?.description() ?? ""
         let email = email ?? ""
         let parentURL = parentOrganization ?? ""
-        return name + "\n" + address + "\n" + "Email address: " + email + "\n" + "Parent organization: \(parentURL)"
+        let telephone = telephone ?? ""
+        return name + "\n" + address + "\n" + "Email address: " + email + "\n" + "Telephone: " + telephone + "\n" + "Parent organization: \(parentURL)"
     }
 }
 
@@ -74,15 +76,13 @@ struct ForecastOfficeAddress: Codable {
     let addressLocality: String?
     let addressRegion: String?
     let streetAddress: String?
-    let telphoneNumber: String?
     
     func description() -> String {
         let streetAddress = streetAddress ?? ""
         let addressLocality = addressLocality ?? ""
         let addressRegion = addressRegion ?? ""
         let postalCode = postalCode ?? ""
-        let telphoneNumber = telphoneNumber ?? ""
-        return streetAddress + "\n" + addressLocality + ", " + addressRegion + " " + postalCode + "\n" + "Phone number:" + telphoneNumber
+        return streetAddress + "\n" + addressLocality + ", " + addressRegion + " " + postalCode + "\n"
     }
 }
 
@@ -135,9 +135,7 @@ class USAWeatherService: ObservableObject {
         let dataTask = URLSession(configuration: .ephemeral).dataTask(with: request, completionHandler: { [weak self] data, _, error in
             let pointInfo = data?.convertToDictionary()
             if let properties = pointInfo?["properties"] as? [String:Any], let forecastURL = properties["forecast"] as? String, let URL = URL(string: forecastURL) {
-                DispatchQueue.main.async { [weak self] in
-                    self?.forecastOfficeURL = properties["forecastOffice"] as? String
-                }
+                self?.forecastOfficeURL = properties["forecastOffice"] as? String
                 var components = URLComponents(url: URL, resolvingAgainstBaseURL: false)!
                 let units: String = "si"//"us" //"si" is the other option
                 components.queryItems = [
