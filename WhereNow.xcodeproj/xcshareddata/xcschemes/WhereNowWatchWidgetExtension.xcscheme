@@ -16,7 +16,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FC51012F2C5AC0DB009C5CB4"
+               BlueprintIdentifier = "FC5FA7CA2C6303190002E2A8"
                BuildableName = "WhereNowWatchWidgetExtension.appex"
                BlueprintName = "WhereNowWatchWidgetExtension"
                ReferencedContainer = "container:WhereNow.xcodeproj">
@@ -75,7 +75,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FC51012F2C5AC0DB009C5CB4"
+            BlueprintIdentifier = "FC5FA7CA2C6303190002E2A8"
             BuildableName = "WhereNowWatchWidgetExtension.appex"
             BlueprintName = "WhereNowWatchWidgetExtension"
             ReferencedContainer = "container:WhereNow.xcodeproj">
@@ -122,7 +122,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FC51012F2C5AC0DB009C5CB4"
+            BlueprintIdentifier = "FC5FA7CA2C6303190002E2A8"
             BuildableName = "WhereNowWatchWidgetExtension.appex"
             BlueprintName = "WhereNowWatchWidgetExtension"
             ReferencedContainer = "container:WhereNow.xcodeproj">

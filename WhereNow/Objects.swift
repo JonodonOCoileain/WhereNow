@@ -5,28 +5,12 @@
 //  Created by Jon on 7/29/24.
 //
 
+
+import MapKit
+import WidgetKit
 import Foundation
 import CoreLocation
 import SwiftUI
-import MapKit
-import WidgetKit
-
-public class Fun {
-    static var emojis: [String] = ["😀","😃","😁","😄","🥹","😆","😊","☺️","😇","🙂","😉","😉","😌","🥳","🤩","🥸","😎","😋","😍","🥰"]
-}
-
-public struct LocationInformation {
-    /// The resolved user location.
-    let userLocation: CLLocation
-
-    /// The map-snapshot image for the resolved user location.
-    let image: Image?
-    
-    /// Location metadata from TomTom
-    var addresses: [Address]?
-    /// Weather data from NOAA
-    var weather: [ForecastInfo]?
-}
 
 public struct ErrorView: View {
     // MARK: - Config
@@ -141,31 +125,7 @@ extension String {
     }
 }
 
-extension CoreLocation.CLLocation {
-    func getAddresses() async -> [Address] {
-        let coordinate = self.coordinate
-        guard let url = URL(string: "https://api.tomtom.com/search/2/reverseGeocode/\(coordinate.latitude),\(coordinate.longitude).json?key=FBSjYeqToGYAeG2A5txodKfGHrql38S4&radius=100") else { return [] }
-        var addresses: [Address] = []
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let newResponse = try JSONDecoder().decode(Response.self, from: data)
-            let newAddresses = newResponse.addresses.compactMap({$0.address})
-            addresses = newAddresses
-        } catch {
-            print(error.localizedDescription)
-            do {
-                let placemarks = try await CLGeocoder().reverseGeocodeLocation(self)
-                
-                let newAddresses = placemarks.compactMap({$0.asAddress()})
-                addresses = newAddresses
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        
-        return addresses
-    }
-}
+
 
 
 struct Response: Codable {
@@ -300,7 +260,7 @@ struct Address: Codable, Equatable {
     }
     
     func formattedShort() -> String {
-        if var streetArray = streetName?.components(separatedBy: " ") as? [String] {
+        if let streetArray = streetName?.components(separatedBy: " ") as? [String] {
             let street = streetArray.joined(separator: " ")
             if localName?.contains(street) != true {
                 return streetArray.joined(separator: " ") + ", " + (localName ?? municipality ?? "")
@@ -401,16 +361,5 @@ struct fading: ViewModifier {
                        .frame(width: 50)
                 }
              )
-    }
-}
-
-extension Data {
-    func convertToDictionary() -> [String: Any]? {
-        do {
-            return try JSONSerialization.jsonObject(with: self, options: []) as? [String: Any]
-        } catch {
-            print(error.localizedDescription)
-        }
-        return nil
     }
 }

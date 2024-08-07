@@ -178,9 +178,3 @@ extension String {
         }
     }
 }
-
-extension Double {
-    func celsiusToFahrenheit() -> Double {
-        return (self * 9/5) + 32
-    }
-}

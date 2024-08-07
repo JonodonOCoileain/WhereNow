@@ -1,3 +1,4 @@
+
 //
 //  WhereNowWatchWidget.swift
 //  WhereNowWatchWidget
@@ -52,8 +53,7 @@ struct Provider: AppIntentTimelineProvider {
 
     private let locationManager: LocationManager = LocationManager(locationStorageManager: UserDefaults.standard)
     private let weatherManager: USAWeatherService = USAWeatherService()
-    //private let mapSnapshotManager: MapSnapshotManager
-    
+   
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> LocationInformationEntry {
         var location: CLLocation
         if let locationIntent = configuration.locationIntent {
@@ -167,13 +167,13 @@ struct WhereNowLocationTextOnlyWidget: Widget {
 extension ConfigurationAppIntent {
     fileprivate static var SpartaNJ: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        //intent.location = "07871"
+        intent.locationIntent = "07871"
         return intent
     }
     
     fileprivate static var CurrentLocation: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        //intent.location = "Current Location"
+        intent.locationIntent = "Current Location"
         return intent
     }
 }
@@ -202,10 +202,3 @@ extension ConfigurationAppIntent {
         }
     }
 #endif*/
-
-
-#Preview(as: .accessoryRectangular) {
-    WhereNowTextWidget()
-} timeline: {
-    SimpleEntry(date: .now, configuration: .SpartaNJ)
-}

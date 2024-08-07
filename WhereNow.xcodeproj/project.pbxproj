@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		FC2491762C48A63800101DF3 /* WhereNow Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FC2491752C48A63800101DF3 /* WhereNow Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		FC5101312C5AC0DB009C5CB4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; };
-		FC5101322C5AC0DB009C5CB4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
-		FC51013D2C5AC0DD009C5CB4 /* WhereNowWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC5101302C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FC5FA7CC2C6303190002E2A8 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; };
+		FC5FA7CD2C6303190002E2A8 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
+		FC5FA7D82C63031B0002E2A8 /* WhereNowWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC5FA7CB2C6303190002E2A8 /* WhereNowWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FCE332C12C5A9C240093D3EF /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; platformFilters = (ios, macos, ); };
 		FCE332C22C5A9C240093D3EF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
 		FCE332D02C5A9C260093D3EF /* WhereNowWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -52,11 +52,11 @@
 			remoteGlobalIDString = FC2491742C48A63800101DF3;
 			remoteInfo = "WhereNow Watch App";
 		};
-		FC51013B2C5AC0DD009C5CB4 /* PBXContainerItemProxy */ = {
+		FC5FA7D62C63031B0002E2A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FC2491472C48A63600101DF3 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = FC51012F2C5AC0DB009C5CB4;
+			remoteGlobalIDString = FC5FA7CA2C6303190002E2A8;
 			remoteInfo = WhereNowWatchWidgetExtension;
 		};
 		FCE332CE2C5A9C260093D3EF /* PBXContainerItemProxy */ = {
@@ -86,7 +86,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				FC51013D2C5AC0DD009C5CB4 /* WhereNowWatchWidgetExtension.appex in Embed Foundation Extensions */,
+				FC5FA7D82C63031B0002E2A8 /* WhereNowWatchWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -113,7 +113,7 @@
 		FC2491912C48A63900101DF3 /* WhereNow Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WhereNow Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2492C92C494D8800101DF3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FC2492CB2C494D8800101DF3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		FC5101302C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhereNowWatchWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC5FA7CB2C6303190002E2A8 /* WhereNowWatchWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhereNowWatchWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhereNowWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -121,12 +121,17 @@
 		FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"CoreLocation+Extension.swift",
+				"Data+.swift",
+				"Double+.swift",
 				ErrorCases.swift,
 				ForecastInfo.swift,
+				Fun.swift,
 				LocationDataModel.swift,
+				LocationInformation.swift,
 				LocationManager.swift,
 				Objects.swift,
-				"String+Extensions.swift",
+				"String+.swift",
 				USAWeatherService.swift,
 				WhereNowView.swift,
 				WidgetKinds.swift,
@@ -141,34 +146,30 @@
 			);
 			target = FC24914E2C48A63600101DF3 /* WhereNow */;
 		};
-		FC5101412C5AC0DD009C5CB4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		FC5FA7DC2C63031B0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */;
+			target = FC5FA7CA2C6303190002E2A8 /* WhereNowWatchWidgetExtension */;
 		};
-		FC5101442C5AC16D009C5CB4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		FC5FA7DE2C63033F0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"CoreLocation+Extension.swift",
+				"Data+.swift",
+				"Double+.swift",
 				ErrorCases.swift,
 				ForecastInfo.swift,
-				LocationDataModel.swift,
+				Fun.swift,
+				LocationInformation.swift,
 				LocationInformationEntry.swift,
 				LocationManager.swift,
 				Objects.swift,
-				"String+Extensions.swift",
 				USAWeatherService.swift,
 				WidgetKinds.swift,
 			);
-			target = FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */;
-		};
-		FCD5739B2C62B054006BFA85 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				AppIntent.swift,
-			);
-			target = FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */;
+			target = FC5FA7CA2C6303190002E2A8 /* WhereNowWatchWidgetExtension */;
 		};
 		FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -180,14 +181,19 @@
 		FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"CoreLocation+Extension.swift",
+				"Data+.swift",
+				"Double+.swift",
 				ErrorCases.swift,
 				ForecastInfo.swift,
+				Fun.swift,
 				LocationDataModel.swift,
+				LocationInformation.swift,
 				LocationInformationEntry.swift,
 				LocationManager.swift,
 				MapSnapshotManager.swift,
 				Objects.swift,
-				"String+Extensions.swift",
+				"String+.swift",
 				USAWeatherService.swift,
 				WidgetKinds.swift,
 			);
@@ -196,14 +202,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		FC2491512C48A63600101DF3 /* WhereNow */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC2492ED2C4ABCB400101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC5101442C5AC16D009C5CB4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNow; sourceTree = "<group>"; };
+		FC2491512C48A63600101DF3 /* WhereNow */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC2492ED2C4ABCB400101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC5FA7DE2C63033F0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNow; sourceTree = "<group>"; };
 		FC2491622C48A63800101DF3 /* WhereNowTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WhereNowTests; sourceTree = "<group>"; };
 		FC24916C2C48A63800101DF3 /* WhereNowUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WhereNowUITests; sourceTree = "<group>"; };
 		FC2491792C48A63800101DF3 /* WhereNow Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch App"; sourceTree = "<group>"; };
 		FC24918A2C48A63900101DF3 /* WhereNow Watch AppTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch AppTests"; sourceTree = "<group>"; };
 		FC2491942C48A63900101DF3 /* WhereNow Watch AppUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch AppUITests"; sourceTree = "<group>"; };
-		FC5101332C5AC0DB009C5CB4 /* WhereNowWatchWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC5101412C5AC0DD009C5CB4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWatchWidget; sourceTree = "<group>"; };
-		FCE332C32C5A9C240093D3EF /* WhereNowWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCD5739B2C62B054006BFA85 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWidget; sourceTree = "<group>"; };
+		FC5FA7CE2C6303190002E2A8 /* WhereNowWatchWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC5FA7DC2C63031B0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWatchWidget; sourceTree = "<group>"; };
+		FCE332C32C5A9C240093D3EF /* WhereNowWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWidget; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -249,12 +255,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FC51012D2C5AC0DB009C5CB4 /* Frameworks */ = {
+		FC5FA7C82C6303190002E2A8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FC5101322C5AC0DB009C5CB4 /* SwiftUI.framework in Frameworks */,
-				FC5101312C5AC0DB009C5CB4 /* WidgetKit.framework in Frameworks */,
+				FC5FA7CD2C6303190002E2A8 /* SwiftUI.framework in Frameworks */,
+				FC5FA7CC2C6303190002E2A8 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,7 +286,7 @@
 				FC24918A2C48A63900101DF3 /* WhereNow Watch AppTests */,
 				FC2491942C48A63900101DF3 /* WhereNow Watch AppUITests */,
 				FCE332C32C5A9C240093D3EF /* WhereNowWidget */,
-				FC5101332C5AC0DB009C5CB4 /* WhereNowWatchWidget */,
+				FC5FA7CE2C6303190002E2A8 /* WhereNowWatchWidget */,
 				FC2492C82C494D8800101DF3 /* Frameworks */,
 				FC2491502C48A63600101DF3 /* Products */,
 			);
@@ -296,7 +302,7 @@
 				FC2491872C48A63900101DF3 /* WhereNow Watch AppTests.xctest */,
 				FC2491912C48A63900101DF3 /* WhereNow Watch AppUITests.xctest */,
 				FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */,
-				FC5101302C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension.appex */,
+				FC5FA7CB2C6303190002E2A8 /* WhereNowWatchWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -397,7 +403,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				FC51013C2C5AC0DD009C5CB4 /* PBXTargetDependency */,
+				FC5FA7D72C63031B0002E2A8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				FC2491792C48A63800101DF3 /* WhereNow Watch App */,
@@ -455,26 +461,26 @@
 			productReference = FC2491912C48A63900101DF3 /* WhereNow Watch AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */ = {
+		FC5FA7CA2C6303190002E2A8 /* WhereNowWatchWidgetExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FC51013E2C5AC0DD009C5CB4 /* Build configuration list for PBXNativeTarget "WhereNowWatchWidgetExtension" */;
+			buildConfigurationList = FC5FA7D92C63031B0002E2A8 /* Build configuration list for PBXNativeTarget "WhereNowWatchWidgetExtension" */;
 			buildPhases = (
-				FC51012C2C5AC0DB009C5CB4 /* Sources */,
-				FC51012D2C5AC0DB009C5CB4 /* Frameworks */,
-				FC51012E2C5AC0DB009C5CB4 /* Resources */,
+				FC5FA7C72C6303190002E2A8 /* Sources */,
+				FC5FA7C82C6303190002E2A8 /* Frameworks */,
+				FC5FA7C92C6303190002E2A8 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				FC5101332C5AC0DB009C5CB4 /* WhereNowWatchWidget */,
+				FC5FA7CE2C6303190002E2A8 /* WhereNowWatchWidget */,
 			);
 			name = WhereNowWatchWidgetExtension;
 			packageProductDependencies = (
 			);
 			productName = WhereNowWatchWidgetExtension;
-			productReference = FC5101302C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension.appex */;
+			productReference = FC5FA7CB2C6303190002E2A8 /* WhereNowWatchWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */ = {
@@ -531,7 +537,7 @@
 						CreatedOnToolsVersion = 16.0;
 						TestTargetID = FC2491742C48A63800101DF3;
 					};
-					FC51012F2C5AC0DB009C5CB4 = {
+					FC5FA7CA2C6303190002E2A8 = {
 						CreatedOnToolsVersion = 16.0;
 					};
 					FCE332BF2C5A9C240093D3EF = {
@@ -561,7 +567,7 @@
 				FC2491862C48A63900101DF3 /* WhereNow Watch AppTests */,
 				FC2491902C48A63900101DF3 /* WhereNow Watch AppUITests */,
 				FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */,
-				FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */,
+				FC5FA7CA2C6303190002E2A8 /* WhereNowWatchWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -609,7 +615,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FC51012E2C5AC0DB009C5CB4 /* Resources */ = {
+		FC5FA7C92C6303190002E2A8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -668,7 +674,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FC51012C2C5AC0DB009C5CB4 /* Sources */ = {
+		FC5FA7C72C6303190002E2A8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -710,10 +716,10 @@
 			target = FC2491742C48A63800101DF3 /* WhereNow Watch App */;
 			targetProxy = FC2491922C48A63900101DF3 /* PBXContainerItemProxy */;
 		};
-		FC51013C2C5AC0DD009C5CB4 /* PBXTargetDependency */ = {
+		FC5FA7D72C63031B0002E2A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FC51012F2C5AC0DB009C5CB4 /* WhereNowWatchWidgetExtension */;
-			targetProxy = FC51013B2C5AC0DD009C5CB4 /* PBXContainerItemProxy */;
+			target = FC5FA7CA2C6303190002E2A8 /* WhereNowWatchWidgetExtension */;
+			targetProxy = FC5FA7D62C63031B0002E2A8 /* PBXContainerItemProxy */;
 		};
 		FCE332CF2C5A9C260093D3EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1163,13 +1169,13 @@
 			};
 			name = Release;
 		};
-		FC51013F2C5AC0DD009C5CB4 /* Debug */ = {
+		FC5FA7DA2C63031B0002E2A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhereNowWatchWidget/Info.plist;
@@ -1193,13 +1199,13 @@
 			};
 			name = Debug;
 		};
-		FC5101402C5AC0DD009C5CB4 /* Release */ = {
+		FC5FA7DB2C63031B0002E2A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhereNowWatchWidget/Info.plist;
@@ -1376,11 +1382,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FC51013E2C5AC0DD009C5CB4 /* Build configuration list for PBXNativeTarget "WhereNowWatchWidgetExtension" */ = {
+		FC5FA7D92C63031B0002E2A8 /* Build configuration list for PBXNativeTarget "WhereNowWatchWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				FC51013F2C5AC0DD009C5CB4 /* Debug */,
-				FC5101402C5AC0DD009C5CB4 /* Release */,
+				FC5FA7DA2C63031B0002E2A8 /* Debug */,
+				FC5FA7DB2C63031B0002E2A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
