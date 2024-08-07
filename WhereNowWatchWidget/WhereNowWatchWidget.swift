@@ -19,7 +19,7 @@ private enum TextWidgetConfig {
     static let description = "This is a widget to show weather, street name, and town name metadata of a location."
 
     /// The sizes that our widget supports.
-    static let supportedFamilies: [WidgetFamily] = [.accessoryRectangular]
+    static let supportedFamilies: [WidgetFamily] = [.accessoryRectangular, .accessoryInline]
 }
 
 private enum LocationOnlyTextWidgetConfig {
@@ -104,35 +104,45 @@ struct WhereNowTextWidgetView : View {
     
     var entry: Provider.Entry
     let titleFontSize: CGFloat = 8
-    let fontSize: CGFloat = 10
+    let fontSize: CGFloat = 9
+    let emojiFontSize: CGFloat = 9
     let emojiLine: Bool
     var body: some View {
         switch widgetFamily {
         case .accessoryRectangular:
             VStack(alignment: .center) {
-                Text(entry.mediumLocationDescription + (![.accented].contains(self.widgetRenderingMode) ? entry.flagDescription : ""))
+                Text(entry.mediumLocationDescription + (![.accented].contains(self.widgetRenderingMode) ? " " + entry.flagDescription : ""))
                     .multilineTextAlignment(.center)
                     .lineLimit(1)
                     .font(.system(size: titleFontSize))
                 Text(entry.weatherDescription + (emojiLine ? "" : " " + (Fun.emojis.randomElement() ?? "")))
                     .multilineTextAlignment(.center)
-                    .lineLimit(4)
+                    .lineLimit(5)
                     .font(.system(size: fontSize))
                 if ![.accented].contains(self.widgetRenderingMode) && emojiLine {
                     Text(Fun.emojis.randomElement() ?? "")
                         .multilineTextAlignment(.center)
-                        .font(.system(size: fontSize))
+                        .font(.system(size: emojiFontSize))
                 }
             }
+            .frame(maxHeight: .infinity)
             Spacer()
         case .accessoryCorner, .accessoryCircular, .accessoryInline:
-            Text(entry.shortDescription)
+            Text(entry.shortDescription + (emojiLine ? "" : " " + (Fun.emojis.randomElement() ?? "")))
         @unknown default:
             Text(entry.shortDescription)
         }
         
     }
 }
+
+
+/*struct WhereNowWidgetBundle: WidgetBundle {
+    var body: some Widget {
+        WhereNowTextWidget()
+        WhereNowLocationTextOnlyWidget()
+    }
+}*/
 @main
 struct WhereNowTextWidget: Widget {
     
