@@ -99,7 +99,18 @@ struct Provider: AppIntentTimelineProvider {
             location = locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
         }
         let addresses = await location.getAddresses()
-        let weather = await weatherManager.getForecasts(using: location.coordinate)
+        var weather = await weatherManager.getForecasts(using: location.coordinate)
+        if weather.count > 0 {
+            for (index, forecastInfo) in weather.enumerated() {
+                UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
+            }
+        } else {
+            for i in 1...15 {
+                if let forecastInfo =  UserDefaults.standard.weather(forKey: "\(location.coordinate) \(i)") {
+                    weather[i] = forecastInfo
+                }
+            }
+        }
         let entry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather)))
         return entry
         #else
@@ -117,7 +128,18 @@ struct Provider: AppIntentTimelineProvider {
             let snapshots = MapSnapshotManager()
             let snapshotResult = await snapshots.snapshot(of: coordinate)
             let addresses = await location.getAddresses()
-            let forecastInfos = await weatherManager.getForecasts(using: coordinate)
+            var forecastInfos = await weatherManager.getForecasts(using: coordinate)
+        if forecastInfos.count > 0 {
+            for (index, forecastInfo) in forecastInfos.enumerated() {
+                UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
+            }
+        } else {
+            for i in 1...15 {
+                if let forecastInfo =  UserDefaults.standard.weather(forKey: "\(location.coordinate) \(i)") {
+                    forecastInfos[i] = forecastInfo
+                }
+            }
+        }
         
         switch snapshotResult {
         case .success(let image):
@@ -139,7 +161,18 @@ struct Provider: AppIntentTimelineProvider {
             location = locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
         }
         let addresses = await location.getAddresses()
-        let weather = await weatherManager.getForecasts(using: location.coordinate)
+        var weather = await weatherManager.getForecasts(using: location.coordinate)
+        if weather.count > 0 {
+            for (index, forecastInfo) in weather.enumerated() {
+                UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
+            }
+        } else {
+            for i in 1...15 {
+                if let forecastInfo =  UserDefaults.standard.weather(forKey: "\(location.coordinate) \(i)") {
+                    weather[i] = forecastInfo
+                }
+            }
+        }
         let entries = [LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather)))]
         return Timeline(entries: entries, policy: .after(.now + 60*10))
         #else
@@ -147,7 +180,18 @@ struct Provider: AppIntentTimelineProvider {
             let snapshots = MapSnapshotManager()
             let snapshotResult = await snapshots.snapshot(of: location.coordinate)
             let addresses = await location.getAddresses()
-            let forecastInfos = await weatherManager.getForecasts(using: location.coordinate)
+            var forecastInfos = await weatherManager.getForecasts(using: location.coordinate)
+            if forecastInfos.count > 0 {
+                for (index, forecastInfo) in forecastInfos.enumerated() {
+                    UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
+                }
+            } else {
+                for i in 1...15 {
+                    if let forecastInfo =  UserDefaults.standard.weather(forKey: "\(location.coordinate) \(i)") {
+                        forecastInfos[i] = forecastInfo
+                    }
+                }
+            }
             var locationInformationEntry: LocationInformationEntry
             switch snapshotResult {
             case .success(let image):
@@ -364,7 +408,7 @@ struct WhereNowMapAndWeatherWidgetView : View {
 
     var body: some View {
         GeometryReader { geometry in
-            VStack {
+            VStack(spacing: 0) {
                 HStack(spacing: 0) {
                     ZStack {
                         info.image?
@@ -386,6 +430,7 @@ struct WhereNowMapAndWeatherWidgetView : View {
                                    height: Config.userLocationDotSize)
                     }
                     .frame(width: geometry.size.width / 2, height: geometry.size.width / 2)
+                    .ignoresSafeArea()
                     
                     if [WidgetFamily.systemLarge, WidgetFamily.systemExtraLarge].contains(widgetFamily) {
                         Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
@@ -393,10 +438,10 @@ struct WhereNowMapAndWeatherWidgetView : View {
                             .lineLimit(100)
                             .font(.caption)
                             .frame(minWidth: 80, maxWidth: 185, maxHeight: .infinity)
+                            .ignoresSafeArea()
                     }
                 }
-                .padding([.top,.bottom], -17)
-                
+        
                 if let weather = info.weather, let first = weather.first {
                     Text(("\(Fun.emojis.randomElement() ?? "") ") + (first.name ?? ""))
                         .multilineTextAlignment(.center)
@@ -415,11 +460,13 @@ struct WhereNowMapAndWeatherWidgetView : View {
                         .lineLimit(100)
                         .font(.caption)
                 }
-                
+                Spacer()
             }
-        }
-        .ignoresSafeArea()
-        .padding(-16)
+            .ignoresSafeArea()
+            .frame(width: geometry.size.width,
+                                   height: geometry.size.height,
+                                   alignment: .topLeading)
+        }.ignoresSafeArea()
     }
 }
 
@@ -455,7 +502,11 @@ struct WhereNowLongWeatherWidgetView : View {
         GeometryReader { geometry in
             VStack {
                 if let weather = info.weather, let first = weather.first {
-                    Text(("\(Fun.emojis.randomElement() ?? "") ") + (first.name ?? ""))
+                    Text(Fun.emojis.randomElement() ?? "")
+                        .multilineTextAlignment(.center)
+                        .lineLimit(1)
+                        .font(.subheadline)
+                    Text(first.name ?? "")
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
@@ -463,7 +514,11 @@ struct WhereNowLongWeatherWidgetView : View {
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
-                    Text(("\(Fun.emojis.randomElement() ?? "") ") + (weather[1].name ?? ""))
+                    Text(Fun.emojis.randomElement() ?? "")
+                        .multilineTextAlignment(.center)
+                        .lineLimit(1)
+                        .font(.subheadline)
+                    Text(weather[1].name ?? "")
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
@@ -471,7 +526,11 @@ struct WhereNowLongWeatherWidgetView : View {
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
-                    Text(("\(Fun.emojis.randomElement() ?? "") ") + (weather[2].name ?? ""))
+                    Text(Fun.emojis.randomElement() ?? "")
+                        .multilineTextAlignment(.center)
+                        .lineLimit(1)
+                        .font(.subheadline)
+                    Text(weather[2].name ?? "")
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
@@ -479,7 +538,11 @@ struct WhereNowLongWeatherWidgetView : View {
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
-                    Text(("\(Fun.emojis.randomElement() ?? "") ") + (weather[3].name ?? ""))
+                    Text(Fun.emojis.randomElement() ?? "")
+                        .multilineTextAlignment(.center)
+                        .lineLimit(1)
+                        .font(.subheadline)
+                    Text(weather[3].name ?? "")
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
@@ -492,7 +555,6 @@ struct WhereNowLongWeatherWidgetView : View {
             }
         }
         .ignoresSafeArea()
-        .padding(-16)
     }
 }
 
@@ -533,9 +595,11 @@ struct WhereNowMapAndWeatherWidget: Widget {
             switch entry.state {
                 case .success(let locationInfo):
                     WhereNowMapAndWeatherWidgetView(info: locationInfo)
+                        .ignoresSafeArea()
                         .containerBackground(LinearGradient(colors: [Color.pink, Color.purple], startPoint: .bottomLeading, endPoint: .topTrailing), for: .widget)
                 case .placeholder:
                     WhereNowMapAndWeatherWidgetView(info: LocationInformation(userLocation: CLLocation(latitude: 37.333424329435715, longitude: -122.00546584232792), image: Image("MapApplePark"), addresses: [Address(localName: "Apple")]))
+                    .ignoresSafeArea()
                     .containerBackground(.fill.tertiary, for: .widget)
                 case .failure(let error):
                     ErrorView(errorMessage: error.localizedDescription)
@@ -599,21 +663,15 @@ extension ConfigurationAppIntent {
         static var previews: some View {
             let appleParkLocation = CLLocation(latitude: 37.333424329435715, longitude: -122.00546584232792)
             let info = LocationInformation(userLocation: appleParkLocation,
-                                          image: Image("MapApplePark"),
-                                           weather: [ForecastInfo(forecast: "Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! ")])
+                                           image: Image("MapApplePark"), addresses: [Address(streetNumber: "1", street: "street", streetName: "streetName", streetNameAndNumber: "1 streetNameWithNumber", countryCode: "US", municipality: "municipality", postalCode: "12345", country: "United States", localName: "localName")],
+                                           weather: [ForecastInfo(name: "now", forecast: "Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! "),ForecastInfo(name: "later", forecast: "Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! "),ForecastInfo(name: "later later", forecast: "Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! "),ForecastInfo(name: "later later", forecast: "Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! "),ForecastInfo(name: "later later", forecast: "Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! "),ForecastInfo(name: "later later", forecast: "Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! "),ForecastInfo(name: "later later", forecast: "Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! "),ForecastInfo(name: "later later", forecast: "Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! "),ForecastInfo(name: "later later", forecast: "Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! "),ForecastInfo(name: "later later", forecast: "Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! Weather Now! ")])
 
-            let informationEntry = LocationInformationEntry(date: Date(),
-                                                    state: .success(info))
+            //let informationEntry = LocationInformationEntry(date: Date(),
+                                                    //state: .success(info))
 
             return Group {
-                WhereNowWidgetTextView(entry: informationEntry)
-                    .previewContext(WidgetPreviewContext(family: .accessoryRectangular))
-                
-                WhereNowWidgetTextView(entry: informationEntry)
-                    .previewContext(WidgetPreviewContext(family: .accessoryInline))
-                
-                WhereNowWidgetTextView(entry: informationEntry)
-                    .previewContext(WidgetPreviewContext(family: .accessoryCircular))
+                WhereNowMapAndWeatherWidgetView(info: info)
+                    .previewContext(WidgetPreviewContext(family: .systemLarge))
             }
         }
     }

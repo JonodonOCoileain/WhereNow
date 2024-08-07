@@ -256,6 +256,7 @@ class USAWeatherService: ObservableObject {
             }
             timesAndForecasts.append(ForecastInfo(name: element, forecast: details.joined(separator: " "), shortDescription: shortDescriptions[index], windSpeed: windSpeeds[index], windDirection: windDirections[index]))
         }
+        
         return timesAndForecasts
     }
     

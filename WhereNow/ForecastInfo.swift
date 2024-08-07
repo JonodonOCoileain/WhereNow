@@ -6,7 +6,28 @@
 //
 import Foundation
 
-class ForecastInfo: Hashable {
+class ForecastInfo: NSObject, NSCoding {
+    func encode(with coder: NSCoder) {
+        coder.encode(self.name, forKey: "name")
+        coder.encode(self.time, forKey: "time")
+        coder.encode(self.forecast, forKey: "forecast")
+        coder.encode(self.shortDescription, forKey: "shortDescription")
+        coder.encode(self.image, forKey: "image")
+        coder.encode(self.windDirection, forKey: "windDirection")
+        coder.encode(self.windSpeed, forKey: "windSpeed")
+    }
+    
+    required init?(coder: NSCoder) {
+        self.name = coder.decodeObject(forKey: "name") as? String
+        self.time = coder.decodeObject(forKey: "time") as? String
+        self.forecast = coder.decodeObject(forKey: "forecast") as? String ?? ""
+        self.shortDescription = coder.decodeObject(forKey: "shortDescription") as? String
+        self.image = coder.decodeObject(forKey: "image") as? String
+        self.windDirection = coder.decodeObject(forKey: "windDirection") as? String
+        self.windSpeed = coder.decodeObject(forKey: "windSpeed") as? String
+    }
+    
+    
     let name: String?
     let time: String?
     let forecast: String
@@ -34,7 +55,7 @@ class ForecastInfo: Hashable {
 
     }
     
-    func hash(into hasher: inout Hasher) {
+    /*func hash(into hasher: inout Hasher) {
         hasher.combine(name)
         hasher.combine(forecast)
         hasher.combine(time)
@@ -42,5 +63,5 @@ class ForecastInfo: Hashable {
         hasher.combine(image)
         hasher.combine(windSpeed)
         hasher.combine(windDirection)
-    }
+    }*/
 }

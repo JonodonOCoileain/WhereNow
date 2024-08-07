@@ -64,7 +64,18 @@ struct Provider: AppIntentTimelineProvider {
             location = locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
         }
         let addresses = await location.getAddresses()
-        let weather = await weatherManager.getForecasts(using: location.coordinate)
+        var weather = await weatherManager.getForecasts(using: location.coordinate)
+        if weather.count > 0 {
+            for (index, forecastInfo) in weather.enumerated() {
+                UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
+            }
+        } else {
+            for i in 1...15 {
+                if let forecastInfo =  UserDefaults.standard.weather(forKey: "\(location.coordinate) \(i)") {
+                    weather[i] = forecastInfo
+                }
+            }
+        }
         let entry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather)))
         return entry
     }
@@ -79,7 +90,18 @@ struct Provider: AppIntentTimelineProvider {
             location = locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
         }
         let addresses = await location.getAddresses()
-        let weather = await weatherManager.getForecasts(using: location.coordinate)
+        var weather = await weatherManager.getForecasts(using: location.coordinate)
+        if weather.count > 0 {
+            for (index, forecastInfo) in weather.enumerated() {
+                UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
+            }
+        } else {
+            for i in 1...15 {
+                if let forecastInfo =  UserDefaults.standard.weather(forKey: "\(location.coordinate) \(i)") {
+                    weather[i] = forecastInfo
+                }
+            }
+        }
         let entries = [LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather)))]
         return Timeline(entries: entries, policy: .after(.now + 60*10))
     }
@@ -91,11 +113,6 @@ struct Provider: AppIntentTimelineProvider {
     /*func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
        return [WidgetRelevanceEntry(configuration: ConfigurationAppIntent(), context: Rel)]
     }*/
-}
-
-struct SimpleEntry: TimelineEntry {
-    let date: Date
-    let configuration: ConfigurationAppIntent
 }
 
 struct WhereNowTextWidgetView : View {

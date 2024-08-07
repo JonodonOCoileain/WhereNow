@@ -74,6 +74,36 @@ extension UserDefaults: LocationStorageManaging {
     }
 }
 
+protocol WeatherStorageManaging {
+    func set(weather: ForecastInfo, forKey key: String)
+    func weather(forKey key: String) -> ForecastInfo?
+}
+
+extension UserDefaults: WeatherStorageManaging {
+    func set(weather: ForecastInfo, forKey key: String) {
+        do {
+            let encodedLocationData = try NSKeyedArchiver.archivedData(withRootObject: weather, requiringSecureCoding: true)
+            set(encodedLocationData, forKey: key)
+        } catch {
+            "Could not store location in user-defaults: \(error.localizedDescription)".log(level: .error)
+        }
+    }
+
+    func weather(forKey key: String) -> ForecastInfo? {
+        guard let decodedLocationData = data(forKey: key) else {
+            "Couldn't find location data for key \(key)".log(level: .error)
+            return nil
+        }
+
+        do {
+            return try NSKeyedUnarchiver.unarchivedObject(ofClass: ForecastInfo.self, from: decodedLocationData)
+        } catch {
+            "Couldn't decode location: \(error.localizedDescription)".log(level: .error)
+            return nil
+        }
+    }
+}
+
 // MARK: - Helpers
 
 
