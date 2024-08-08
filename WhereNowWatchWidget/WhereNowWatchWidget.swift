@@ -121,7 +121,7 @@ struct WhereNowTextWidgetView : View {
     
     var entry: Provider.Entry
     let titleFontSize: CGFloat = 8
-    let fontSize: CGFloat = 9
+    let fontSize: CGFloat = 8
     let emojiFontSize: CGFloat = 9
     let emojiLine: Bool
     var body: some View {

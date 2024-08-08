@@ -353,17 +353,17 @@ struct WhereNowMapWidgetView : View {
                     )
                     .frame(width: Config.userLocationDotSize,
                            height: Config.userLocationDotSize)
-                
+            }
+            .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
+            .overlay(alignment: .bottom, content: {
                 Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
                         .multilineTextAlignment(.center)
                         .lineLimit(8)
-                        .font(.caption)
+                        .font(.system(size: 8))
                         .foregroundColor(Color(red: 0.4, green: 0, blue: 0.7))
-                        .frame(minWidth: 80, maxWidth: .infinity, maxHeight: .infinity)
                         .bold()
                         .opacity(widgetFamily != .systemMedium ? 1 : 0)
-            }
-            .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
+            })
             
             if widgetFamily == .systemMedium {
                 Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
@@ -447,6 +447,7 @@ struct WhereNowMapAndWeatherWidgetView : View {
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
+                        .bold()
                     Text(first.forecast)
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
@@ -455,6 +456,7 @@ struct WhereNowMapAndWeatherWidgetView : View {
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
+                        .bold()
                     Text(weather[1].forecast)
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
@@ -510,6 +512,7 @@ struct WhereNowLongWeatherWidgetView : View {
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
+                        .bold()
                     Text(first.forecast)
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
@@ -522,6 +525,7 @@ struct WhereNowLongWeatherWidgetView : View {
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
+                        .bold()
                     Text(weather[1].forecast)
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
@@ -534,6 +538,7 @@ struct WhereNowLongWeatherWidgetView : View {
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
+                        .bold()
                     Text(weather[2].forecast)
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
@@ -546,6 +551,7 @@ struct WhereNowLongWeatherWidgetView : View {
                         .multilineTextAlignment(.center)
                         .lineLimit(100)
                         .font(.caption)
+                        .bold()
                     Text(weather[3].forecast)
                         .multilineTextAlignment(.center)
                         .lineLimit(100)

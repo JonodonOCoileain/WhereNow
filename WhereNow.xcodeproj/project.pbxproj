@@ -121,6 +121,8 @@
 		FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				BirdsBriefView.swift,
+				BirdSightingService.swift,
 				"CoreLocation+Extension.swift",
 				"Data+.swift",
 				"Double+.swift",
@@ -156,12 +158,14 @@
 		FC5FA7DE2C63033F0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				BirdSightingService.swift,
 				"CoreLocation+Extension.swift",
 				"Data+.swift",
 				"Double+.swift",
 				ErrorCases.swift,
 				ForecastInfo.swift,
 				Fun.swift,
+				LocationDataModel.swift,
 				LocationInformation.swift,
 				LocationInformationEntry.swift,
 				LocationManager.swift,
@@ -181,6 +185,7 @@
 		FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				BirdSightingService.swift,
 				"CoreLocation+Extension.swift",
 				"Data+.swift",
 				"Double+.swift",

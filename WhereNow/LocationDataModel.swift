@@ -10,8 +10,8 @@ import CoreLocation
 
 class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
-#if os(watchOS)
-#else
+    #if os(watchOS)
+    #else
     var snapshotManager: MapSnapshotManager = MapSnapshotManager()
     #endif
     @Published var image: Image?
@@ -138,6 +138,7 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print(locations.first?.coordinate.latitude ?? 1, locations.first?.coordinate.longitude ?? 1)
         if readyForUpdate {
             if let currentLocation = locations.first, currentLocation != self.currentLocation {
                 self.currentLocation = currentLocation
@@ -161,6 +162,12 @@ extension Date {
     public func description() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "ha EEEE"
+        return formatter.string(from: self)
+    }
+    
+    public func longDescription() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, MMMM d, yyyy"
         return formatter.string(from: self)
     }
 }

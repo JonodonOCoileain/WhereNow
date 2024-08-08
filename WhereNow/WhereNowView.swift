@@ -18,6 +18,7 @@ struct WhereNowView: View {
     static var countTime:Double = 0.1
     @ObservedObject var data: LocationDataModel = LocationDataModel()
     @ObservedObject var weatherData: USAWeatherService = USAWeatherService()
+    @ObservedObject var birdData: BirdSightingService = BirdSightingService()
     
     var body: some View {
         if ([CLAuthorizationStatus.restricted, CLAuthorizationStatus.denied].contains(where: {$0 == data.manager.authorizationStatus})) {
@@ -26,12 +27,12 @@ struct WhereNowView: View {
         } else {
             Group {
                 #if os(watchOS)
-                WhereNowPortraitView(data: data, weatherData: weatherData)
+                WhereNowPortraitView(data: data, weatherData: weatherData, birdData: birdData)
                 #else
                 if orientation.isPortrait {
-                    WhereNowPortraitView(data: data, weatherData: weatherData)
+                    WhereNowPortraitView(data: data, weatherData: weatherData, birdData: birdData)
                 } else if orientation.isLandscape {
-                    WhereNowLandscapeView(data: data, weatherData: weatherData)
+                    WhereNowLandscapeView(data: data, weatherData: weatherData, birdData: birdData)
                 }
                 #endif
             }
@@ -84,7 +85,7 @@ struct WhereNowPortraitView: View {
     static var countTime:Double = 0.1
     @ObservedObject var data: LocationDataModel
     @ObservedObject var weatherData: USAWeatherService
-    
+    @ObservedObject var birdData: BirdSightingService
     let timer = Timer.publish(every: WhereNowView.countTime, on: .main, in: .common).autoconnect()
     @State var timeCounter:Double = 0.0
     
@@ -108,6 +109,11 @@ struct WhereNowPortraitView: View {
                     MapSnapshotView(image: image)
                 }
 #endif
+                if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
+                    BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
+                        .frame(minHeight:140)
+                }
+                
                 LazyVStack(alignment:.leading) {
                     ForEach(weatherData.timesAndForecasts, id: \.self) { element in
                         LazyVStack(alignment:.center) {
@@ -118,6 +124,7 @@ struct WhereNowPortraitView: View {
                                 .font(.subheadline)
                                     .padding([.leading, .trailing])
                                     .multilineTextAlignment(.center)
+                                    .bold()
                             Text(element.forecast)
                                 .font(.subheadline)
                                 .padding([.leading, .trailing, .bottom])
@@ -137,6 +144,9 @@ struct WhereNowPortraitView: View {
         .onChange(of: data.currentLocation, { oldValue, newValue in
             if weatherData.timesAndForecasts.count == 0 {
                 weatherData.cacheForecasts(using: newValue.coordinate)
+            }
+            if birdData.sightings.count == 0 {
+                birdData.cacheSightings(using: newValue.coordinate)
             }
         })
         .padding([.top, .bottom], reversePadding ? -25 : 0)
@@ -158,6 +168,7 @@ struct WhereNowLandscapeView: View {
     static var countTime:Double = 0.1
     @ObservedObject var data: LocationDataModel
     @ObservedObject var weatherData: USAWeatherService = USAWeatherService()
+    @ObservedObject var birdData: BirdSightingService = BirdSightingService()
     
     var body: some View {
         ScrollView(.horizontal) {
@@ -167,6 +178,11 @@ struct WhereNowLandscapeView: View {
                 if let image = self.data.image {
                     MapSnapshotView(image: image)
                 }
+                
+                if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
+                    BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
+                }
+                
                 WhereNowWeatherHStackView(data: data, weatherData: weatherData)
                 
                 VStack {
@@ -180,6 +196,11 @@ struct WhereNowLandscapeView: View {
                 }
             }
         }
+        .onChange(of: data.currentLocation, { oldValue, newValue in
+            if birdData.sightings.count == 0 {
+                birdData.cacheSightings(using: newValue.coordinate)
+            }
+        })
     }
 }
 #endif
