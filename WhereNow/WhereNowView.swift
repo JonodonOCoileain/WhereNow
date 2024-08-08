@@ -184,7 +184,7 @@ struct WhereNowLandscapeView: View {
                     
                     if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
                         BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
-                            .frame(minHeight:140, maxHeight: (geometry.size.height ?? 0) > 140 ? (geometry.size.height ?? 140) : 140 )
+                            .frame(minHeight: 3*CGFloat(birdData.sightings.count) < geometry.size.height ? 3*CGFloat(birdData.sightings.count) : geometry.size.height, maxHeight: geometry.size.height > 140 ? geometry.size.height : 140 )
                     }
                     
                     WhereNowWeatherHStackView(data: data, weatherData: weatherData)
