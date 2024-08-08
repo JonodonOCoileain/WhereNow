@@ -110,7 +110,7 @@ class BirdSightingService: ObservableObject {
         dataTask.resume()
     }
     
-    func getForecasts(using coordinate: CLLocationCoordinate2D) async -> [BirdSighting] {
+    func getSightings(using coordinate: CLLocationCoordinate2D) async -> [BirdSighting] {
         guard let request = makeRequest(using: coordinate) else { return []}
         do {
             let data = try await URLSession(configuration: .ephemeral).data(for: request).0

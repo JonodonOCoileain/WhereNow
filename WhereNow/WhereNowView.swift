@@ -90,76 +90,78 @@ struct WhereNowPortraitView: View {
     @State var timeCounter:Double = 0.0
     
     var body: some View {
-        if !data.addressInfoIsUpdated {
-            Image("LOCATION")
-                .resizable(resizingMode: .stretch)
-                .frame(width: 7, height: 7)
-                .scaledToFit()
-                .opacity(data.addressInfoIsUpdated ? 0 : 1-timeCounter)
-                .padding([.top,.bottom], reversePadding ? -25 : 0)
-        }
-        
-        ScrollView() {
-            VStack {
-                Text(self.data.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
-                    .multilineTextAlignment(.center)
+        GeometryReader { geometry in
+            if !data.addressInfoIsUpdated {
+                Image("LOCATION")
+                    .resizable(resizingMode: .stretch)
+                    .frame(width: 7, height: 7)
+                    .scaledToFit()
+                    .opacity(data.addressInfoIsUpdated ? 0 : 1-timeCounter)
+                    .padding([.top,.bottom], reversePadding ? -25 : 0)
+            }
+            
+            ScrollView() {
+                VStack {
+                    Text(self.data.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
+                        .multilineTextAlignment(.center)
 #if os(watchOS)
 #else
-                if let image = self.data.image {
-                    MapSnapshotView(image: image)
-                }
+                    if let image = self.data.image {
+                        MapSnapshotView(image: image)
+                    }
 #endif
-                if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
-                    BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
-                        .frame(minHeight:140)
-                }
-                
-                LazyVStack(alignment:.leading) {
-                    ForEach(weatherData.timesAndForecasts, id: \.self) { element in
-                        LazyVStack(alignment:.center) {
-                            Text(Fun.emojis.randomElement() ?? "")
-                                .font(.title)
-                                .multilineTextAlignment(.center)
-                            Text(element.name ?? "")
-                                .font(.subheadline)
+                    if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
+                        BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
+                            .frame(minHeight:140, maxHeight: (geometry.size.height ?? 0) > 140 ? (geometry.size.height ?? 140) : 140 )
+                    }
+                    
+                    LazyVStack(alignment:.leading) {
+                        ForEach(weatherData.timesAndForecasts, id: \.self) { element in
+                            LazyVStack(alignment:.center) {
+                                Text(Fun.emojis.randomElement() ?? "")
+                                    .font(.title)
+                                    .multilineTextAlignment(.center)
+                                Text(element.name ?? "")
+                                    .font(.subheadline)
                                     .padding([.leading, .trailing])
                                     .multilineTextAlignment(.center)
                                     .bold()
-                            Text(element.forecast)
-                                .font(.subheadline)
-                                .padding([.leading, .trailing, .bottom])
-                                .multilineTextAlignment(.leading)
+                                Text(element.forecast)
+                                    .font(.subheadline)
+                                    .padding([.leading, .trailing, .bottom])
+                                    .multilineTextAlignment(.leading)
+                            }
                         }
                     }
+                    
+                    Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
+                        .multilineTextAlignment(.center)
+                        .font(.caption2)
+                    Text(weatherData.forecastOffice?.description() ?? "")
+                        .multilineTextAlignment(.center)
+                        .font(.caption2)
                 }
-                
-                Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
-                    .multilineTextAlignment(.center)
-                    .font(.caption2)
-                Text(weatherData.forecastOffice?.description() ?? "")
-                    .multilineTextAlignment(.center)
-                    .font(.caption2)
             }
-        }
-        .onChange(of: data.currentLocation, { oldValue, newValue in
-            if weatherData.timesAndForecasts.count == 0 {
-                weatherData.cacheForecasts(using: newValue.coordinate)
+            .onChange(of: data.currentLocation, { oldValue, newValue in
+                if weatherData.timesAndForecasts.count == 0 {
+                    weatherData.cacheForecasts(using: newValue.coordinate)
+                }
+                if birdData.sightings.count == 0 {
+                    birdData.cacheSightings(using: newValue.coordinate)
+                }
+            })
+            .padding([.top, .bottom], reversePadding ? -25 : 0)
+            .onReceive(timer) { input in
+                if timeCounter >= 2.0 {
+                    timeCounter = 0
+                }
+                timeCounter = timeCounter + WhereNowView.countTime * 2
             }
-            if birdData.sightings.count == 0 {
-                birdData.cacheSightings(using: newValue.coordinate)
-            }
-        })
-        .padding([.top, .bottom], reversePadding ? -25 : 0)
-        .onReceive(timer) { input in
-            if timeCounter >= 2.0 {
-                timeCounter = 0
-            }
-            timeCounter = timeCounter + WhereNowView.countTime * 2
-        }
 #if os(watchOS)
-        Spacer()
+            Spacer()
 #else
 #endif
+        }
     }
 }
 #if os(watchOS)
@@ -171,36 +173,39 @@ struct WhereNowLandscapeView: View {
     @ObservedObject var birdData: BirdSightingService = BirdSightingService()
     
     var body: some View {
-        ScrollView(.horizontal) {
-            LazyHStack {
-                Text(self.data.addressesVeryLongFlag)
-                    .multilineTextAlignment(.center)
-                if let image = self.data.image {
-                    MapSnapshotView(image: image)
-                }
-                
-                if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
-                    BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
-                }
-                
-                WhereNowWeatherHStackView(data: data, weatherData: weatherData)
-                
-                VStack {
-                    Spacer()
-                    Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
-                        .font(.caption2)
-                        .multilineTextAlignment(.leading)
-                    Text(weatherData.forecastOffice?.description() ?? "")
-                        .multilineTextAlignment(.leading)
-                        .font(.caption2)
+        GeometryReader { geometry in
+            ScrollView(.horizontal) {
+                LazyHStack {
+                    Text(self.data.addressesVeryLongFlag)
+                        .multilineTextAlignment(.center)
+                    if let image = self.data.image {
+                        MapSnapshotView(image: image)
+                    }
+                    
+                    if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
+                        BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
+                            .frame(minHeight:140, maxHeight: (geometry.size.height ?? 0) > 140 ? (geometry.size.height ?? 140) : 140 )
+                    }
+                    
+                    WhereNowWeatherHStackView(data: data, weatherData: weatherData)
+                    
+                    VStack {
+                        Spacer()
+                        Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
+                            .font(.caption2)
+                            .multilineTextAlignment(.leading)
+                        Text(weatherData.forecastOffice?.description() ?? "")
+                            .multilineTextAlignment(.leading)
+                            .font(.caption2)
+                    }
                 }
             }
+            .onChange(of: data.currentLocation, { oldValue, newValue in
+                if birdData.sightings.count == 0 {
+                    birdData.cacheSightings(using: newValue.coordinate)
+                }
+            })
         }
-        .onChange(of: data.currentLocation, { oldValue, newValue in
-            if birdData.sightings.count == 0 {
-                birdData.cacheSightings(using: newValue.coordinate)
-            }
-        })
     }
 }
 #endif

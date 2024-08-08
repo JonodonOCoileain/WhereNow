@@ -21,4 +21,6 @@ public struct LocationInformation {
     var addresses: [Address]?
     /// Weather data from NOAA
     var weather: [ForecastInfo]?
+    /// Bird sighting data
+    var birdSightings: [BirdSighting]?
 }

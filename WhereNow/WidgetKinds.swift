@@ -13,6 +13,7 @@ public enum WidgetKinds {
     case WhereNowTextLocationOnlyWidget
     case WhereNowWeatherTextWidget
     case WhereNowLongWeatherWidget
+    case WhereNowBirdSightingsWidget
     
     var description: String {
         switch self {
@@ -28,6 +29,8 @@ public enum WidgetKinds {
                 return "WhereNowWeatherTextWidget"
             case .WhereNowLongWeatherWidget:
                 return "WhereNowLongWeatherTextWidget"
+            case .WhereNowBirdSightingsWidget:
+                return "WhereNowBirdSightingsWidget"
         }
     }
 }

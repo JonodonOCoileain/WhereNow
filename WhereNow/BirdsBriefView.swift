@@ -23,12 +23,15 @@ struct BirdsBriefView: View {
                             .multilineTextAlignment(.leading)
                             .padding([.horizontal])
                             .padding(.bottom, 4)
-                        Text("🐣 " + briefing)
-                            .font(.caption)
-                            .bold()
-                            .font(.system(size: descriptionSize))
-                            .multilineTextAlignment(.leading)
-                            .padding(.horizontal)
+                        ScrollView {
+                            Text("🐣 " + briefing)
+                                .font(.caption)
+                                .bold()
+                                .font(.system(size: descriptionSize))
+                                .multilineTextAlignment(.leading)
+                                .padding(.horizontal)
+                                .lineLimit(1000000)
+                        }
                         Spacer()
                     }.frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
                     
@@ -73,3 +76,59 @@ struct BirdBriefView_Previews: PreviewProvider {
     }
 }
 
+struct BirdsDataBriefView: View {
+    let birdData: [BirdSighting]
+    let briefing: String
+    let titleSize: CGFloat = 11
+    let descriptionSize: CGFloat = 12
+    var body: some View {
+        GeometryReader { geometry in
+            ScrollView(.horizontal) {
+                LazyHStack(alignment:.top) {
+                    VStack(alignment: .leading) {
+                        Text("🐦 Birds sighted near here recently:")
+                            .font(.system(size: titleSize))
+                            .multilineTextAlignment(.leading)
+                            .padding([.horizontal])
+                            .padding(.bottom, 4)
+                        Text("🐣 " + briefing)
+                            .font(.caption)
+                            .bold()
+                            .font(.system(size: descriptionSize))
+                            .multilineTextAlignment(.leading)
+                            .padding(.horizontal)
+                        Spacer()
+                    }.frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
+                    
+                    ScrollView {
+                        BirdDataSightingsView(birdData: birdData)
+                    }
+                    .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
+                }
+                .scrollTargetLayout()
+            }.frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
+                .scrollTargetBehavior(.paging)
+        }
+    }
+}
+
+struct BirdDataSightingsView: View {
+    let birdData: [BirdSighting]
+    var body: some View {
+        ScrollView {
+            LazyVStack(alignment:.leading, spacing: 9) {
+                ForEach(birdData, id: \.self) { sighting in
+                    LazyVStack(alignment:.leading, spacing: 9) {
+                        Text(Fun.eBirdjis.randomElement() ?? "")
+                            .font(.system(size: 12))
+                            .multilineTextAlignment(.leading)
+                        Text(sighting.description())
+                            .font(.system(size: 12))
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(8)
+                    }
+                }
+            }
+        }.padding(.all)
+    }
+}

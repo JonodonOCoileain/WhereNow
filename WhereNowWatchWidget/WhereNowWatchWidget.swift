@@ -53,6 +53,7 @@ struct Provider: AppIntentTimelineProvider {
 
     private let locationManager: LocationManager = LocationManager(locationStorageManager: UserDefaults.standard)
     private let weatherManager: USAWeatherService = USAWeatherService()
+    private let birdSightingService: BirdSightingService = BirdSightingService()
    
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> LocationInformationEntry {
         var location: CLLocation
@@ -76,7 +77,8 @@ struct Provider: AppIntentTimelineProvider {
                 }
             }
         }
-        let entry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather)))
+        let birdData = await birdSightingService.getSightings(using: location.coordinate)
+        let entry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather, birdSightings: birdData)))
         return entry
     }
         
@@ -91,6 +93,7 @@ struct Provider: AppIntentTimelineProvider {
         }
         let addresses = await location.getAddresses()
         var weather = await weatherManager.getForecasts(using: location.coordinate)
+        let birdData = await birdSightingService.getSightings(using: location.coordinate)
         if weather.count > 0 {
             for (index, forecastInfo) in weather.enumerated() {
                 UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
@@ -102,7 +105,7 @@ struct Provider: AppIntentTimelineProvider {
                 }
             }
         }
-        let entries = [LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather)))]
+        let entries = [LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather, birdSightings: birdData)))]
         return Timeline(entries: entries, policy: .after(.now + 60*10))
     }
     
@@ -144,8 +147,10 @@ struct WhereNowTextWidgetView : View {
             }
             .frame(maxHeight: .infinity)
             Spacer()
-        case .accessoryCorner, .accessoryCircular, .accessoryInline:
+        case .accessoryInline:
             Text(entry.shortDescription + (emojiLine ? "" : " " + (Fun.emojis.randomElement() ?? "")))
+        case .accessoryCorner, .accessoryCircular:
+            Text(entry.birdsDescriptionShorter)
         @unknown default:
             Text(entry.shortDescription)
         }
@@ -161,6 +166,13 @@ struct WhereNowTextWidgetView : View {
     }
 }*/
 @main
+struct WhereNowWidgetBundle: WidgetBundle {
+    var body: some Widget {
+        WhereNowTextWidget()
+        WhereNowLocationTextOnlyWidget()
+    }
+}
+
 struct WhereNowTextWidget: Widget {
     
     let kind: String = WidgetKinds.WhereNowTextWidget.description

@@ -131,4 +131,28 @@ struct LocationInformationEntry: TimelineEntry {
             return error.localizedDescription
         }
     }
+    
+    var birdsDescription: String {
+        switch self.state {
+        case .placeholder:
+            return "Earthbirdlings"
+        case .success(let locationInformation):
+            let birds: String = locationInformation.birdSightings?.compactMap({$0.comName}).joined(separator: ", ") ?? "Earthbirdlings"
+            return birds
+        case .failure(let error):
+            return error.localizedDescription
+        }
+    }
+    
+    var birdsDescriptionShorter: String {
+        switch self.state {
+        case .placeholder:
+            return "Earthbirdlings"
+        case .success(let locationInformation):
+            let birds: String = locationInformation.birdSightings?.compactMap({$0.comName}).joined(separator: ",") ?? "Earthbirdlings"
+            return birds
+        case .failure(let error):
+            return error.localizedDescription
+        }
+    }
 }

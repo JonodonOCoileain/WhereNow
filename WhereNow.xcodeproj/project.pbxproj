@@ -158,6 +158,7 @@
 		FC5FA7DE2C63033F0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				BirdsBriefView.swift,
 				BirdSightingService.swift,
 				"CoreLocation+Extension.swift",
 				"Data+.swift",
@@ -185,6 +186,7 @@
 		FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				BirdsBriefView.swift,
 				BirdSightingService.swift,
 				"CoreLocation+Extension.swift",
 				"Data+.swift",

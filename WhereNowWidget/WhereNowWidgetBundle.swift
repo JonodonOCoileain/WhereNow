@@ -15,6 +15,7 @@ struct WhereNowWidgetBundle: WidgetBundle {
         WhereNowMapWidget()
         WhereNowMapAndWeatherWidget()
         WhereNowLongWeatherTextWidget()
+        WhereNowBirdSightingsWidget()
     }
 }
 

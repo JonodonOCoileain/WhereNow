@@ -65,6 +65,17 @@ private enum WeatherTextWidgetConfig {
     static let supportedFamilies: [WidgetFamily] = [.accessoryRectangular]
 }
 
+private enum BirdSightingsWidgetConfig {
+    /// The name shown for a widget when a user adds or edits it.
+    static let displayName = "Bird Sightings Widget"
+
+    /// The description shown for a widget when a user adds or edits it.
+    static let description = "This is a widget to show bird sighting data related to the current location."
+
+    /// The sizes that our widget supports.
+    static let supportedFamilies: [WidgetFamily] = [.systemLarge, .systemExtraLarge, .accessoryRectangular]
+}
+
 struct Provider: AppIntentTimelineProvider {
     
     typealias Entry = LocationInformationEntry
@@ -86,7 +97,7 @@ struct Provider: AppIntentTimelineProvider {
     private let locationManager: LocationManager = LocationManager(locationStorageManager: UserDefaults.standard)
     
     private let weatherManager: USAWeatherService = USAWeatherService()
-    //private let mapSnapshotManager: MapSnapshotManager
+    private let birdSightingService: BirdSightingService = BirdSightingService()
     
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> LocationInformationEntry {
         #if os(watchOS)
@@ -100,6 +111,7 @@ struct Provider: AppIntentTimelineProvider {
         }
         let addresses = await location.getAddresses()
         var weather = await weatherManager.getForecasts(using: location.coordinate)
+        let birdData = await birdSightingService.getSightings(using: location.coordinate)
         if weather.count > 0 {
             for (index, forecastInfo) in weather.enumerated() {
                 UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
@@ -111,7 +123,7 @@ struct Provider: AppIntentTimelineProvider {
                 }
             }
         }
-        let entry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather)))
+        let entry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather, birdSightings: birdData)))
         return entry
         #else
             print("Not watchOS")
@@ -129,6 +141,7 @@ struct Provider: AppIntentTimelineProvider {
             let snapshotResult = await snapshots.snapshot(of: coordinate)
             let addresses = await location.getAddresses()
             var forecastInfos = await weatherManager.getForecasts(using: coordinate)
+            let birdData = await birdSightingService.getSightings(using: location.coordinate)
         if forecastInfos.count > 0 {
             for (index, forecastInfo) in forecastInfos.enumerated() {
                 UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
@@ -143,9 +156,9 @@ struct Provider: AppIntentTimelineProvider {
         
         switch snapshotResult {
         case .success(let image):
-            return LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: image, addresses: addresses, weather: forecastInfos)))
+            return LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: image, addresses: addresses, weather: forecastInfos, birdSightings: birdData)))
         case .failure(_):
-            return LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: forecastInfos)))
+            return LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: forecastInfos, birdSightings: birdData)))
         }
         #endif
     }
@@ -355,11 +368,11 @@ struct WhereNowMapWidgetView : View {
                            height: Config.userLocationDotSize)
             }
             .frame(minWidth: 80, maxWidth: 370, maxHeight: .infinity)
-            .overlay(alignment: .bottom, content: {
-                Text(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way")
+            .overlay(alignment: .center, content: {
+                Text("\n\n\n\n"+(info.addresses?.first?.formattedCommonVeryLongFlag() ?? "Planet Earth, Milky Way"))
                         .multilineTextAlignment(.center)
-                        .lineLimit(8)
-                        .font(.system(size: 8))
+                        .lineLimit(20)
+                        .font(.system(size: 12))
                         .foregroundColor(Color(red: 0.4, green: 0, blue: 0.7))
                         .bold()
                         .opacity(widgetFamily != .systemMedium ? 1 : 0)
@@ -564,7 +577,68 @@ struct WhereNowLongWeatherWidgetView : View {
     }
 }
 
+struct WhereNowBirdSightingsWidgetView : View {
+    @Environment(\.widgetFamily) var widgetFamily
+    var entry: Provider.Entry
 
+    var body: some View {
+        switch widgetFamily {
+        case .accessoryInline:
+            Text(entry.birdsDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        case .accessoryRectangular:
+            Text(entry.birdsDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        case .accessoryCircular:
+            VStack {
+                Text(entry.birdsDescription)
+                    .font(.caption)
+                    .multilineTextAlignment(.center)
+                Text(entry.birdsDescription)
+                    .font(.caption)
+            }
+                .containerBackground(.fill.tertiary, for: .widget)
+        case .systemSmall:
+            Text(entry.birdsDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        case .systemMedium:
+            Text(entry.birdsDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        case .systemLarge:
+            switch entry.state {
+            case .success(let entryInfo):
+                BirdDataSightingsView(birdData: entryInfo.birdSightings ?? [])
+                    .containerBackground(.fill.tertiary, for: .widget)
+            case .placeholder:
+                BirdDataSightingsView(birdData: [BirdSighting(speciesCode: "BigiusBirdius", comName: "Big Bird", sciName: "Bigius Birdius", locId: "SesameStreetPA", locName: "Sesame Street, NY/PA", obsDt: "Today", howMany: 1, lat: 43, lng: 72, obsValid: true, obsReviewed: true, locationPrivate: false)])
+                    .containerBackground(.fill.tertiary, for: .widget)
+            case .failure(let error):
+                ErrorView(errorMessage: "Where now, birds!")
+            }
+        case .systemExtraLarge:
+            Text(entry.birdsDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        @unknown default:
+            Text(entry.birdsDescription)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+    }
+}
+
+struct WhereNowBirdSightingsWidget: Widget {
+    
+    let kind: String = WidgetKinds.WhereNowBirdSightingsWidget.description
+
+    var body: some WidgetConfiguration {
+        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
+            WhereNowBirdSightingsWidgetView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName(BirdSightingsWidgetConfig.displayName)
+        .description(BirdSightingsWidgetConfig.description)
+        .supportedFamilies(BirdSightingsWidgetConfig.supportedFamilies)
+    }
+}
 
 
 struct WhereNowMapWidget: Widget {
