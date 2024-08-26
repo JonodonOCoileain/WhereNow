@@ -255,6 +255,7 @@ struct HeaderView: View {
                     .rotationEffect(.degrees(isPresenting ? 0 : 180))
                     .animation(Animation.easeInOut(duration: 0.3), value: isPresenting)
             })
+            padding([.vertical])
             .onTapGesture {
                 isPresenting.toggle()
             }
