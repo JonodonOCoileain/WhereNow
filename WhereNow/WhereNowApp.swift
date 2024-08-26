@@ -13,6 +13,9 @@ struct WhereNowApp: App {
         WindowGroup {
             WhereNowView()
                 .preferredColorScheme(.dark)
+                .onAppear {
+                    print("App appeared")
+                }
         }
     }
 }

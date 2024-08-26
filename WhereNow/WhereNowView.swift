@@ -36,6 +36,7 @@ struct WhereNowView: View {
                 }
                 #endif
             }
+            .animation(.default, value: 1)
             .onAppear() {
                 data.start()
             }
@@ -164,6 +165,9 @@ struct WhereNowPortraitView: View {
                     if birdData.sightings.count == 0 {
                         birdData.cacheSightings(using: newValue.coordinate)
                     }
+                    if birdData.notableSightings.count == 0 {
+                        birdData.cacheNotableSightings(using: newValue.coordinate)
+                    }
                 })
                 .padding([.top, .bottom], reversePadding ? -25 : 0)
                 .onReceive(timer) { input in
@@ -232,6 +236,9 @@ struct WhereNowLandscapeView: View {
             .onChange(of: data.currentLocation, { oldValue, newValue in
                 if birdData.sightings.count == 0 {
                     birdData.cacheSightings(using: newValue.coordinate)
+                }
+                if birdData.notableSightings.count == 0 {
+                    birdData.cacheNotableSightings(using: newValue.coordinate)
                 }
             })
         }

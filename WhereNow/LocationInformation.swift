@@ -23,4 +23,6 @@ public struct LocationInformation {
     var weather: [ForecastInfo]?
     /// Bird sighting data
     var birdSightings: [BirdSighting]?
+    /// Notable bird sighting data
+    var notableBirdSightings: [BirdSighting]?
 }

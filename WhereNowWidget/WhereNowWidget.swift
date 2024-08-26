@@ -70,7 +70,18 @@ private enum BirdSightingsWidgetConfig {
     static let displayName = "Bird Sightings Widget"
 
     /// The description shown for a widget when a user adds or edits it.
-    static let description = "This is a widget to show bird sighting data related to the current location."
+    static let description = "This is a widget to show bird sighting data reported near the current location."
+
+    /// The sizes that our widget supports.
+    static let supportedFamilies: [WidgetFamily] = [.systemLarge, .systemExtraLarge, .accessoryRectangular]
+}
+
+private enum NotableBirdSightingsWidgetConfig {
+    /// The name shown for a widget when a user adds or edits it.
+    static let displayName = "Notable Bird Sightings Widget"
+
+    /// The description shown for a widget when a user adds or edits it.
+    static let description = "This is a widget to show notable bird sighting data reported near the current location."
 
     /// The sizes that our widget supports.
     static let supportedFamilies: [WidgetFamily] = [.systemLarge, .systemExtraLarge, .accessoryRectangular]
@@ -112,6 +123,7 @@ struct Provider: AppIntentTimelineProvider {
         let addresses = await location.getAddresses()
         var weather = await weatherManager.getForecasts(using: location.coordinate)
         let birdData = await birdSightingService.getSightings(using: location.coordinate)
+        let notables = await birdSightingService.getNotableSightings(using: location.coordinate)
         if weather.count > 0 {
             for (index, forecastInfo) in weather.enumerated() {
                 UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
@@ -123,7 +135,7 @@ struct Provider: AppIntentTimelineProvider {
                 }
             }
         }
-        let entry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather, birdSightings: birdData)))
+        let entry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather, birdSightings: birdData, notableBirdSightings: notables)))
         return entry
         #else
             print("Not watchOS")
@@ -142,6 +154,7 @@ struct Provider: AppIntentTimelineProvider {
             let addresses = await location.getAddresses()
             var forecastInfos = await weatherManager.getForecasts(using: coordinate)
             let birdData = await birdSightingService.getSightings(using: location.coordinate)
+            let notables = await birdSightingService.getNotableSightings(using: location.coordinate)
         if forecastInfos.count > 0 {
             for (index, forecastInfo) in forecastInfos.enumerated() {
                 UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
@@ -156,9 +169,9 @@ struct Provider: AppIntentTimelineProvider {
         
         switch snapshotResult {
         case .success(let image):
-            return LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: image, addresses: addresses, weather: forecastInfos, birdSightings: birdData)))
+            return LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: image, addresses: addresses, weather: forecastInfos, birdSightings: birdData, notableBirdSightings: notables)))
         case .failure(_):
-            return LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: forecastInfos, birdSightings: birdData)))
+            return LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: forecastInfos, birdSightings: birdData, notableBirdSightings: notables)))
         }
         #endif
     }
@@ -175,6 +188,8 @@ struct Provider: AppIntentTimelineProvider {
         }
         let addresses = await location.getAddresses()
         var weather = await weatherManager.getForecasts(using: location.coordinate)
+        let birdData = await birdSightingService.getSightings(using: location.coordinate)
+        let notables = await birdSightingService.getNotableSightings(using: location.coordinate)
         if weather.count > 0 {
             for (index, forecastInfo) in weather.enumerated() {
                 UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
@@ -186,7 +201,7 @@ struct Provider: AppIntentTimelineProvider {
                 }
             }
         }
-        let entries = [LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather)))]
+        let entries = [LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather, birdSightings: birdData, notableBirdSightings: notables)))]
         return Timeline(entries: entries, policy: .after(.now + 60*10))
         #else
         if let location = locationManager.immediateLocation() {
@@ -195,6 +210,7 @@ struct Provider: AppIntentTimelineProvider {
             let addresses = await location.getAddresses()
             var forecastInfos = await weatherManager.getForecasts(using: location.coordinate)
             let birdData = await birdSightingService.getSightings(using: location.coordinate)
+            let notables = await birdSightingService.getNotableSightings(using: location.coordinate)
             if forecastInfos.count > 0 {
                 for (index, forecastInfo) in forecastInfos.enumerated() {
                     UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
@@ -209,9 +225,9 @@ struct Provider: AppIntentTimelineProvider {
             var locationInformationEntry: LocationInformationEntry
             switch snapshotResult {
             case .success(let image):
-                locationInformationEntry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: image, addresses: addresses, weather: forecastInfos, birdSightings: birdData)))
+                locationInformationEntry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: image, addresses: addresses, weather: forecastInfos, birdSightings: birdData, notableBirdSightings: notables)))
             case .failure(_):
-                locationInformationEntry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: forecastInfos, birdSightings: birdData)))
+                locationInformationEntry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: forecastInfos, birdSightings: birdData, notableBirdSightings: notables)))
             }
             
             return Timeline(entries: [locationInformationEntry], policy: .after(.now + 60*19.5))
@@ -581,6 +597,7 @@ struct WhereNowLongWeatherWidgetView : View {
 struct WhereNowBirdSightingsWidgetView : View {
     @Environment(\.widgetFamily) var widgetFamily
     var entry: Provider.Entry
+    var notables: Bool? = false
 
     var body: some View {
         switch widgetFamily {
@@ -608,10 +625,10 @@ struct WhereNowBirdSightingsWidgetView : View {
         case .systemLarge:
             switch entry.state {
             case .success(let entryInfo):
-                BirdDataSightingsShortView(birdData: entryInfo.birdSightings ?? [])
+                BirdDataSightingsShortView(birdData: entryInfo.notableBirdSightings ?? [], notables: true)
                     .containerBackground(.fill.tertiary, for: .widget)
             case .placeholder:
-                BirdDataSightingsShortView(birdData: [BirdSighting(speciesCode: "BigiusBirdius", comName: "Big Bird", sciName: "Bigius Birdius", locId: "SesameStreetPA", locName: "Sesame Street, NY/PA", obsDt: "Today", howMany: 1, lat: 43, lng: 72, obsValid: true, obsReviewed: true, locationPrivate: false)])
+                BirdDataSightingsShortView(birdData: [BirdSighting(speciesCode: "BigiusBirdius", comName: "Big Bird", sciName: "Bigius Birdius", locId: "SesameStreetPA", locName: "Sesame Street, NY/PA", obsDt: "Today", howMany: 1, lat: 43, lng: 72, obsValid: true, obsReviewed: true, locationPrivate: false)], notables: notables == true)
                     .containerBackground(.fill.tertiary, for: .widget)
             case .failure(let error):
                 ErrorView(errorMessage: "\(error) Where now, birds!")
@@ -638,6 +655,21 @@ struct WhereNowBirdSightingsWidget: Widget {
         .configurationDisplayName(BirdSightingsWidgetConfig.displayName)
         .description(BirdSightingsWidgetConfig.description)
         .supportedFamilies(BirdSightingsWidgetConfig.supportedFamilies)
+    }
+}
+
+struct WhereNowNotableBirdSightingsWidget: Widget {
+    
+    let kind: String = WidgetKinds.WhereNowNotableBirdSightingsWidget.description
+
+    var body: some WidgetConfiguration {
+        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
+            WhereNowBirdSightingsWidgetView(entry: entry, notables: true)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName(NotableBirdSightingsWidgetConfig.displayName)
+        .description(NotableBirdSightingsWidgetConfig.description)
+        .supportedFamilies(NotableBirdSightingsWidgetConfig.supportedFamilies)
     }
 }
 

@@ -25,6 +25,15 @@ struct BirdsBriefView: View {
         GeometryReader { geometry in
             ScrollView(.horizontal) {
                 LazyHStack(alignment:.top) {
+                    VStack {
+                        Text("🦅 Especially Notable Bird Reports thanks to Cornell Lab of Ornithology and the Macauley Library.")
+                        ScrollView {
+                            BirdSightingsView(birdData: birdData)
+                                .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
+                        }
+                        .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
+                    }
+                    
                     VStack(alignment: .leading) {
                         Text("🐥 Avian data provided by the Lab of Ornithology and Macauley Library of Cornell University")
                             .font(.system(size: titleSize))
@@ -46,7 +55,6 @@ struct BirdsBriefView: View {
                                 .padding(.horizontal)
                                 .lineLimit(1000000)
                         }
-                        Spacer()
                     }.frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
                     
                     ScrollView {
@@ -69,39 +77,18 @@ struct BirdSightingsView: View {
     let titleSize: CGFloat = 11
     let descriptionSize: CGFloat = 12
     @State private var isFullScreen = false
+    
+    var notables: Bool? = false
+    
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
                 LazyVStack(alignment:.leading, spacing: 9) {
-                    ForEach(birdData.sightings, id: \.self) { sighting in
+                    ForEach(notables == true ? birdData.notableSightings : birdData.sightings, id: \.self) { sighting in
                         LazyHStack(alignment:.top) {
                             BirdSightingDescriptionView(sighting: sighting)
                             .frame(width: geometry.size.width*3/4, height: 130)
-                            /*.onAppear(perform: {
-                                if let name = sighting.comName {
-                                    //birdData.getBirdAudioSource(of: name)
-                                }
-                            })*/
                             Spacer()
-                            /*Button(action: {
-                                if let name = sighting.comName, let remoteFile = birdData.birdSoundURL[name], let localFilename = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
-                                    self.birdData.downloadFileCompletionHandler(urlstring: remoteFile, named: localFilename) { url, error in
-                                        if let error = error {
-                                            print(error)
-                                        } else {
-                                            let documentsUrl =  try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-                                            let destinationUrl = documentsUrl.appendingPathComponent(localFilename)
-                                            self.audioPlayerViewModel.useFile(url: destinationUrl)
-                                            self.audioPlayerViewModel.playOrPause()
-                                        }
-                                    }
-                                }
-                            },label: {
-                                    Image(systemName: audioPlayerViewModel.isPlaying ? "pause.circle" : "play.circle")
-                                      .resizable()
-                                      .frame(width: 32, height: 32)
-                                  })
-                            .frame(width: geometry.size.width/4, height: 150)*/
                         }.frame(width: geometry.size.width, height: 130)
                     }
                 }.frame(width: geometry.size.width)

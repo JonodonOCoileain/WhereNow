@@ -8,9 +8,10 @@ import SwiftUI
 
 struct BirdDataSightingsShortView: View {
     let birdData: [BirdSighting]
+    var notables: Bool? = false
     var body: some View {
-        VStack {
-            Text("🐦 Birds sighted near here recently:")
+        VStack() {
+            Text(notables == true ? "Especially notable 🐦 sightings near here recently:" : "🐦 Birds sighted near here recently:")
                 .font(.system(size: 12))
                 .multilineTextAlignment(.leading)
                 .padding([.horizontal])
@@ -22,6 +23,5 @@ struct BirdDataSightingsShortView: View {
                 .padding(.horizontal)
                 .lineLimit(1000000)
         }
-        Spacer().padding(.all)
     }
 }

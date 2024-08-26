@@ -83,10 +83,11 @@ struct BirdSighting: Codable, Hashable {
     }
 }
 class BirdSightingService: ObservableObject {
+    public static let notablesURLString:String =  "https://api.ebird.org/v2/data/obs/geo/recent/notable"//?lat={{lat}}&lng={{lng}}"
     public static let youTubeVideoBaseURL: String = "https://www.youtube.com/watch?v="
     public static let cornellUOrnithologyAPIKey = "4ubf1p4of0js"
     public static let unsplashAPIKey: String = ""
-    public static let BaseURLString: String = "https://api.ebird.org/v2/data/obs/geo/recent"
+    public static let recentsURLString: String = "https://api.ebird.org/v2/data/obs/geo/recent"
     
     typealias SightingsRequestCompletionHandler = (Result<[BirdSighting], Error>) -> Void
     typealias SightingsRequestResult = Result<[BirdSighting], Error>
@@ -97,11 +98,20 @@ class BirdSightingService: ObservableObject {
             birdSeenCommonDescription = commonNames.joined(separator: ", ")
         }
     }
+    
+    var notableSightings: [BirdSighting] = [] {
+        didSet {
+            let commonNames = notableSightings.compactMap({$0.comName})
+            notableBirdsSeenCommonDescription = commonNames.joined(separator: ", ")
+        }
+    }
+    
     var birdImageData: [String:Data] = [:]
     var birdImageMetadataRequest: [String:URLRequest] = [:]
     @Published var birdYouTubeVideoURL: [String:String] = [:]
     @Published var birdSoundURL: [String:String] = [:]
     @Published var birdSeenCommonDescription: String?
+    @Published var notableBirdsSeenCommonDescription: String?
     
     init(sightings: [BirdSighting] = []) {
         self.sightings = sightings
@@ -247,7 +257,7 @@ class BirdSightingService: ObservableObject {
     func makeAudioRequest(using coordinate: CLLocationCoordinate2D) -> URLRequest? {
         let typeAudio = URLQueryItem(name: "type", value: "audio")
         let queryItems:[URLQueryItem] = [typeAudio]
-        guard let baseURL = URL(string:BirdSightingService.BaseURLString) else { return nil}
+        guard let baseURL = URL(string:BirdSightingService.recentsURLString) else { return nil}
         let finalURL = baseURL.appending(queryItems: queryItems)
         var request = URLRequest(url: finalURL)
         request.addValue("\(BirdSightingService.cornellUOrnithologyAPIKey)", forHTTPHeaderField: "X-eBirdApiToken")
@@ -259,8 +269,20 @@ class BirdSightingService: ObservableObject {
         let longitudeURLQueryItem = URLQueryItem(name: "lng", value: String(coordinate.longitude))
         let sortingURLQueryItem = URLQueryItem(name: "sort", value: "date")
         let queryItems:[URLQueryItem] = [latitudeURLQueryItem, longitudeURLQueryItem, sortingURLQueryItem]
-        guard let baseURL = URL(string:BirdSightingService.BaseURLString) else { return nil}
+        guard let baseURL = URL(string:BirdSightingService.recentsURLString) else { return nil}
         let finalURL = baseURL.appending(queryItems: queryItems)
+        var request = URLRequest(url: finalURL)
+        request.addValue("\(BirdSightingService.cornellUOrnithologyAPIKey)", forHTTPHeaderField: "X-eBirdApiToken")
+        return request
+    }
+    
+    func makeNotablesRequest(using coordinate: CLLocationCoordinate2D) -> URLRequest? {
+        let latitudeURLQueryItem = URLQueryItem(name: "lat", value: String(coordinate.latitude))
+        let longitudeURLQueryItem = URLQueryItem(name: "lng", value: String(coordinate.longitude))
+        let sortingURLQueryItem = URLQueryItem(name: "sort", value: "date")
+        let queryItems:[URLQueryItem] = [latitudeURLQueryItem, longitudeURLQueryItem, sortingURLQueryItem]
+        guard let notablesURL = URL(string:BirdSightingService.notablesURLString) else { return nil}
+        let finalURL = notablesURL.appending(queryItems: queryItems)
         var request = URLRequest(url: finalURL)
         request.addValue("\(BirdSightingService.cornellUOrnithologyAPIKey)", forHTTPHeaderField: "X-eBirdApiToken")
         return request
@@ -299,6 +321,44 @@ class BirdSightingService: ObservableObject {
             self.sightings = decodedSightings
             
             return sightings
+        } catch {
+            print(error.localizedDescription)
+            return []
+        }
+    }
+    
+    func cacheNotableSightings(using coordinate: CLLocationCoordinate2D) {
+        guard let request = makeNotablesRequest(using: coordinate) else { return }
+        let dataTask = URLSession(configuration: .ephemeral).dataTask(with: request, completionHandler: { [weak self] data, response, error in
+            guard let data = data else {
+                print(error?.localizedDescription ?? "Error retrieving forecast data")
+                return
+            }
+            do {
+                let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
+                DispatchQueue.main.async { [weak self] in
+                    self?.notableSightings = decodedSightings
+                }
+            } catch {
+                let description = error.localizedDescription
+                print(description)
+                DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 4, execute: { [weak self] in
+                    let coordinate = CoreLocation.CLLocationManager().location?.coordinate ?? coordinate
+                    self?.cacheNotableSightings(using: coordinate)
+                })
+            }
+        })
+        dataTask.resume()
+    }
+    
+    func getNotableSightings(using coordinate: CLLocationCoordinate2D) async -> [BirdSighting] {
+        guard let request = makeNotablesRequest(using: coordinate) else { return []}
+        do {
+            let data = try await URLSession(configuration: .ephemeral).data(for: request).0
+            let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
+            self.notableSightings = decodedSightings
+            
+            return notableSightings
         } catch {
             print(error.localizedDescription)
             return []

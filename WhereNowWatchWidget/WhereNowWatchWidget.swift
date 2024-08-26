@@ -44,6 +44,17 @@ private enum BirdSightingsWidgetConfig {
     static let supportedFamilies: [WidgetFamily] = [.accessoryRectangular]
 }
 
+private enum NotableBirdSightingsWidgetConfig {
+    /// The name shown for a widget when a user adds or edits it.
+    static let displayName = "Notable Bird Sightings Widget"
+
+    /// The description shown for a widget when a user adds or edits it.
+    static let description = "This is a widget to metadata of notable bird sightings."
+
+    /// The sizes that our widget supports.
+    static let supportedFamilies: [WidgetFamily] = [.accessoryRectangular]
+}
+
 struct Provider: AppIntentTimelineProvider {
     
     typealias Entry = LocationInformationEntry
@@ -89,7 +100,8 @@ struct Provider: AppIntentTimelineProvider {
             }
         }
         let birdData = await birdSightingService.getSightings(using: location.coordinate)
-        let entry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather, birdSightings: birdData)))
+        let notables = await birdSightingService.getNotableSightings(using: location.coordinate)
+        let entry = LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather, birdSightings: birdData, notableBirdSightings: notables)))
         return entry
     }
         
@@ -105,6 +117,7 @@ struct Provider: AppIntentTimelineProvider {
         let addresses = await location.getAddresses()
         var weather = await weatherManager.getForecasts(using: location.coordinate)
         let birdData = await birdSightingService.getSightings(using: location.coordinate)
+        let notables = await birdSightingService.getNotableSightings(using: location.coordinate)
         if weather.count > 0 {
             for (index, forecastInfo) in weather.enumerated() {
                 UserDefaults.standard.set(weather: forecastInfo, forKey: "\(location.coordinate) \(index)")
@@ -116,7 +129,7 @@ struct Provider: AppIntentTimelineProvider {
                 }
             }
         }
-        let entries = [LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather, birdSightings: birdData)))]
+        let entries = [LocationInformationEntry(date: .now, state: .success(LocationInformation(userLocation: location, image: nil, addresses: addresses, weather: weather, birdSightings: birdData, notableBirdSightings: notables)))]
         return Timeline(entries: entries, policy: .after(.now + 60*10))
     }
     
@@ -205,6 +218,41 @@ struct WhereNowBirdSightingsWidgetView : View {
     }
 }
 
+struct WhereNowNotableBirdSightingsWidgetView : View {
+    @Environment(\.widgetFamily) var widgetFamily
+    @Environment(\.widgetRenderingMode) var widgetRenderingMode
+    
+    var entry: Provider.Entry
+    let titleFontSize: CGFloat = 8
+    let fontSize: CGFloat = 8
+    let emojiFontSize: CGFloat = 9
+    let emojiLine: Bool
+    var body: some View {
+        switch widgetFamily {
+        case .accessoryRectangular:
+            VStack(alignment: .center) {
+                if ![.accented].contains(self.widgetRenderingMode) && emojiLine {
+                    Text(Fun.eBirdjis.randomElement() ?? "")
+                        .multilineTextAlignment(.center)
+                        .font(.system(size: emojiFontSize))
+                }
+                Text(entry.notableBirdsDescription)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(5)
+                    .font(.system(size: titleFontSize))
+            }
+            .frame(maxHeight: .infinity)
+            Spacer()
+        case .accessoryInline:
+            Text(entry.notableBirdsDescriptionShorter + (emojiLine ? "" : " " + (Fun.eBirdjis.randomElement() ?? "")))
+        case .accessoryCorner, .accessoryCircular:
+            Text(entry.notableBirdsDescriptionShorter)
+        @unknown default:
+            Text(entry.notableBirdsDescriptionShorter)
+        }
+        
+    }
+}
 
 @main
 struct WhereNowWidgetBundle: WidgetBundle {
@@ -212,6 +260,7 @@ struct WhereNowWidgetBundle: WidgetBundle {
         WhereNowTextWidget()
         WhereNowLocationTextOnlyWidget()
         WhereNowBirdSightingsWidget()
+        WhereNowNotableBirdSightingsWidget()
     }
 }
 
@@ -257,6 +306,21 @@ struct WhereNowBirdSightingsWidget: Widget {
         .configurationDisplayName(BirdSightingsWidgetConfig.displayName)
         .description(BirdSightingsWidgetConfig.description)
         .supportedFamilies(BirdSightingsWidgetConfig.supportedFamilies)
+    }
+}
+
+struct WhereNowNotableBirdSightingsWidget: Widget {
+    
+    let kind: String = WidgetKinds.WhereNowNotableBirdSightingsWidget.description
+
+    var body: some WidgetConfiguration {
+        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
+            WhereNowNotableBirdSightingsWidgetView(entry: entry, emojiLine: false)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName(NotableBirdSightingsWidgetConfig.displayName)
+        .description(NotableBirdSightingsWidgetConfig.description)
+        .supportedFamilies(NotableBirdSightingsWidgetConfig.supportedFamilies)
     }
 }
 
