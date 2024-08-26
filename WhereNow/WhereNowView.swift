@@ -89,78 +89,94 @@ struct WhereNowPortraitView: View {
     let timer = Timer.publish(every: WhereNowView.countTime, on: .main, in: .common).autoconnect()
     @State var timeCounter:Double = 0.0
     
+    @State var showLocation: Bool = true
+    @State var showBirdData: Bool = true
+    @State var showWeatherData: Bool = true
+    
+    
     var body: some View {
         GeometryReader { geometry in
-            if !data.addressInfoIsUpdated {
-                Image("LOCATION")
-                    .resizable(resizingMode: .stretch)
-                    .frame(width: 7, height: 7)
-                    .scaledToFit()
-                    .opacity(data.addressInfoIsUpdated ? 0 : 1-timeCounter)
-                    .padding([.top,.bottom], reversePadding ? -25 : 0)
-            }
-            
-            ScrollView() {
-                VStack {
-                    Text(self.data.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
-                        .multilineTextAlignment(.center)
+            VStack {
+                if !data.addressInfoIsUpdated {
+                    Image("LOCATION")
+                        .resizable(resizingMode: .stretch)
+                        .frame(width: 7, height: 7)
+                        .scaledToFit()
+                        .opacity(data.addressInfoIsUpdated ? 0 : 1-timeCounter)
+                        .padding([.top,.bottom], reversePadding ? -25 : 0)
+                }
+                
+                ScrollView() {
+                    VStack {
+                        HeaderView(isPresenting: $showLocation, title: "Where now!")
+                        if $showLocation.wrappedValue {
+                            Text(self.data.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
+                                .multilineTextAlignment(.center)
 #if os(watchOS)
 #else
-                    if let image = self.data.image {
-                        MapSnapshotView(image: image)
-                    }
+                            if let image = self.data.image {
+                                MapSnapshotView(image: image)
+                            }
 #endif
-                    if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
-                        BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
-                            .frame(minHeight:140, maxHeight: (geometry.size.height ?? 0) > 140 ? (geometry.size.height ?? 140) : 140 )
-                    }
-                    
-                    LazyVStack(alignment:.leading) {
-                        ForEach(weatherData.timesAndForecasts, id: \.self) { element in
-                            LazyVStack(alignment:.center) {
-                                Text(Fun.emojis.randomElement() ?? "")
-                                    .font(.title)
-                                    .multilineTextAlignment(.center)
-                                Text(element.name ?? "")
-                                    .font(.subheadline)
-                                    .padding([.leading, .trailing])
-                                    .multilineTextAlignment(.center)
-                                    .bold()
-                                Text(element.forecast)
-                                    .font(.subheadline)
-                                    .padding([.leading, .trailing, .bottom])
-                                    .multilineTextAlignment(.leading)
+                        }
+                        if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
+                            HeaderView(isPresenting: $showBirdData, title: "Hear now!")
+                            if $showBirdData.wrappedValue {
+                                BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
+                                    .frame(minHeight:220, maxHeight: geometry.size.height > 220 ? geometry.size.height : 200 )
                             }
                         }
+                        
+                        HeaderView(isPresenting: $showWeatherData, title: "Weather now!")
+                        if $showWeatherData.wrappedValue {
+                            LazyVStack(alignment:.leading) {
+                                ForEach(weatherData.timesAndForecasts, id: \.self) { element in
+                                    LazyVStack(alignment:.center) {
+                                        Text(Fun.emojis.randomElement() ?? "")
+                                            .font(.title)
+                                            .multilineTextAlignment(.center)
+                                        Text(element.name ?? "")
+                                            .font(.subheadline)
+                                            .padding([.leading, .trailing])
+                                            .multilineTextAlignment(.center)
+                                            .bold()
+                                        Text(element.forecast)
+                                            .font(.subheadline)
+                                            .padding([.leading, .trailing, .bottom])
+                                            .multilineTextAlignment(.leading)
+                                    }
+                                }
+                            }
+                            
+                            Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
+                                .multilineTextAlignment(.center)
+                                .font(.caption2)
+                            Text(weatherData.forecastOffice?.description() ?? "")
+                                .multilineTextAlignment(.center)
+                                .font(.caption2)
+                        }
                     }
-                    
-                    Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
-                        .multilineTextAlignment(.center)
-                        .font(.caption2)
-                    Text(weatherData.forecastOffice?.description() ?? "")
-                        .multilineTextAlignment(.center)
-                        .font(.caption2)
                 }
-            }
-            .onChange(of: data.currentLocation, { oldValue, newValue in
-                if weatherData.timesAndForecasts.count == 0 {
-                    weatherData.cacheForecasts(using: newValue.coordinate)
+                .onChange(of: data.currentLocation, { oldValue, newValue in
+                    if weatherData.timesAndForecasts.count == 0 {
+                        weatherData.cacheForecasts(using: newValue.coordinate)
+                    }
+                    if birdData.sightings.count == 0 {
+                        birdData.cacheSightings(using: newValue.coordinate)
+                    }
+                })
+                .padding([.top, .bottom], reversePadding ? -25 : 0)
+                .onReceive(timer) { input in
+                    if timeCounter >= 2.0 {
+                        timeCounter = 0
+                    }
+                    timeCounter = timeCounter + WhereNowView.countTime * 2
                 }
-                if birdData.sightings.count == 0 {
-                    birdData.cacheSightings(using: newValue.coordinate)
-                }
-            })
-            .padding([.top, .bottom], reversePadding ? -25 : 0)
-            .onReceive(timer) { input in
-                if timeCounter >= 2.0 {
-                    timeCounter = 0
-                }
-                timeCounter = timeCounter + WhereNowView.countTime * 2
-            }
 #if os(watchOS)
-            Spacer()
+                Spacer()
 #else
 #endif
+            }
         }
     }
 }
@@ -172,31 +188,44 @@ struct WhereNowLandscapeView: View {
     @ObservedObject var weatherData: USAWeatherService = USAWeatherService()
     @ObservedObject var birdData: BirdSightingService = BirdSightingService()
     
+    @State var showLocation: Bool = true
+    @State var showBirdData: Bool = true
+    @State var showWeatherData: Bool = true
+    
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal) {
                 LazyHStack {
-                    Text(self.data.addressesVeryLongFlag)
-                        .multilineTextAlignment(.center)
-                    if let image = self.data.image {
-                        MapSnapshotView(image: image)
+                    HeaderView(isPresenting: $showLocation, title: "Where now!")
+                    if $showLocation.wrappedValue {
+                        Text(self.data.addressesVeryLongFlag)
+                            .multilineTextAlignment(.center)
+                        if let image = self.data.image {
+                            MapSnapshotView(image: image)
+                        }
                     }
                     
                     if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
-                        BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
-                            .frame(minHeight: 3*CGFloat(birdData.sightings.count) < geometry.size.height ? 3*CGFloat(birdData.sightings.count) : geometry.size.height, maxHeight: geometry.size.height > 140 ? geometry.size.height : 140 )
+                        HeaderView(isPresenting: $showBirdData, title: "Hear now!")
+                        if $showBirdData.wrappedValue {
+                            BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
+                                .frame(minHeight: 3*CGFloat(birdData.sightings.count) < geometry.size.height ? 3*CGFloat(birdData.sightings.count) : geometry.size.height, maxHeight: geometry.size.height > 220 ? geometry.size.height : 220 )
+                        }
                     }
                     
-                    WhereNowWeatherHStackView(data: data, weatherData: weatherData)
-                    
-                    VStack {
-                        Spacer()
-                        Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
-                            .font(.caption2)
-                            .multilineTextAlignment(.leading)
-                        Text(weatherData.forecastOffice?.description() ?? "")
-                            .multilineTextAlignment(.leading)
-                            .font(.caption2)
+                    HeaderView(isPresenting: $showWeatherData, title: "Weather now!")
+                    if $showWeatherData.wrappedValue {
+                        WhereNowWeatherHStackView(data: data, weatherData: weatherData)
+                        
+                        VStack {
+                            Spacer()
+                            Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
+                                .font(.caption2)
+                                .multilineTextAlignment(.leading)
+                            Text(weatherData.forecastOffice?.description() ?? "")
+                                .multilineTextAlignment(.leading)
+                                .font(.caption2)
+                        }
                     }
                 }
             }
@@ -209,6 +238,29 @@ struct WhereNowLandscapeView: View {
     }
 }
 #endif
+
+struct HeaderView: View {
+    @Binding var isPresenting: Bool
+    @State var title: String
+    var body: some View {
+        GeometryReader { geometry in
+            HStack(content: {
+                Text(title)
+                    .font(.title)
+                if geometry.size.height < geometry.size.width {
+                    Spacer()
+                }
+                Image(systemName: "chevron.compact.down")
+                    .foregroundColor(.gray)
+                    .rotationEffect(.degrees(isPresenting ? 0 : 180))
+                    .animation(Animation.easeInOut(duration: 0.3), value: isPresenting)
+            })
+            .onTapGesture {
+                isPresenting.toggle()
+            }
+        }
+    }
+}
 
 struct WhereNowWeatherHStackView: View {
     @ObservedObject var data: LocationDataModel

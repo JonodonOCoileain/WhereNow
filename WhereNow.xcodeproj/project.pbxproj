@@ -121,6 +121,8 @@
 		FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				BirdDataSightingsShortView.swift,
+				BirdDataSightingsView.swift,
 				BirdsBriefView.swift,
 				BirdSightingService.swift,
 				"CoreLocation+Extension.swift",
@@ -158,7 +160,8 @@
 		FC5FA7DE2C63033F0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				BirdsBriefView.swift,
+				BirdDataSightingsShortView.swift,
+				BirdDataSightingsView.swift,
 				BirdSightingService.swift,
 				"CoreLocation+Extension.swift",
 				"Data+.swift",
@@ -186,7 +189,8 @@
 		FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				BirdsBriefView.swift,
+				BirdDataSightingsShortView.swift,
+				BirdDataSightingsView.swift,
 				BirdSightingService.swift,
 				"CoreLocation+Extension.swift",
 				"Data+.swift",
@@ -1188,6 +1192,7 @@
 				INFOPLIST_FILE = WhereNowWatchWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WhereNowWatchWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1218,6 +1223,7 @@
 				INFOPLIST_FILE = WhereNowWatchWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WhereNowWatchWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

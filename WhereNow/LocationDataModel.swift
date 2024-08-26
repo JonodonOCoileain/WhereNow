@@ -138,7 +138,11 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print(locations.first?.coordinate.latitude ?? 1, locations.first?.coordinate.longitude ?? 1)
+        print("CLLocationManager did update locations")
+        for location in locations {
+            print(location.coordinate.latitude, location.coordinate.longitude)
+        }
+        print("Total locations: \(locations.count)")
         if readyForUpdate {
             if let currentLocation = locations.first, currentLocation != self.currentLocation {
                 self.currentLocation = currentLocation

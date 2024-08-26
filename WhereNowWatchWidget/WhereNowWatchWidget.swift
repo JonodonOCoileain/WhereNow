@@ -33,6 +33,17 @@ private enum LocationOnlyTextWidgetConfig {
     static let supportedFamilies: [WidgetFamily] = [.accessoryInline]
 }
 
+private enum BirdSightingsWidgetConfig {
+    /// The name shown for a widget when a user adds or edits it.
+    static let displayName = "Bird Sightings Widget"
+
+    /// The description shown for a widget when a user adds or edits it.
+    static let description = "This is a widget to metadata of bird sightings."
+
+    /// The sizes that our widget supports.
+    static let supportedFamilies: [WidgetFamily] = [.accessoryRectangular]
+}
+
 struct Provider: AppIntentTimelineProvider {
     
     typealias Entry = LocationInformationEntry
@@ -158,18 +169,49 @@ struct WhereNowTextWidgetView : View {
     }
 }
 
-
-/*struct WhereNowWidgetBundle: WidgetBundle {
-    var body: some Widget {
-        WhereNowTextWidget()
-        WhereNowLocationTextOnlyWidget()
+struct WhereNowBirdSightingsWidgetView : View {
+    @Environment(\.widgetFamily) var widgetFamily
+    @Environment(\.widgetRenderingMode) var widgetRenderingMode
+    
+    var entry: Provider.Entry
+    let titleFontSize: CGFloat = 8
+    let fontSize: CGFloat = 8
+    let emojiFontSize: CGFloat = 9
+    let emojiLine: Bool
+    var body: some View {
+        switch widgetFamily {
+        case .accessoryRectangular:
+            VStack(alignment: .center) {
+                if ![.accented].contains(self.widgetRenderingMode) && emojiLine {
+                    Text(Fun.eBirdjis.randomElement() ?? "")
+                        .multilineTextAlignment(.center)
+                        .font(.system(size: emojiFontSize))
+                }
+                Text(entry.birdsDescription)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(5)
+                    .font(.system(size: titleFontSize))
+            }
+            .frame(maxHeight: .infinity)
+            Spacer()
+        case .accessoryInline:
+            Text(entry.birdsDescriptionShorter + (emojiLine ? "" : " " + (Fun.eBirdjis.randomElement() ?? "")))
+        case .accessoryCorner, .accessoryCircular:
+            Text(entry.birdsDescriptionShorter)
+        @unknown default:
+            Text(entry.shortDescription)
+        }
+        
     }
-}*/
+}
+
+
 @main
 struct WhereNowWidgetBundle: WidgetBundle {
     var body: some Widget {
         WhereNowTextWidget()
         WhereNowLocationTextOnlyWidget()
+        WhereNowBirdSightingsWidget()
     }
 }
 
@@ -200,6 +242,21 @@ struct WhereNowLocationTextOnlyWidget: Widget {
         .configurationDisplayName(LocationOnlyTextWidgetConfig.displayName)
         .description(LocationOnlyTextWidgetConfig.description)
         .supportedFamilies(LocationOnlyTextWidgetConfig.supportedFamilies)
+    }
+}
+
+struct WhereNowBirdSightingsWidget: Widget {
+    
+    let kind: String = WidgetKinds.WhereNowBirdSightingsWidget.description
+
+    var body: some WidgetConfiguration {
+        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
+            WhereNowBirdSightingsWidgetView(entry: entry, emojiLine: false)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName(BirdSightingsWidgetConfig.displayName)
+        .description(BirdSightingsWidgetConfig.description)
+        .supportedFamilies(BirdSightingsWidgetConfig.supportedFamilies)
     }
 }
 
