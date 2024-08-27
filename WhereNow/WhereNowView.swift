@@ -91,8 +91,14 @@ struct WhereNowPortraitView: View {
     @State var timeCounter:Double = 0.0
     
     @State var showLocation: Bool = true
+    @State var showLocationTime: Double = Date().timeIntervalSince1970
+    @State var hideLocationTime: Double = 0.0
     @State var showBirdData: Bool = true
+    @State var showBirdDataTime: Double = Date().timeIntervalSince1970
+    @State var hideBirdDataTime: Double = 0.0
     @State var showWeatherData: Bool = true
+    @State var showWeatherDataTime: Double = Date().timeIntervalSince1970
+    @State var hideWeatherDataTime: Double = 0.0
     
     
     var body: some View {
@@ -109,8 +115,14 @@ struct WhereNowPortraitView: View {
                 
                 ScrollView() {
                     VStack {
-                        HeaderView(isPresenting: $showLocation, title: "Where now!")
-                        if $showLocation.wrappedValue {
+                        Text("HERE NOW!")
+                            .modifier(Spinnable())
+                            .padding([.bottom],10)
+                        
+                        HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Where now!")
+                            .frame(maxWidth: .infinity)
+
+                        VStack {
                             Text(self.data.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
                                 .multilineTextAlignment(.center)
 #if os(watchOS)
@@ -120,16 +132,21 @@ struct WhereNowPortraitView: View {
                             }
 #endif
                         }
+                        .scaleEffect(showLocation ? 1 : 0)
+                        .offset(y: hideLocationTime > showLocationTime ? -200 * (Date().timeIntervalSince1970 - hideLocationTime)/0.35 : (hideLocationTime < showLocationTime && showLocationTime >= 0.35+Date().timeIntervalSince1970  ? -10 * (showLocationTime - Date().timeIntervalSince1970)/0.35 : 0))
+                        .frame(maxHeight: showLocationTime < Date().timeIntervalSince1970 - 0.35 && showLocationTime > hideLocationTime ? .infinity : Date().timeIntervalSince1970 > hideLocationTime + 0.35 && hideLocationTime > showLocationTime ? 0 : Date().timeIntervalSince1970 < hideLocationTime + 0.35 && Date().timeIntervalSince1970 > hideLocationTime ? 500 * (Date().timeIntervalSince1970 - hideLocationTime)/0.35 : .infinity)
+                        .animation(.easeInOut, value: showLocation)
+                        
                         if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
-                            HeaderView(isPresenting: $showBirdData, title: "Hear now!")
-                            if $showBirdData.wrappedValue {
+                            HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
                                 BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
-                                    .frame(minHeight:220, maxHeight: geometry.size.height > 220 ? geometry.size.height : 200 )
-                            }
+                                    .frame(minHeight:300, maxHeight: geometry.size.height > 220 ? geometry.size.height : 200 )
+                                    .scaleEffect(showBirdData ? 1 : 0)
+                                    .animation(.easeInOut, value: showBirdData)
+                                    .frame(maxHeight: showBirdData ? .infinity : 0)
                         }
                         
-                        HeaderView(isPresenting: $showWeatherData, title: "Weather now!")
-                        if $showWeatherData.wrappedValue {
+                        HeaderView(isPresenting: $showWeatherData, showTimeTracker: $showWeatherDataTime,  hideTimeTracker: $hideWeatherDataTime, title: "Weather now!")
                             LazyVStack(alignment:.leading) {
                                 ForEach(weatherData.timesAndForecasts, id: \.self) { element in
                                     LazyVStack(alignment:.center) {
@@ -147,7 +164,6 @@ struct WhereNowPortraitView: View {
                                             .multilineTextAlignment(.leading)
                                     }
                                 }
-                            }
                             
                             Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
                                 .multilineTextAlignment(.center)
@@ -156,6 +172,9 @@ struct WhereNowPortraitView: View {
                                 .multilineTextAlignment(.center)
                                 .font(.caption2)
                         }
+                            .scaleEffect(showWeatherData ? 1 : 0)
+                            .animation(.easeInOut, value: showWeatherData)
+                            .frame(maxHeight: showWeatherData ? .infinity : 0)
                     }
                 }
                 .onChange(of: data.currentLocation, { oldValue, newValue in
@@ -181,7 +200,7 @@ struct WhereNowPortraitView: View {
 #else
 #endif
             }
-        }
+        }.animation(.default, value: 1)
     }
 }
 #if os(watchOS)
@@ -193,33 +212,47 @@ struct WhereNowLandscapeView: View {
     @ObservedObject var birdData: BirdSightingService = BirdSightingService()
     
     @State var showLocation: Bool = true
+    @State var showLocationTime: Double = 0.0
+    @State var hideLocationTime: Double = 0.0
     @State var showBirdData: Bool = true
+    @State var showBirdDataTime: Double = 0.0
+    @State var hideBirdDataTime: Double = 0.0
     @State var showWeatherData: Bool = true
+    @State var showWeatherDataTime: Double = 0.0
+    @State var hideWeatherDataTime: Double = 0.0
     
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal) {
                 LazyHStack {
-                    HeaderView(isPresenting: $showLocation, title: "Where now!")
-                    if $showLocation.wrappedValue {
-                        Text(self.data.addressesVeryLongFlag)
-                            .multilineTextAlignment(.center)
-                        if let image = self.data.image {
-                            MapSnapshotView(image: image)
-                        }
+                    Text("HERE NOW!")
+                        .modifier(Spinnable())
+                        .padding([.bottom],10)
+                    
+                    HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Where now!")
+                    Text(self.data.addressesVeryLongFlag)
+                        .multilineTextAlignment(.center)
+                        .scaleEffect(showLocation ? 1 : 0)
+                        .animation(.easeInOut, value: showLocation)
+                    if let image = self.data.image {
+                        MapSnapshotView(image: image)
+                            .scaleEffect(showLocation ? 1 : 0)
+                            .animation(.easeInOut, value: showLocation)
                     }
                     
                     if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
-                        HeaderView(isPresenting: $showBirdData, title: "Hear now!")
+                        HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
                         if $showBirdData.wrappedValue {
                             BirdsBriefView(birdData: birdData, briefing: birdSeenCommonDescription)
                                 .frame(minHeight: 3*CGFloat(birdData.sightings.count) < geometry.size.height ? 3*CGFloat(birdData.sightings.count) : geometry.size.height, maxHeight: geometry.size.height > 220 ? geometry.size.height : 220 )
                         }
                     }
                     
-                    HeaderView(isPresenting: $showWeatherData, title: "Weather now!")
-                    if $showWeatherData.wrappedValue {
+                    HeaderView(isPresenting: $showWeatherData, showTimeTracker: $showWeatherDataTime,  hideTimeTracker: $hideWeatherDataTime, title: "Weather now!")
                         WhereNowWeatherHStackView(data: data, weatherData: weatherData)
+                        .scaleEffect(showWeatherData ? 1 : 0)
+                        .animation(.easeInOut, value: showWeatherData)
+                        .frame(maxWidth: showWeatherData ? .infinity : 0)
                         
                         VStack {
                             Spacer()
@@ -230,7 +263,9 @@ struct WhereNowLandscapeView: View {
                                 .multilineTextAlignment(.leading)
                                 .font(.caption2)
                         }
-                    }
+                        .scaleEffect(showWeatherData ? 1 : 0)
+                        .animation(.easeInOut, value: showWeatherData)
+                        .frame(maxWidth: showWeatherData ? .infinity : 0)
                 }
             }
             .onChange(of: data.currentLocation, { oldValue, newValue in
@@ -248,23 +283,27 @@ struct WhereNowLandscapeView: View {
 
 struct HeaderView: View {
     @Binding var isPresenting: Bool
-    @State var title: String
+    @Binding var showTimeTracker: Double
+    @Binding var hideTimeTracker: Double
+    let title: String
     var body: some View {
-        GeometryReader { geometry in
-            HStack(content: {
-                Text(title)
-                    .font(.title)
-                if geometry.size.height < geometry.size.width {
-                    Spacer()
-                }
-                Image(systemName: "chevron.compact.down")
-                    .foregroundColor(.gray)
-                    .rotationEffect(.degrees(isPresenting ? 0 : 180))
-                    .animation(Animation.easeInOut(duration: 0.3), value: isPresenting)
-            })
-            padding([.vertical])
-            .onTapGesture {
-                isPresenting.toggle()
+        HStack(content: {
+            Text(title)
+                .font(.title)
+            Spacer()
+            Image(systemName: "chevron.compact.down")
+                .foregroundColor(.gray)
+                .rotationEffect(.degrees(isPresenting ? 0 : 180))
+                .animation(Animation.easeInOut(duration: 0.3), value: isPresenting)
+        })
+        .padding()
+        .background()
+        .onTapGesture {
+            isPresenting.toggle()
+            if isPresenting {
+                showTimeTracker = Date().timeIntervalSince1970
+            } else {
+                hideTimeTracker = Date().timeIntervalSince1970
             }
         }
     }

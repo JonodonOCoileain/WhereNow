@@ -16,6 +16,7 @@ struct BirdDataSightingsShortView: View {
                 .multilineTextAlignment(.leading)
                 .padding([.horizontal])
                 .padding(.bottom, 4)
+                .lineLimit(1000000)
             Text("🐣 " + birdData.compactMap({"\($0.comName ?? "")@\($0.locName ?? "")"}).joined(separator: ", \(Fun.eBirdjis.randomElement() ?? "")"))
                 .font(.system(size: 12))
                 .bold()

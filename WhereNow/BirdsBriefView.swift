@@ -25,13 +25,16 @@ struct BirdsBriefView: View {
         GeometryReader { geometry in
             ScrollView(.horizontal) {
                 LazyHStack(alignment:.top) {
-                    VStack {
+                    VStack(alignment: .leading) {
                         Text("🦅 Especially Notable Bird Reports thanks to Cornell Lab of Ornithology and the Macauley Library.")
-                        ScrollView {
-                            BirdSightingsView(birdData: birdData)
-                                .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
-                        }
-                        .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
+                            .frame(width: geometry.size.width)
+                            .lineLimit(5)
+                        ScrollView() {
+                            VStack(alignment: .leading, content: {
+                                BirdSightingsView(birdData: birdData, notables: true)
+                                    .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
+                            })
+                        }.frame(width: geometry.size.width)
                     }
                     
                     VStack(alignment: .leading) {
@@ -71,8 +74,6 @@ struct BirdsBriefView: View {
 }
 
 struct BirdSightingsView: View {
-    @ObservedObject var audioPlayerViewModel: AudioPlayerViewModel = AudioPlayerViewModel()
-    
     let birdData: BirdSightingService
     let titleSize: CGFloat = 11
     let descriptionSize: CGFloat = 12
@@ -87,9 +88,10 @@ struct BirdSightingsView: View {
                     ForEach(notables == true ? birdData.notableSightings : birdData.sightings, id: \.self) { sighting in
                         LazyHStack(alignment:.top) {
                             BirdSightingDescriptionView(sighting: sighting)
-                            .frame(width: geometry.size.width*3/4, height: 130)
+                            .frame(width: geometry.size.width*9/10, height: 163)
                             Spacer()
-                        }.frame(width: geometry.size.width, height: 130)
+                                .frame(width: 1, height: 1)
+                        }
                     }
                 }.frame(width: geometry.size.width)
             }.frame(width: geometry.size.width)
@@ -112,20 +114,14 @@ struct BirdSightingDescriptionView: View {
                     .multilineTextAlignment(.leading)
                     .lineLimit(1)
             }
-            if let commonName = sighting.comName {
-                Text(commonName)
-                    .font(.system(size: descriptionSize))
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(1)
-            }
             if let name = sighting.sciName {
                 Text(name)
                     .font(.system(size: descriptionSize))
                     .multilineTextAlignment(.leading)
                     .lineLimit(1)
             }
-            if let quantity = sighting.howMany {
-                Text("Quantity: \(quantity)")
+            if let location = sighting.locName {
+                Text("Location: " + location)
                     .font(.system(size: descriptionSize))
                     .multilineTextAlignment(.leading)
                     .lineLimit(1)
@@ -136,8 +132,8 @@ struct BirdSightingDescriptionView: View {
                     .multilineTextAlignment(.leading)
                     .lineLimit(1)
             }
-            if let location = sighting.locName {
-                Text("Location: " + location)
+            if let quantity = sighting.howMany {
+                Text("Quantity: \(quantity)")
                     .font(.system(size: descriptionSize))
                     .multilineTextAlignment(.leading)
                     .lineLimit(1)
@@ -149,50 +145,22 @@ struct BirdSightingDescriptionView: View {
                     .lineLimit(1)
             }
             if let name = sighting.comName, let nameURLString = name.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed), let url = URL(string:"https://www.youtube.com/results?search_query=\(nameURLString)") {
-                Link("Tap to search on YouTube", destination: url)
+                Link("📺 Tap to search on YouTube", destination: url)
                     .font(.system(size: descriptionSize))
                     .multilineTextAlignment(.leading)
+                    .padding([.bottom], 3)
              }
-        }
-    }
-}
-
-class AudioPlayerViewModel: ObservableObject {
-    var audioPlayer: AVPlayer?
-    
-    @Published var isPlaying = false
-    
-    init() {
-        if let sound = Bundle.main.path(forResource: "PocketCyclopsLvl1", ofType: "mp3") {
-            self.audioPlayer = AVPlayer(url: URL(fileURLWithPath: sound))
-        } else {
-            print("Audio file could not be found.")
-        }
-    }
-    func useRemoteFile(string: String) {
-        if let url = URL(string: string) {
-            self.audioPlayer = AVPlayer(url: url)
-        }
-    }
-    
-    func useFile(url: URL) {
-        self.audioPlayer = AVPlayer(url: url)
-    }
-    
-    func playOrPause() {
-        guard let player = audioPlayer else { return }
-        
-        if player.rate != 0 {
-            player.pause()
-            DispatchQueue.main.async { [weak self] in
-                self?.isPlaying = false
+            if let speciesCode = sighting.speciesCode, let speciesURLString = speciesCode.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed), let url = URL(string: "https://media.ebird.org/catalog?taxonCode=\(speciesURLString)&mediaType=photo") {
+                Link("🖼️ Tap to see photos", destination: url)
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .padding([.bottom], 3)
             }
-        } else {
-            player.play()
-            DispatchQueue.main.async { [weak self] in
-                self?.isPlaying = true
+            if let speciesCode = sighting.speciesCode, let speciesURLString = speciesCode.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed), let url = URL(string: "https://media.ebird.org/catalog?taxonCode=\(speciesURLString)&mediaType=audio") {
+                Link("🎼🔊 Tap for recordings", destination: url)
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
             }
         }
     }
 }
-

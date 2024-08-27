@@ -625,7 +625,7 @@ struct WhereNowBirdSightingsWidgetView : View {
         case .systemLarge:
             switch entry.state {
             case .success(let entryInfo):
-                BirdDataSightingsShortView(birdData: entryInfo.notableBirdSightings ?? [], notables: true)
+                BirdDataSightingsShortView(birdData: notables == true ? (entryInfo.notableBirdSightings ?? []) : entryInfo.birdSightings ?? [], notables: true)
                     .containerBackground(.fill.tertiary, for: .widget)
             case .placeholder:
                 BirdDataSightingsShortView(birdData: [BirdSighting(speciesCode: "BigiusBirdius", comName: "Big Bird", sciName: "Bigius Birdius", locId: "SesameStreetPA", locName: "Sesame Street, NY/PA", obsDt: "Today", howMany: 1, lat: 43, lng: 72, obsValid: true, obsReviewed: true, locationPrivate: false)], notables: notables == true)
