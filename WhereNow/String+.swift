@@ -14,4 +14,24 @@ extension String {
         }
         return UIImage()
     }
+    func matches(for regex: String) -> [String] {
+
+        do {
+            let regex = try NSRegularExpression(pattern: regex)
+            let results = regex.matches(in: self,
+                                        range: NSRange(self.startIndex..., in: self))
+            return results.map {
+                String(self[Range($0.range, in: self)!])
+            }
+        } catch let error {
+            print("invalid regex: \(error.localizedDescription)")
+            return []
+        }
+    }
 }
+
+extension String {
+    static var weatherNowTitle = "Weather Now!"
+    static var andLaterTitle = "(And later!)"
+}
+

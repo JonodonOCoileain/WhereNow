@@ -10,16 +10,15 @@ import WidgetKit
 #if canImport(UniformTypeIdentifiers)
 import UniformTypeIdentifiers
 #endif
-#if canImport(SafariServices)
-import SafariServices
 #if canImport(UIKit)
 import UIKit
 #endif
-#endif
 import AVFoundation
+import MapKit
 
 struct BirdSightingsViews: View {
-    let birdData: BirdSightingService
+    @ObservedObject var birdData: BirdSightingService
+    @ObservedObject var locationData: LocationDataModel
     let briefing: String
     let titleSize: CGFloat = 11
     let descriptionSize: CGFloat = 12
@@ -33,7 +32,7 @@ struct BirdSightingsViews: View {
                             .lineLimit(5)
                         ScrollView() {
                             VStack(alignment: .leading, content: {
-                                BirdSightingsContainerView(birdData: birdData, notables: true)
+                                BirdSightingsContainerView(birdData: birdData, locationData: locationData, notables: true)
                                     .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
                             })
                         }.frame(width: geometry.size.width)
@@ -63,7 +62,7 @@ struct BirdSightingsViews: View {
                     }.frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
                     
                     ScrollView {
-                        BirdSightingsContainerView(birdData: birdData)
+                        BirdSightingsContainerView(birdData: birdData, locationData: locationData)
                             .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
                     }
                     .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
@@ -75,20 +74,22 @@ struct BirdSightingsViews: View {
     }
 }
 
-struct BirdSightingsContainerView: View {
-    let birdData: BirdSightingService
+public struct BirdSightingsContainerView: View {
+    @ObservedObject var birdData: BirdSightingService
+    @ObservedObject var locationData: LocationDataModel
     let titleSize: CGFloat = 11
     let descriptionSize: CGFloat = 12
+    
     @State private var isFullScreen = false
     
     var notables: Bool? = false
-    var body: some View {
+    public var body: some View {
         GeometryReader { geometry in
             ScrollView {
                 LazyVStack(alignment:.leading, spacing: 9) {
-                    ForEach(notables == true ? birdData.notableSightings : birdData.sightings, id: \.id) { sighting in
+                    ForEach(notables == true ? birdData.notableSightings : birdData.sightings) { sighting in
                         LazyHStack(alignment:.top) {
-                            BirdSightingView(sighting: sighting, birdData: birdData)
+                            BirdSightingView(sighting: sighting, locationData: locationData, currentLocation: locationData.currentLocation.coordinate, birdData: birdData)
                                 .frame(width: geometry.size.width*9/10)
                             Spacer()
                                 .frame(width: 1, height: 1)
@@ -126,63 +127,96 @@ class PlayerViewModel: ObservableObject {
         audioPlayer.pause()
         isPlaying = false
     }
+    
+    func stop() {
+        guard let audioPlayer = audioPlayer else { return }
+        audioPlayer.pause()
+        audioPlayer.seek(to: .zero)
+        isPlaying = false
+    }
 }
 
-struct BirdSightingView: View {
+public struct BirdSightingView: View {
     @State private var isPresented: Bool = false
     @State private var selectedDetailTitle: String?
     @State private var selectedDetailSubtitle: String?
     @State private var selectedBirdData: BirdSpeciesAssetMetadata?
+    #if os(iOS)
+    @State var route: IdentifiableRoute?
+    @State var routeDestination: CLLocationCoordinate2D?
+    #else
+    @State var route: String?
+    #endif
     @ObservedObject var player = PlayerViewModel()
-    let sighting: BirdSighting
+    @State var sighting: BirdSighting
+    @ObservedObject var locationData: LocationDataModel
+    let currentLocation: CLLocationCoordinate2D?
     @ObservedObject var birdData: BirdSightingService
     let titleSize: CGFloat = 11
     let descriptionSize: CGFloat = 12
-    
-    var body: some View {
+    @State var speciesMetadata: BirdSpeciesAssetMetadata?
+    @State var coordinate: CLLocationCoordinate2D?
+    public var body: some View {
         LazyVStack(alignment:.leading, spacing: 0) {
-            if let code = sighting.speciesCode {
-                let relatedData = birdData.speciesMedia.filter({$0.speciesCode == code})
-                if relatedData.count > 0 {
-                    HStack(alignment: .center) {
-                        ForEach(relatedData.filter({$0.assetFormatCode == "photo"}), id: \.id) { imageData in
-                            VStack {
-                                AsyncImage(url: URL(string: imageData.url)){ image in
-                                    image.resizable()
-                                } placeholder: {
-                                    Color.red
-                                }
-                                .frame(width: 64, height: 64)
+            let relatedData = Set(birdData.sightings + birdData.notableSightings).first(where: {$0.speciesCode == sighting.speciesCode})?.speciesMediaMetadata
+                if (relatedData?.count ?? 0) > 0 {
+                    ScrollView(.horizontal) {
+                        LazyHStack(alignment: .center) {
+                            let data = relatedData ?? []
+                            ForEach(data.filter({$0.assetFormatCode == "photo"})) { imageData in
                                 
-                                Text("Uploaded by:")
-                                    .font(.caption2)
-                                    .multilineTextAlignment(.center)
-                                Text(imageData.uploadedBy)
-                                    .font(.caption2)
-                                    .multilineTextAlignment(.center)
-                            }
-                            .onTapGesture {
-#if os(iOS)
-                                if let citationUrl = selectedBirdData?.citationUrl {
-                                    UIApplication.shared.open(URL(string: citationUrl)!)
+                                VStack {
+                                    if let image = imageData.image, let uiImage = UIImage(data: image) {
+                                        Image(uiImage: uiImage)
+                                            .resizable()
+                                            .scaledToFill()
+                                        #if os(iOS)
+                                            .frame(width: 64, height: 64)
+                                        #else
+                                            .frame(width: 20, height: 20)
+                                        #endif
+                                            
+                                    }
+                                    Text("Uploaded by:")
+                                        .font(.caption2)
+                                        .multilineTextAlignment(.center)
+                                    Text(imageData.uploadedBy)
+                                        .font(.caption2)
+                                        .multilineTextAlignment(.center)
+                                        .onAppear() {
+                                            birdData.retrieveImageData(of: data.filter({$0.assetFormatCode == "photo"}))
+                                        }
+                                        
                                 }
+                                .onTapGesture {
+                                    print("Tapped")
+#if os(iOS)
+                                    if let citationUrl = selectedBirdData?.citationUrl {
+                                        UIApplication.shared.open(URL(string: citationUrl)!)
+                                    }
 #endif
+                                }
+                                .onLongPressGesture(perform: {
+                                    selectedDetailTitle = sighting.sciName
+                                    selectedDetailSubtitle = sighting.comName
+                                    selectedBirdData = imageData
+                                    isPresented.toggle()
+                                })
                             }
-                            .onLongPressGesture(perform: {
-                                selectedDetailTitle = sighting.sciName
-                                selectedDetailSubtitle = sighting.comName
-                                selectedBirdData = imageData
-                                isPresented.toggle()
-                            })
-                        }
-                    }.frame(maxWidth: .infinity, maxHeight: 64)
-                        .padding(.bottom)
-                }
+                        }.frame(maxWidth: .infinity, maxHeight: 100)
+                            .padding(.bottom)
+                    }
             } else {
                 Text(Fun.eBirdjis.randomElement() ?? "")
                     .font(.system(size: descriptionSize))
                     .multilineTextAlignment(.leading)
             }
+            Spacer()
+                .onAppear {
+                    if [nil,0].contains(sighting.speciesMediaMetadata?.count){
+                        birdData.requestWebsiteAssetMetadataOf(sighting: sighting)
+                    }
+                }
             if let commonName = sighting.comName {
                 Text(commonName)
                     .font(.system(size: descriptionSize))
@@ -196,10 +230,58 @@ struct BirdSightingView: View {
                     .lineLimit(2)
             }
             if let location = sighting.locName {
-                Text("Location: " + location)
-                    .font(.system(size: descriptionSize))
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(2)
+                VStack {
+                    #if os(iOS)
+                    Text("Location: " + location)
+                        .font(.system(size: descriptionSize))
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(2)
+                        .foregroundColor(UIDevice.current.systemName == "iOS" ? .blue : .primary)
+                        #if os(iOS)
+                        .onTapGesture(perform: {
+                            if let locName = sighting.locName, let coordinate = coordinate {
+                                
+                                self.route = nil
+                                
+                                // Coordinate to use as a starting point for the example
+                                guard let startingPoint = currentLocation else { return }
+                                
+                                // Create and configure the request
+                                let request = MKDirections.Request()
+                                request.source = MKMapItem(placemark: MKPlacemark(coordinate: startingPoint))
+                                request.destination = MKMapItem(placemark: MKPlacemark(coordinate: coordinate))
+                                request.transportType = .walking
+                                routeDestination = coordinate
+                                // Get the directions based on the request
+                                Task {
+                                    let directions = MKDirections(request: request)
+                                    do {
+                                        let response = try await directions.calculate()
+                                        guard let route = response.routes.first else { return }
+                
+                                        self.route = IdentifiableRoute(route: route)
+                                    } catch {
+                                        print(error)
+                                    }
+                                }
+                            } else if let locName = sighting.locName, let startingPoint = currentLocation, let url = URL(string:
+                                                                                                                            "https://www.google.co.in/maps/dir/\(startingPoint.latitude),\(startingPoint.longitude)/\(locName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "")/") {
+                                UIApplication.shared.open(url)
+                            }
+                        })
+                        #endif
+                    #else
+                    Text("Location: " + location)
+                        .font(.system(size: descriptionSize))
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(2)
+                    #endif
+                }
+#if os(iOS)
+                .sheet(item: $route, content: { route in
+                    FullScreenModalDirectionsView(destination: routeDestination ?? CLLocationCoordinate2D(), route: route, newRoute: route, sighting: sighting, locationData: locationData)
+                    })
+#endif
             }
             if let date = sighting.obsDt {
                 Text("Date: " + date)
@@ -244,19 +326,22 @@ struct BirdSightingView: View {
                     .multilineTextAlignment(.leading)
             }
             //Audio files
-            if let code = sighting.speciesCode {
-                let relatedData = birdData.speciesMedia.filter({$0.speciesCode == code})
-                if relatedData.count > 0 {
+            if let relatedData = relatedData, relatedData.count > 0 {
+                ScrollView(.horizontal) {
                     LazyHStack {
                         ForEach(relatedData.filter({$0.assetFormatCode == "audio"})) { key in
                             Button(action:{
                                 if let url = URL(string: key.url) {
                                     self.player.set(url: url)
-                                    self.player.play()
+                                    if self.player.isPlaying {
+                                        self.player.pause()
+                                    } else {
+                                        self.player.play()
+                                    }
                                 }
                             },label:{
                                 VStack(alignment: .center, spacing: 2) {
-                                    Image(systemName: "play")
+                                    Image(systemName: "play.circle.fill")
                                         .frame(width: 64, height: 64)
                                         .clipShape(.rect(cornerRadius: 8))
                                         .buttonStyle(.borderedProminent)
@@ -267,9 +352,9 @@ struct BirdSightingView: View {
                                         .font(.caption2)
                                         .multilineTextAlignment(.center)
                                 }.onLongPressGesture {
-                                    #if os(iOS)
+#if os(iOS)
                                     UIApplication.shared.open(URL(string: key.citationUrl)!)
-                                    #endif
+#endif
                                 }
                             })
                         }
@@ -278,48 +363,68 @@ struct BirdSightingView: View {
             }
         }
         .sheet(item: $selectedBirdData, content: { data in
-            if let selectedBirdData = selectedBirdData {
-                FullScreenModalView(data: selectedBirdData)
-            }
+            FullScreenModalView(data: data)
         })
-        .onAppear {
-            if let code = sighting.speciesCode, !birdData.speciesMedia.compactMap({$0.speciesCode}).contains(code) {
-                birdData.requestWebsiteOf(speciesCode: code)
-            }
-        }
+        .onAppear(perform:  {
+            guard let locName = sighting.locName else { return }
+            LocationDataModel.getCoordinate(addressString: locName) { coordinate, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                } else {
+                    self.coordinate = coordinate
+                }}})
         .padding()
     }
 }
+
+
+#if os(iOS)
+class IdentifiableRoute: Identifiable, ObservableObject {
+    @Published var route: MKRoute
+    let id: ObjectIdentifier
+    
+    init(route: MKRoute) {
+        self.route = route
+        self.id = ObjectIdentifier(route)
+    }
+}
+#endif
 
 struct FullScreenModalView: View {
     @Environment(\.dismiss) var dismiss
     @State var data: BirdSpeciesAssetMetadata
     var body: some View {
         VStack {
+            if let image = data.image, let uiImage = UIImage(data: image) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    
+            }
+            
             if let sciName = data.sciName {
                 Text(sciName)
-                    .padding(.horizontal)
             }
+            
             if let comName = data.comName {
                 Text(comName)
-                    .padding(.horizontal)
             }
-            Text(data.generatedUrl).onTapGesture {
-#if canImport(UniformTypeIdentifiers)
-                #if os(iOS)
-                UIPasteboard.general.setValue(data.generatedUrl,
-                            forPasteboardType: UTType.plainText.identifier)
-                #endif
-                #endif
+            
+            let uploadedBy = data.uploadedBy
+            if uploadedBy.count > 0 {
+                Text("Uploaded by:")
+                Text(uploadedBy)
             }
-            AsyncImage(url: URL(string: data.generatedUrl)){ image in
-                image
-                    .resizable()
-                    .renderingMode(.template)
-                    .scaledToFit()
-            } placeholder: {
-                ProgressView().progressViewStyle(.circular)
+
+            if let description = data.description, description.count > 0 {
+                Text("Description:")
+                Text(description)
             }
+            if let url = URL(string: data.generatedUrl) {
+                Link(url.absoluteString, destination: url)
+            }
+            Spacer()
         }
         .edgesIgnoringSafeArea(.all)
         .onTapGesture {
@@ -327,7 +432,160 @@ struct FullScreenModalView: View {
         }
     }
 }
+#if os(iOS)
+struct FullScreenModalDirectionsView: View {
+    @Environment(\.dismiss) var dismiss
+    let destination: CLLocationCoordinate2D
+    @State var route: IdentifiableRoute
+    @ObservedObject var newRoute: IdentifiableRoute
+    @State var sighting: BirdSighting
+    @ObservedObject var locationData: LocationDataModel
+    
+    var body: some View {
+        VStack {
+            Spacer()
+            RouteSummaryView(route: route)
+            Spacer()
+            RouteMapView(route: route, newRoute: newRoute)
+            
+            Spacer()
+            RouteStepsView(steps: route.route.steps, newRoute: newRoute)
+        }
+        .edgesIgnoringSafeArea(.all)
+        .onTapGesture {
+            dismiss()
+        }
+        .onChange(of: locationData.currentLocation) { oldValue, newValue in
+            
+            // Coordinate to use as a starting point for the example
+            let startingPoint = locationData.currentLocation.coordinate
+            
+            // Create and configure the request
+            let request = MKDirections.Request()
+            request.source = MKMapItem(placemark: MKPlacemark(coordinate: startingPoint))
+            request.destination = MKMapItem(placemark: MKPlacemark(coordinate: self.destination))
+            request.transportType = .walking
+            // Get the directions based on the request
+            Task {
+                let directions = MKDirections(request: request)
+                do {
+                    let response = try await directions.calculate()
+                    guard let route = response.routes.first else { return }
+                    
+                    self.newRoute.route = route
+                } catch {
+                    print(error)
+                }
+            }
+        }
+    }
+}
 
+extension TimeInterval {
+    func spellOut() -> String {
+        return Duration.seconds(self).formatted(.units(
+            allowed: [.days, .hours, .minutes, .seconds],
+            width: .wide
+        ))
+    }
+}
+
+struct RouteSummaryView: View {
+    @ObservedObject var route: IdentifiableRoute
+    var body: some View {
+        Text("Directions to \(route.route.name)").font(.title)
+            .padding([.vertical])
+        Text("Expected travel time: \(route.route.expectedTravelTime.spellOut())").font(.caption)
+        if Locale.current.usesMetricSystem == true {
+            let distance = String(format: "%.1f", Double(round(route.route.distance.inKilometers()*Double(10)))/Double(10))
+            Text("Distance: \(distance) kilometers").font(.caption)
+        } else {
+            let imperialDistance = String(format: "%.2f", Double(round(route.route.distance.inMiles()*Double(100)))/Double(100))
+            Text("Distance: \(imperialDistance) miles").font(.caption)
+        }
+        if !route.route.advisoryNotices.isEmpty {
+            Text("Advisory Notices:").font(.caption)
+            ForEach(route.route.advisoryNotices, id: \.self) { notice in
+                Text(notice).font(.caption)
+            }
+        }
+    }
+}
+
+struct RouteMapView: View {
+    @ObservedObject var route: IdentifiableRoute
+    @ObservedObject var newRoute: IdentifiableRoute
+    
+    var body: some View {
+        Map(interactionModes: [.rotate], content: {
+            MapPolyline(route.route)
+                .stroke(Color(red: 0.68, green: 0.85, blue: 0.9), lineWidth: 4)
+            MapPolyline(route.route)
+                .stroke(.blue, lineWidth: 5)
+            
+        })
+        .frame(maxWidth: .infinity, maxHeight: 450)
+    }
+}
+
+struct RouteStepsView: View {
+    let steps: [MKRoute.Step]
+    @ObservedObject var newRoute: IdentifiableRoute
+    
+    var body: some View {
+        ScrollView {
+            LazyVStack {
+                let steps: [MKRoute.Step] = steps.filter({ $0.instructions != "" })
+                ForEach(steps, id: \.self) { step in
+                    let newSteps: [MKRoute.Step] = newRoute.route.steps.filter({ $0.instructions != "" })
+                    if newSteps.first?.instructions ?? "" == step.instructions {
+                        Text(step.instructions).font(.subheadline).foregroundStyle(.blue)
+                    } else {
+                        Text(step.instructions).font(.subheadline)
+                    }
+                    if Locale.current.usesMetricSystem == true {
+                        let distance = String(format: "%.1f", Double(round(step.distance.inKilometers()*10))/10)
+                        Text("\(distance) kilometers").font(.caption)
+                    } else {
+                        let imperialDistance = String(format: "%.2f", Double(round(step.distance.inMiles()*100))/100)
+                        Text("\(imperialDistance) miles").font(.caption)
+                    }
+                    
+                    Text(step.notice ?? "").font(.caption)
+                }
+            }
+        }
+    }
+}
+
+extension CLLocationDistance {
+    func inMiles() -> Double {
+        return Double(self)*Double(0.00062137)
+    }
+
+    func inKilometers() -> Double {
+        return Double(self)/Double(1000)
+    }
+}
+
+extension UnitLength {
+    static var preciseMiles: UnitLength {
+        return UnitLength(symbol: "mile",
+                          converter: UnitConverterLinear(coefficient: 1609.344))
+    }
+}
+
+public extension MKMultiPoint {
+    var coordinates: [CLLocationCoordinate2D] {
+        var coords = [CLLocationCoordinate2D](repeating: kCLLocationCoordinate2DInvalid,
+                                              count: pointCount)
+
+        getCoordinates(&coords, range: NSRange(location: 0, length: pointCount))
+
+        return coords
+    }
+}
+#endif
 /* audio asset example
  "asset": {
  "ageSex": {},

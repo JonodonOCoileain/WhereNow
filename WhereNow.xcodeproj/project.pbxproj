@@ -121,24 +121,25 @@
 		FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				BirdDataSightingsShortView.swift,
-				BirdDataSightingsView.swift,
-				BirdsBriefView.swift,
-				BirdSightingService.swift,
 				"CoreLocation+Extension.swift",
+				"Data Models/BirdSightingService.swift",
+				"Data Models/LocationDataModel.swift",
+				"Data Models/LocationManager.swift",
+				"Data Models/USAWeatherService.swift",
 				"Data+.swift",
 				"Double+.swift",
 				ErrorCases.swift,
 				ForecastInfo.swift,
 				Fun.swift,
-				LocationDataModel.swift,
 				LocationInformation.swift,
-				LocationManager.swift,
 				Objects.swift,
+				routing.geojson,
 				"String+.swift",
-				USAWeatherService.swift,
 				ViewModifiers.swift,
-				WhereNowView.swift,
+				Views/BirdDataSightingsShortView.swift,
+				Views/BirdDataSightingsView.swift,
+				Views/BirdSightingsViews.swift,
+				Views/WhereNowView.swift,
 				WidgetKinds.swift,
 			);
 			target = FC2491742C48A63800101DF3 /* WhereNow Watch App */;
@@ -161,22 +162,23 @@
 		FC5FA7DE2C63033F0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				BirdDataSightingsShortView.swift,
-				BirdDataSightingsView.swift,
-				BirdSightingService.swift,
 				"CoreLocation+Extension.swift",
+				"Data Models/BirdSightingService.swift",
+				"Data Models/LocationDataModel.swift",
+				"Data Models/LocationManager.swift",
+				"Data Models/USAWeatherService.swift",
 				"Data+.swift",
 				"Double+.swift",
 				ErrorCases.swift,
 				ForecastInfo.swift,
 				Fun.swift,
-				LocationDataModel.swift,
 				LocationInformation.swift,
 				LocationInformationEntry.swift,
-				LocationManager.swift,
 				Objects.swift,
-				USAWeatherService.swift,
+				routing.geojson,
 				ViewModifiers.swift,
+				Views/BirdDataSightingsShortView.swift,
+				Views/BirdDataSightingsView.swift,
 				WidgetKinds.swift,
 			);
 			target = FC5FA7CA2C6303190002E2A8 /* WhereNowWatchWidgetExtension */;
@@ -191,24 +193,25 @@
 		FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				BirdDataSightingsShortView.swift,
-				BirdDataSightingsView.swift,
-				BirdSightingService.swift,
 				"CoreLocation+Extension.swift",
+				"Data Models/BirdSightingService.swift",
+				"Data Models/LocationDataModel.swift",
+				"Data Models/LocationManager.swift",
+				"Data Models/USAWeatherService.swift",
 				"Data+.swift",
 				"Double+.swift",
 				ErrorCases.swift,
 				ForecastInfo.swift,
 				Fun.swift,
-				LocationDataModel.swift,
 				LocationInformation.swift,
 				LocationInformationEntry.swift,
-				LocationManager.swift,
 				MapSnapshotManager.swift,
 				Objects.swift,
+				routing.geojson,
 				"String+.swift",
-				USAWeatherService.swift,
 				ViewModifiers.swift,
+				Views/BirdDataSightingsShortView.swift,
+				Views/BirdDataSightingsView.swift,
 				WidgetKinds.swift,
 			);
 			target = FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */;
@@ -865,7 +868,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_PREVIEWS = YES;
@@ -874,6 +877,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
 				INFOPLIST_KEY_CLKComplicationPrincipalClass = ComplicationController;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "This app can show you its location using GPS-derived data.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app can show you its location using GPS-derived data.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
@@ -884,7 +888,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -904,7 +908,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_PREVIEWS = YES;
@@ -913,6 +917,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
 				INFOPLIST_KEY_CLKComplicationPrincipalClass = ComplicationController;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "This app can show you its location using GPS-derived data.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app can show you its location using GPS-derived data.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
@@ -923,7 +928,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -944,7 +949,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = WhereNow/WhereNow.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow/Preview Content\"";
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_PREVIEWS = YES;
@@ -952,8 +957,10 @@
 				INFOPLIST_FILE = WhereNow/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = NO;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app can show you its location using GPS-derived data.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "This app can show you its location, local weather information, and local bird sighting data using GPS-derived data.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app provides data such as weather information and local bird sightings based on your location.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -966,7 +973,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -987,7 +994,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = WhereNow/WhereNow.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow/Preview Content\"";
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_PREVIEWS = YES;
@@ -995,8 +1002,10 @@
 				INFOPLIST_FILE = WhereNow/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = NO;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app can show you its location using GPS-derived data.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "This app can show you its location, local weather information, and local bird sighting data using GPS-derived data.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app provides data such as weather information and local bird sightings based on your location.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1009,7 +1018,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1189,13 +1198,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 94;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhereNowWatchWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WhereNowWatchWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app shows information based on your location.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1220,13 +1230,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 94;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhereNowWatchWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WhereNowWatchWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app shows information based on your location.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1253,7 +1264,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = WhereNowWidget/WhereNowWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 94;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1296,7 +1307,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = WhereNowWidget/WhereNowWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 94;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;

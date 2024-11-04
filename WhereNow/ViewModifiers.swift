@@ -46,6 +46,8 @@ struct SpinningBlueRoundedRectangle: View {
 struct Spinnable: ViewModifier {
     @State private var spinning = false
     @State private var spun = false
+    let timer = Timer.publish(every: 0.34, on: .main, in: .common).autoconnect()
+    @State var currentRandom:Int? = [1,2].randomElement()
     func body(content: Content) -> some View {
         content
             .font(.largeTitle)
@@ -62,6 +64,9 @@ struct Spinnable: ViewModifier {
                 if spinning == false {
                     spun.toggle()
                 }
+            }
+            .onReceive(timer) { input in
+                self.currentRandom = [1,2].randomElement()
             }
     }
 }

@@ -18,6 +18,7 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     var readyForUpdate:Bool = true
     var timer: Timer?
     var counter: Int = 0
+    @Published var deniedStatus: Bool = false
     @objc func fireTimer() {
         counter += 2
         self.readyForUpdate = true
@@ -122,6 +123,7 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         if timer {
             self.timer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
         }
+        manager.delegate = self
     }
     
     deinit {
@@ -130,11 +132,28 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func start() {
-        manager.delegate = self
-        manager.requestAlwaysAuthorization()
-        manager.requestWhenInUseAuthorization()
-        manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-        manager.startUpdatingLocation()
+        print("authorization status: \(manager.authorizationStatus)")
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:  // Location services are available.
+            deniedStatus = false
+            manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            manager.startUpdatingLocation()
+            break
+            
+        case .restricted, .denied:  // Location services currently unavailable.
+            deniedStatus = true
+            break
+            
+        case .notDetermined:        // Authorization not determined yet.
+            deniedStatus = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: { [weak self] in
+                self?.manager.requestWhenInUseAuthorization()
+            })
+            break
+            
+        default:
+            break
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -152,6 +171,12 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if [.authorizedWhenInUse, .authorizedAlways].contains(manager.authorizationStatus) {
+            self.start()
+        }
+    }
+    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
         print(error.localizedDescription)
         addressInfoIsUpdated = false
@@ -159,6 +184,23 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func stop() {
         manager.stopUpdatingLocation()
+    }
+    
+    static func getCoordinate( addressString : String,
+            completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(addressString) { (placemarks, error) in
+            if error == nil {
+                if let placemark = placemarks?[0] {
+                    let location = placemark.location!
+                        
+                    completionHandler(location.coordinate, nil)
+                    return
+                }
+            }
+                
+            completionHandler(kCLLocationCoordinate2DInvalid, error as NSError?)
+        }
     }
 }
 
@@ -184,7 +226,7 @@ extension String {
             let results = regex.matches(in: self, range: NSMakeRange(0, nsString.length))
             return results.compactMap( { nsString.substring(with: $0.range)} )
         } catch {
-            print(error)
+            print(error.localizedDescription)
             return []
         }
     }

@@ -32,7 +32,7 @@ struct BirdsDataBriefView: View {
                     }.frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
                     
                     ScrollView {
-                        BirdDataSightingsView(birdData: birdData)
+                        BirdSightingDescriptionView(birdData: birdData)
                     }
                     .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
                 }

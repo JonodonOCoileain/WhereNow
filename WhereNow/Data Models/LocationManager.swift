@@ -20,7 +20,7 @@ final class LocationManager: NSObject {
         static let desiredAccuracy = kCLLocationAccuracyNearestTenMeters
 
         /// The key we use to store the last known user location.
-        static let storageKey = "MapWidgetExample.lastKnownUserLocation"
+        static let storageKey = "LocationManager.lastKnownUserLocation"
     }
 
     // MARK: - Types
@@ -66,8 +66,18 @@ final class LocationManager: NSObject {
     }
     
     func immediateLocation() -> CLLocation? {
-        self.locationManager?.requestWhenInUseAuthorization()
-        return locationManager?.location ?? locationStorageManager.location(forKey: Config.storageKey)
+        guard let locationManager = locationManager else {
+            "Expect to have a valid `locationManager` instance at this point!"
+                .log(level: .error)
+
+            return locationStorageManager.location(forKey: Config.storageKey)
+        }
+        if locationManager.authorizationStatus.isAuthorized {
+            locationManager.requestLocation()
+        } else {
+            locationManager.requestWhenInUseAuthorization()
+        }
+        return locationManager.location ?? locationStorageManager.location(forKey: Config.storageKey)
     }
     
     func locationFrom(postalCode: String) async -> CLPlacemark? {
@@ -76,7 +86,7 @@ final class LocationManager: NSObject {
             let location = try await geoCoder.geocodeAddressString(postalCode).first
             return location
         } catch {
-            print(error)
+            print(error.localizedDescription)
             return nil
         }
     }
@@ -108,7 +118,7 @@ final class LocationManager: NSObject {
 extension LocationManager: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         guard manager.authorizationStatus.isAuthorized else {
-            // Ignore authorization changes where we loose access to location data.
+            // Ignore authorization changes where we lose access to location data.
             return
         }
 
@@ -117,7 +127,7 @@ extension LocationManager: CLLocationManagerDelegate {
             return
         }
 
-        locationManager?.requestLocation()
+        self.locationManager?.startUpdatingLocation()
     }
 
     func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
