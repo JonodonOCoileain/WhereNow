@@ -79,17 +79,16 @@ public struct BirdSightingsContainerView: View {
     @ObservedObject var locationData: LocationDataModel
     let titleSize: CGFloat = 11
     let descriptionSize: CGFloat = 12
-    
     @State private var isFullScreen = false
+    @State var notables: Bool? = false
     
-    var notables: Bool? = false
     public var body: some View {
         GeometryReader { geometry in
             ScrollView {
                 LazyVStack(alignment:.leading, spacing: 9) {
                     ForEach(notables == true ? birdData.notableSightings : birdData.sightings) { sighting in
                         LazyHStack(alignment:.top) {
-                            BirdSightingView(sighting: sighting, locationData: locationData, currentLocation: locationData.currentLocation.coordinate, birdData: birdData)
+                            BirdSightingView(sighting: sighting, locationData: locationData, currentLocation: locationData.currentLocation.coordinate, birdData: birdData, notables: notables)
                                 .frame(width: geometry.size.width*9/10)
                             Spacer()
                                 .frame(width: 1, height: 1)
@@ -156,15 +155,14 @@ public struct BirdSightingView: View {
     let descriptionSize: CGFloat = 12
     @State var speciesMetadata: BirdSpeciesAssetMetadata?
     @State var coordinate: CLLocationCoordinate2D?
+    @State var notables: Bool? = false
     public var body: some View {
-        LazyVStack(alignment:.leading, spacing: 0) {
-            let relatedData = Set(birdData.sightings + birdData.notableSightings).first(where: {$0.speciesCode == sighting.speciesCode})?.speciesMediaMetadata
-                if (relatedData?.count ?? 0) > 0 {
+        LazyVStack(alignment: .leading, spacing: 0) {
+            let relatedData = sighting.speciesMediaMetadata ?? [] //Set(notables ?? false ? birdData.notableSightings : birdData.sightings).first(where: {$0.speciesCode == sighting.speciesCode})?.speciesMediaMetadata ?? []
+            if relatedData.count > 0 && relatedData.filter({$0.assetFormatCode == "photo"}).first?.image != nil {
                     ScrollView(.horizontal) {
                         LazyHStack(alignment: .center) {
-                            let data = relatedData ?? []
-                            ForEach(data.filter({$0.assetFormatCode == "photo"})) { imageData in
-                                
+                            ForEach(relatedData.filter({$0.assetFormatCode == "photo"})) { imageData in
                                 VStack {
                                     if let image = imageData.image, let uiImage = UIImage(data: image) {
                                         Image(uiImage: uiImage)
@@ -183,9 +181,6 @@ public struct BirdSightingView: View {
                                     Text(imageData.uploadedBy)
                                         .font(.caption2)
                                         .multilineTextAlignment(.center)
-                                        .onAppear() {
-                                            birdData.retrieveImageData(of: data.filter({$0.assetFormatCode == "photo"}))
-                                        }
                                         
                                 }
                                 .onTapGesture {
@@ -295,6 +290,12 @@ public struct BirdSightingView: View {
                     .multilineTextAlignment(.leading)
                     .lineLimit(2)
             }
+            if let userName = sighting.userDisplayName {
+                Text("Seen by: \(userName)")
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+            }
             if let locationPrivate = sighting.locationPrivate {
                 Text("In public location: \(locationPrivate == false)")
                     .font(.system(size: descriptionSize))
@@ -326,7 +327,7 @@ public struct BirdSightingView: View {
                     .multilineTextAlignment(.leading)
             }
             //Audio files
-            if let relatedData = relatedData, relatedData.count > 0 {
+            if relatedData.count > 0 {
                 ScrollView(.horizontal) {
                     LazyHStack {
                         ForEach(relatedData.filter({$0.assetFormatCode == "audio"})) { key in
@@ -534,7 +535,7 @@ struct RouteStepsView: View {
     
     var body: some View {
         ScrollView {
-            LazyVStack {
+            VStack {
                 let steps: [MKRoute.Step] = steps.filter({ $0.instructions != "" })
                 ForEach(steps, id: \.self) { step in
                     let newSteps: [MKRoute.Step] = newRoute.route.steps.filter({ $0.instructions != "" })
@@ -694,7 +695,7 @@ public extension MKMultiPoint {
                  "obsDay": 13,
                  "obsDt": "2020-08-13T10:13",
                  "obsDtDisplay": "13 Aug 2020",
-                 "obsId": "OBS967491788",
+                 "subId": "OBS967491788",
                  "obsMonth": 8,
                  "obsReviewed": false,
                  "obsTime": 1013,
@@ -853,7 +854,7 @@ public extension MKMultiPoint {
                  "obsDay": 2,
                  "obsDt": "2019-02-02T11:08",
                  "obsDtDisplay": "02 Feb 2019",
-                 "obsId": "OBS705921647",
+                 "subId": "OBS705921647",
                  "obsMonth": 2,
                  "obsReviewed": true,
                  "obsTime": 1108,

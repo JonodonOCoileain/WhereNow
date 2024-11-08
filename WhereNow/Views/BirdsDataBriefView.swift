@@ -15,7 +15,7 @@ struct BirdsDataBriefView: View {
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal) {
-                LazyHStack(alignment:.top) {
+                HStack(alignment:.top) {
                     VStack(alignment: .leading) {
                         Text("🐦 Birds sighted near here recently:")
                             .font(.system(size: titleSize))

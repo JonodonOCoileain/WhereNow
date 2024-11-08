@@ -132,12 +132,12 @@
 				ForecastInfo.swift,
 				Fun.swift,
 				LocationInformation.swift,
+				Logging.swift,
 				Objects.swift,
 				routing.geojson,
 				"String+.swift",
 				ViewModifiers.swift,
 				Views/BirdDataSightingsShortView.swift,
-				Views/BirdDataSightingsView.swift,
 				Views/BirdSightingsViews.swift,
 				Views/WhereNowView.swift,
 				WidgetKinds.swift,
@@ -174,11 +174,11 @@
 				Fun.swift,
 				LocationInformation.swift,
 				LocationInformationEntry.swift,
+				Logging.swift,
 				Objects.swift,
 				routing.geojson,
 				ViewModifiers.swift,
 				Views/BirdDataSightingsShortView.swift,
-				Views/BirdDataSightingsView.swift,
 				WidgetKinds.swift,
 			);
 			target = FC5FA7CA2C6303190002E2A8 /* WhereNowWatchWidgetExtension */;
@@ -205,13 +205,13 @@
 				Fun.swift,
 				LocationInformation.swift,
 				LocationInformationEntry.swift,
+				Logging.swift,
 				MapSnapshotManager.swift,
 				Objects.swift,
 				routing.geojson,
 				"String+.swift",
 				ViewModifiers.swift,
 				Views/BirdDataSightingsShortView.swift,
-				Views/BirdDataSightingsView.swift,
 				WidgetKinds.swift,
 			);
 			target = FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */;
@@ -888,7 +888,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -928,7 +928,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -973,7 +973,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1018,7 +1018,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1198,7 +1198,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhereNowWatchWidget/Info.plist;
@@ -1212,7 +1212,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1230,7 +1230,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhereNowWatchWidget/Info.plist;
@@ -1244,7 +1244,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1264,7 +1264,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = WhereNowWidget/WhereNowWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1287,7 +1287,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1307,7 +1307,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = WhereNowWidget/WhereNowWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1330,7 +1330,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

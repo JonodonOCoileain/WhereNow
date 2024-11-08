@@ -270,7 +270,7 @@ struct WhereNowLandscapeView: View {
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal) {
-                LazyHStack {
+                HStack {
                     Text("HERE NOW!")
                         .modifier(Spinnable())
                         .padding([.bottom],10)
