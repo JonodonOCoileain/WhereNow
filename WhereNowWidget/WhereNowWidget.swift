@@ -313,12 +313,12 @@ struct WhereNowWidgetWeatherTextView : View {
                 Text(error.localizedDescription)
                     .containerBackground(.fill.tertiary, for: .widget)
             case .placeholder:
-                Text((Fun.emojis.randomElement() ?? "") + " Where Now!")
+                Text((Fun.emojis.randomElement() ?? "") + " Weather Now!")
             }
         case .systemSmall,.systemMedium, .systemLarge, .systemExtraLarge, .accessoryCircular, .accessoryInline:
-            Text((Fun.emojis.randomElement() ?? "") + " Where Now!")
+            Text((Fun.emojis.randomElement() ?? "") + " Weather Now!")
         @unknown default:
-            Text((Fun.emojis.randomElement() ?? "") + " Where Now!")
+            Text((Fun.emojis.randomElement() ?? "") + " Weather Now!")
         }
     }
 }

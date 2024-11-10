@@ -19,7 +19,7 @@ struct WhereNowView: View {
     @ObservedObject var data: LocationDataModel = LocationDataModel()
     @ObservedObject var weatherData: USAWeatherService = USAWeatherService()
     @ObservedObject var birdData: BirdSightingService = BirdSightingService()
-    
+    @Environment(\.scenePhase) var scenePhase
     var body: some View {
         if ([CLAuthorizationStatus.restricted, CLAuthorizationStatus.denied].contains(where: {$0 == data.manager.authorizationStatus})) {
             Image(systemName: "globe")
@@ -29,46 +29,65 @@ struct WhereNowView: View {
                 #if os(watchOS)
                 WhereNowPortraitView(data: data, weatherData: weatherData, birdData: birdData)
                     .onChange(of: data.currentLocation, { oldValue, newValue in
-                        if weatherData.timesAndForecasts.count == 0 {
-                            weatherData.cacheForecasts(using: newValue.coordinate)
-                        }
-                        if birdData.sightings.count == 0 {
-                            birdData.cacheSightings(using: newValue.coordinate)
-                        }
-                        if birdData.notableSightings.count < 2 {
-                            birdData.cacheNotableSightings(using: newValue.coordinate)
-                        }
+                        DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now(), execute: {
+                            if self.weatherData.timesAndForecasts.count == 0 {
+                                self.weatherData.cacheForecasts(using: newValue.coordinate)
+                            }
+                            if birdData.sightings.count == 0 {
+                                self.birdData.cacheSightings(using: newValue.coordinate)
+                            }
+                            if birdData.notableSightings.count < 2 {
+                                self.birdData.cacheNotableSightings(using: newValue.coordinate)
+                            }
+                        })
                     })
                 #else
                 if orientation.isPortrait {
                     WhereNowPortraitView(data: data, weatherData: weatherData, birdData: birdData)
                         .onChange(of: data.currentLocation, { oldValue, newValue in
-                            if weatherData.timesAndForecasts.count == 0 {
-                                weatherData.cacheForecasts(using: newValue.coordinate)
-                            }
-                            if birdData.sightings.count == 0 {
-                                birdData.cacheSightings(using: newValue.coordinate)
-                            }
-                            if birdData.notableSightings.count < 2 {
-                                birdData.cacheNotableSightings(using: newValue.coordinate)
-                            }
+                            DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now(), execute: {
+                                if self.weatherData.timesAndForecasts.count == 0 {
+                                    self.weatherData.cacheForecasts(using: newValue.coordinate)
+                                }
+                                if self.birdData.sightings.count == 0 {
+                                    self.birdData.cacheSightings(using: newValue.coordinate)
+                                }
+                                if self.birdData.notableSightings.count == 0 {
+                                    self.birdData.cacheNotableSightings(using: newValue.coordinate)
+                                }
+                            })
                         })
                 } else if orientation.isLandscape {
                     WhereNowLandscapeView(data: data, weatherData: weatherData, birdData: birdData)
                         .onChange(of: data.currentLocation, { oldValue, newValue in
-                            if weatherData.timesAndForecasts.count == 0 {
-                                weatherData.cacheForecasts(using: newValue.coordinate)
-                            }
-                            if birdData.sightings.count == 0 {
-                                birdData.cacheSightings(using: newValue.coordinate)
-                            }
-                            if birdData.notableSightings.count < 2 {
-                                birdData.cacheNotableSightings(using: newValue.coordinate)
-                            }
+                            DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now(), execute: {
+                                if self.weatherData.timesAndForecasts.count == 0 {
+                                    self.weatherData.cacheForecasts(using: newValue.coordinate)
+                                }
+                                if self.birdData.sightings.count == 0 {
+                                    self.birdData.cacheSightings(using: newValue.coordinate)
+                                }
+                                if self.birdData.notableSightings.count == 0 {
+                                    self.birdData.cacheNotableSightings(using: newValue.coordinate)
+                                }
+                            })
                         })
+                        
                 }
                 #endif
             }
+            .onChange(of: scenePhase) { oldPhase, newPhase in
+                            if newPhase == .active {
+                                print("Active")
+                                self.birdData.createFileDirectory()
+                            } else if newPhase == .inactive {
+                                print("Inactive")
+                                self.birdData.resetData()
+                            } else if newPhase == .background {
+                                print("Background")
+                                self.birdData.resetData()
+                            }
+                        }
             .animation(.default, value: 1)
             .onAppear() {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.01, execute: {
@@ -163,11 +182,11 @@ struct WhereNowPortraitView: View {
                 
                 ScrollView() {
                     VStack {
-                        Text("HERE NOW!")
+                        Text("WHERE NOW!")
                             .modifier(Spinnable())
                             .padding([.bottom],10)
                         
-                        HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Where now!")
+                        HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Here now!")
                             .frame(maxWidth: .infinity)
 
                         VStack {
@@ -275,7 +294,7 @@ struct WhereNowLandscapeView: View {
                         .modifier(Spinnable())
                         .padding([.bottom],10)
                     
-                    HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Where now!")
+                    HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "here now!")
                     Text(self.data.addressesVeryLongFlag)
                         .multilineTextAlignment(.center)
                         .scaleEffect(showLocation ? 1 : 0)

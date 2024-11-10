@@ -3,4 +3,158 @@
    uuid = "ADB24CB3-A8B5-4F42-ADE9-2A12682C9A55"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3BB36308-90B2-4484-A46B-D7C57F5256A4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WhereNow/Data Models/LocationManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
+            landmarkName = "locationFrom(postalCode:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3BB36308-90B2-4484-A46B-D7C57F5256A4 - f37af91fd7b1ccb5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for WhereNow.LocationManager.locationFrom(postalCode: Swift.String) async -&gt; Swift.Optional&lt;__C.CLPlacemark&gt;"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/WhereNow/WhereNow/Data%20Models/LocationManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "86"
+                  endingLineNumber = "86">
+               </Location>
+               <Location
+                  uuid = "3BB36308-90B2-4484-A46B-D7C57F5256A4 - ae67e23a80ff3f6c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for WhereNow.LocationManager.locationFrom(postalCode: Swift.String) async -&gt; Swift.Optional&lt;__C.CLPlacemark&gt;"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/WhereNow/WhereNow/Data%20Models/LocationManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "86"
+                  endingLineNumber = "86">
+               </Location>
+               <Location
+                  uuid = "3BB36308-90B2-4484-A46B-D7C57F5256A4 - ceeeafd5fde900b7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for WhereNow.LocationManager.locationFrom(postalCode: Swift.String) async -&gt; Swift.Optional&lt;__C.CLPlacemark&gt;"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/WhereNow/WhereNow/Data%20Models/LocationManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "86"
+                  endingLineNumber = "86">
+               </Location>
+               <Location
+                  uuid = "3BB36308-90B2-4484-A46B-D7C57F5256A4 - bca47aa8f6fce6b8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for WhereNow.LocationManager.locationFrom(postalCode: Swift.String) async -&gt; Swift.Optional&lt;__C.CLPlacemark&gt;"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/WhereNow/WhereNow/Data%20Models/LocationManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "86"
+                  endingLineNumber = "86">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8573B05A-14EE-42C0-9A4C-1249ED0207AA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WhereNow/Data Models/BirdSightingService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "284"
+            endingLineNumber = "284"
+            landmarkName = "getSightings(using:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CB501A26-9707-49DC-9F37-E278A7BE8537"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WhereNow/Data Models/BirdSightingService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "328"
+            endingLineNumber = "328"
+            landmarkName = "getNotableSightings(using:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C1F3B410-F4FA-4F4D-A236-E25B94088983"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WhereNow/Data Models/BirdSightingService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "333"
+            endingLineNumber = "333"
+            landmarkName = "getNotableSightings(using:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "C1F3B410-F4FA-4F4D-A236-E25B94088983 - cc8fc8e9a15e262b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for WhereNow.BirdSightingService.getNotableSightings(using: __C.CLLocationCoordinate2D) async -&gt; Swift.Array&lt;WhereNow.BirdSighting&gt;"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "333"
+                  endingLineNumber = "333">
+               </Location>
+               <Location
+                  uuid = "C1F3B410-F4FA-4F4D-A236-E25B94088983 - 93604fc1ee9cc1a8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for WhereNow.BirdSightingService.getNotableSightings(using: __C.CLLocationCoordinate2D) async -&gt; Swift.Array&lt;WhereNow.BirdSighting&gt;"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "333"
+                  endingLineNumber = "333">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

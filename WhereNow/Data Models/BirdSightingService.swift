@@ -11,113 +11,6 @@ import CoreLocation
 import AVFoundation
 import OSLog
 
-class BirdSpeciesAssetMetadata: Codable, Equatable, Hashable, Identifiable, ObservableObject {
-    var id: Int { identifier }
-    
-    let identifier: Int
-    let expectedIndex: Int
-    let speciesCode: String
-    let assetFormatCode: String
-    let url: String
-    let uploadedBy: String
-    let citationUrl: String
-    var baseURL: String? = nil
-    var comName: String? = nil
-    var sciName: String? = nil
-    var description: String? = nil
-    @Published var image: Data? = nil
-    
-    enum ChildKeys: CodingKey {
-        case id, description, identifier, expectedIndex, speciesCode, assetFormatCode, url, uploadedBy, citationUrl, baseURL, comName, sciName, image
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: ChildKeys.self)
-        self.identifier = try container.decode(Int.self, forKey: .identifier)
-        self.expectedIndex = try container.decodeIfPresent(Int.self, forKey: .expectedIndex) ?? 0
-        self.speciesCode = try container.decodeIfPresent(String.self, forKey: .speciesCode) ?? ""
-        self.assetFormatCode = try container.decodeIfPresent(String.self, forKey: .assetFormatCode) ?? ""
-        self.url = try container.decodeIfPresent(String.self, forKey: .url) ?? ""
-        self.uploadedBy = try container.decodeIfPresent(String.self, forKey: .uploadedBy) ?? ""
-        self.citationUrl = try container.decodeIfPresent(String.self, forKey: .citationUrl) ?? ""
-        self.baseURL = try container.decodeIfPresent(String.self, forKey: .baseURL)
-        self.comName = try container.decodeIfPresent(String.self, forKey: .comName)
-        self.sciName = try container.decodeIfPresent(String.self, forKey: .sciName)
-        self.image = try container.decodeIfPresent(Data.self, forKey: .image)
-        self.description = try container.decodeIfPresent(String.self, forKey: .description)
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: ChildKeys.self)
-        try container.encode(self.identifier, forKey: .identifier)
-        try container.encodeIfPresent(self.expectedIndex, forKey: .expectedIndex)
-        try container.encodeIfPresent(self.speciesCode, forKey: .speciesCode)
-        try container.encodeIfPresent(self.assetFormatCode, forKey: .assetFormatCode)
-        try container.encodeIfPresent(self.url, forKey: .url)
-        try container.encodeIfPresent(self.uploadedBy, forKey: .uploadedBy)
-        try container.encodeIfPresent(self.citationUrl, forKey: .citationUrl)
-        try container.encodeIfPresent(self.baseURL, forKey: .baseURL)
-        try container.encodeIfPresent(self.comName, forKey: .comName)
-        try container.encodeIfPresent(self.sciName, forKey: .sciName)
-        try container.encodeIfPresent(self.image, forKey: .image)
-        try container.encodeIfPresent(self.description, forKey: .description)
-    }
-    
-    init(identifier: Int, expectedIndex: Int, speciesCode: String, assetFormatCode: String, url: String, uploadedBy: String, citationUrl: String, baseURL: String? = nil, comName: String? = nil, sciName: String? = nil, image: Data? = nil, description: String? = nil) {
-        self.identifier = identifier
-        self.expectedIndex = expectedIndex
-        self.speciesCode = speciesCode
-        self.assetFormatCode = assetFormatCode
-        self.url = url
-        self.uploadedBy = uploadedBy
-        self.citationUrl = citationUrl
-        self.baseURL = baseURL
-        self.comName = comName
-        self.sciName = sciName
-        self.image = image
-        self.description = description
-    }
-    
-    var generatedUrl: String {
-        if let baseURL = baseURL?.replacingOccurrences(of: "\"", with: "") {
-            return baseURL + "\(identifier)"
-        } else {
-            return url
-        }
-    }
-    
-    func retrieveImageData() {
-        if image == nil, let url = URL(string: url) {
-            
-            let request = URLRequest(url: url)
-            
-            let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-                self?.image = data
-            }
-            task.resume()
-        }
-    }
-    
-    static func == (lhs: BirdSpeciesAssetMetadata, rhs: BirdSpeciesAssetMetadata) -> Bool {
-        lhs.identifier == rhs.identifier &&
-        lhs.expectedIndex == rhs.expectedIndex &&
-        lhs.speciesCode == rhs.speciesCode &&
-        lhs.assetFormatCode == rhs.assetFormatCode &&
-        lhs.url == rhs.url &&
-        lhs.uploadedBy == rhs.uploadedBy &&
-        lhs.citationUrl == rhs.citationUrl &&
-        lhs.baseURL == rhs.baseURL &&
-        lhs.comName == rhs.comName &&
-        lhs.sciName == rhs.sciName &&
-        lhs.image == rhs.image &&
-        lhs.description == rhs.description
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self))
-    }
-}
-
 /*struct BirdImagesResponse: Codable {
     let results: [BirdImageMetadata]
 }
@@ -149,123 +42,6 @@ struct BirdImageMetadata: Codable {
     let urls: [String:String] //raw, full, regular, small, thumb
     let links: [String:String] //self, html, download
 }*/
-
-class BirdSighting: Codable, Hashable, Identifiable, ObservableObject, Equatable {
-    enum ChildKeys: CodingKey {
-        case id, userDisplayName, subId, speciesCode, comName, sciName, locId, locName, obsDt, howMany, lat, lng, obsValid, obsReviewed, locationPrivate
-    }
-    
-    var id: Int { Int(subId?.replacingOccurrences(of: "S", with: "") ?? String(Date().timeIntervalSince1970)) ?? 1 }
-    
-    var subId: String? = nil
-    
-    var userDisplayName: String? = nil
-    @Published var speciesMediaMetadata: [BirdSpeciesAssetMetadata]? = []
-    var pictureData: [Data]? = []
-    var audioData: [Data]? = []
-    var speciesCode: String? = nil
-    var comName: String? = nil
-    var sciName: String? = nil
-    var locId: String? = nil
-    var locName: String? = nil
-    var obsDt: String? = nil
-    var howMany: Int? = nil
-    var lat: Float? = nil
-    var lng: Float? = nil
-    var obsValid: Bool? = nil
-    var obsReviewed: Bool? = nil
-    var locationPrivate: Bool? = nil
-    init(subId: String? = nil, userDisplayName: String? = nil, speciesMediaMetadata: [BirdSpeciesAssetMetadata]? = nil, pictureData: [Data]? = nil, audioData: [Data]? = nil, speciesCode: String? = nil, comName: String? = nil, sciName: String? = nil, locId: String? = nil, locName: String? = nil, obsDt: String? = nil, howMany: Int? = nil, lat: Float? = nil, lng: Float? = nil, obsValid: Bool? = nil, obsReviewed: Bool? = nil, locationPrivate: Bool? = nil) {
-        self.subId = subId
-        self.userDisplayName = userDisplayName
-        self.speciesMediaMetadata = speciesMediaMetadata
-        self.pictureData = pictureData
-        self.audioData = audioData
-        self.locId = locId
-        self.locName = locName
-        self.obsDt = obsDt
-        self.comName = comName
-        self.sciName = sciName
-        self.speciesCode = speciesCode
-        self.howMany = howMany
-        self.lat = lat
-        self.lng = lng
-        self.obsValid = obsValid
-        self.obsReviewed = obsReviewed
-        self.locationPrivate = locationPrivate
-    }
-    
-    func description() -> String {
-        let userDisplayName = userDisplayName ?? ""
-        let commonName = comName ?? ""
-        let sciName = sciName ?? ""
-        let howMany = howMany ?? 1
-        let locName = locName ?? ""
-        let obsDt = obsDt ?? ""
-        let locationPrivate = locationPrivate ?? false
-        
-        let description = "\(commonName)\n\(sciName)\nSeen by: \(userDisplayName)\nQuantity: \(howMany)\nAt Location: \(locName)\nOn Date: \(obsDt)\nIn public location: \(locationPrivate == false)"
-        return description
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(userDisplayName)
-        hasher.combine(subId)
-        hasher.combine(speciesCode)
-        hasher.combine(comName)
-        hasher.combine(sciName)
-        hasher.combine(locId)
-        hasher.combine(locName)
-        hasher.combine(obsDt)
-        hasher.combine(howMany)
-        hasher.combine(lat)
-        hasher.combine(lng)
-        hasher.combine(obsValid)
-        hasher.combine(obsReviewed)
-        hasher.combine(locationPrivate)
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: ChildKeys.self)
-        self.subId = try container.decode(String.self, forKey: .subId)
-        self.userDisplayName = try container.decodeIfPresent(String.self, forKey: .userDisplayName)
-        self.comName = try container.decodeIfPresent(String.self, forKey: .comName)
-        self.sciName = try container.decodeIfPresent(String.self, forKey: .sciName)
-        self.speciesCode = try container.decodeIfPresent(String.self, forKey: .speciesCode)
-        self.locId = try container.decodeIfPresent(String.self, forKey: .locId)
-        self.locName = try container.decodeIfPresent(String.self, forKey: .locName)
-        self.obsDt = try container.decodeIfPresent(String.self, forKey: .obsDt)
-        self.howMany = try container.decodeIfPresent(Int.self, forKey: .howMany)
-        self.lat = try container.decodeIfPresent(Float.self, forKey: .lat)
-        self.lng = try container.decodeIfPresent(Float.self, forKey: .lng)
-        self.obsValid = try container.decodeIfPresent(Bool.self, forKey: .obsValid)
-        self.obsReviewed = try container.decodeIfPresent(Bool.self, forKey: .obsReviewed)
-        self.locationPrivate = try container.decodeIfPresent(Bool.self, forKey: .locationPrivate)
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: ChildKeys.self)
-        try container.encode(self.subId, forKey: .subId)
-        try container.encodeIfPresent(self.comName, forKey: .comName)
-            try container.encodeIfPresent(self.sciName, forKey: .sciName)
-        try container.encodeIfPresent(self.speciesCode, forKey: .speciesCode)
-        try container.encodeIfPresent(self.locId, forKey: .locId)
-        try container.encodeIfPresent(self.locName, forKey: .locName)
-        try container.encodeIfPresent(self.obsDt, forKey: .obsDt)
-        try container.encodeIfPresent(self.howMany, forKey: .howMany)
-        try container.encodeIfPresent(self.lat, forKey: .lat)
-        try container.encodeIfPresent(self.lng, forKey: .lng)
-        try container.encodeIfPresent(self.obsValid, forKey: .obsValid)
-        try container.encodeIfPresent(self.obsReviewed, forKey: .obsReviewed)
-        try container.encodeIfPresent(self.locationPrivate, forKey: .locationPrivate)
-    }
-    
-    static func == (lhs: BirdSighting, rhs: BirdSighting) -> Bool {
-        return lhs.subId == rhs.subId
-    }
-    
-}
-
 class BirdSightingService: ObservableObject {
     public static let notablesURLString:String =  "https://api.ebird.org/v2/data/obs/geo/recent/notable"//?lat={{lat}}&lng={{lng}}"
     public static let youTubeVideoBaseURL: String = "https://www.youtube.com/watch?v="
@@ -290,24 +66,112 @@ class BirdSightingService: ObservableObject {
         }
     }
     
-    @Published var birdYouTubeVideoURL: [String:String] = [:]
-    @Published var birdSoundURL: [String:String] = [:]
     @Published var birdSeenCommonDescription: String?
     @Published var notableBirdsSeenCommonDescription: String?
     @Published var speciesMedia: [BirdSpeciesAssetMetadata] = []
     //Array of unique IDs to track requests and prevent duplicative and redundant work
     private var sightingRequests: [String] = []
-    
+    @Published var savedImages: Int = 0
     init(sightings: [BirdSighting] = []) {
         self.sightings = sightings
+        createFileDirectory()
     }
     
-    func retrieveImageData(of dataArray: [BirdSpeciesAssetMetadata]) {
-        for data in dataArray {
-            data.retrieveImageData()
+    func resetData() {
+        sightings = []
+        notableSightings = []
+        speciesMedia  = []
+        birdSeenCommonDescription = nil
+        notableBirdsSeenCommonDescription = nil
+        deleteFileDirectory()
+    }
+    //set the name of the new folder
+    private let birdFilesFolderURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent("BirdFiles")
+    func createFileDirectory() {
+        do
+        {
+            try FileManager.default.createDirectory(at: birdFilesFolderURL, withIntermediateDirectories: true)
+        }
+        catch let error as NSError
+        {
+            NSLog("Unable to create directory \(error.debugDescription)")
         }
     }
     
+    func deleteFileDirectory() {
+        do
+        {
+            try FileManager.default.removeItem(at: birdFilesFolderURL)
+        }
+        catch let error as NSError
+        {
+            NSLog("Unable to create directory \(error.debugDescription)")
+        }
+    }
+    
+    func saveBirdFile(data: Data, metaData: BirdSpeciesAssetMetadata) {
+        let name = String(metaData.hashValue)
+        guard let directoryName = metaData.comName ?? metaData.sciName else {
+            Logger.assetMetadata.error("Could not generate asset data folder name for \(metaData.description ?? "Undescribed metadata")")
+            return
+        }
+        let directory = birdFilesFolderURL.appendingPathComponent(directoryName)
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        
+        let extensionString = metaData.assetFormatCode
+        let fileURL = directory.appendingPathComponent(name).appendingPathExtension(extensionString)
+        
+        do {
+            try data.write(to: fileURL)
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in
+                self?.savedImages += 1
+            })
+        } catch {
+            print(error)
+        }
+    }
+    
+    func retrieveData(of dataArray: [BirdSpeciesAssetMetadata]) {
+        for metadata in dataArray {
+            if let url = URL(string: metadata.url) {
+                
+                let request = URLRequest(url: url)
+                
+                let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                    if let data = data {
+                        self?.saveBirdFile(data: data, metaData: metadata)
+                    }
+                }
+                task.resume()
+            }
+        }
+    }
+    
+    func getDataOfBird(metadata: BirdSpeciesAssetMetadata) -> Data? {
+        let name = String(metadata.hashValue)
+        guard let directoryName = metadata.comName ?? metadata.sciName else {
+            Logger.assetMetadata.error("Could not generate asset data folder name for \(metadata.description ?? "Undescribed metadata")")
+            return nil
+        }
+        let directory = try! FileManager.default
+            .url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            .appendingPathComponent(directoryName)
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        
+        let extensionString = metadata.assetFormatCode
+        let fileURL = directory.appendingPathComponent(name).appendingPathExtension(extensionString)
+        
+        if FileManager.default.fileExists(atPath: fileURL.path()) {
+            do {
+                return try Data(contentsOf: fileURL, options: [])
+            } catch {
+                print(error.localizedDescription)
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
     
     func downloadFileCompletionHandler(urlstring: String, named: String, completion: @escaping (URL?, Error?) -> Void) {
         
@@ -364,7 +228,7 @@ class BirdSightingService: ObservableObject {
         let latitudeURLQueryItem = URLQueryItem(name: "lat", value: String(coordinate.latitude))
         let longitudeURLQueryItem = URLQueryItem(name: "lng", value: String(coordinate.longitude))
         let sortingURLQueryItem = URLQueryItem(name: "sort", value: "date")
-        let maxURLQueryItem = URLQueryItem(name: "maxResults", value: "70")
+        let maxURLQueryItem = URLQueryItem(name: "maxResults", value: "25")
         let distItem = URLQueryItem(name: "dist", value: "22")
         let queryItems:[URLQueryItem] = [latitudeURLQueryItem, longitudeURLQueryItem, sortingURLQueryItem, maxURLQueryItem, distItem]
         guard let baseURL = URL(string:BirdSightingService.recentsURLString) else { return nil}
@@ -378,7 +242,7 @@ class BirdSightingService: ObservableObject {
         let latitudeURLQueryItem = URLQueryItem(name: "lat", value: String(coordinate.latitude))
         let longitudeURLQueryItem = URLQueryItem(name: "lng", value: String(coordinate.longitude))
         let sortingURLQueryItem = URLQueryItem(name: "sort", value: "date")
-        let maxURLQueryItem = URLQueryItem(name: "maxResults", value: "70")
+        let maxURLQueryItem = URLQueryItem(name: "maxResults", value: "25")
         let distItem = URLQueryItem(name: "dist", value: "22")
         let queryItems:[URLQueryItem] = [latitudeURLQueryItem, longitudeURLQueryItem, sortingURLQueryItem, maxURLQueryItem, distItem]
         guard let notablesURL = URL(string:BirdSightingService.notablesURLString) else { return nil}
@@ -436,8 +300,14 @@ class BirdSightingService: ObservableObject {
             }
             do {
                 let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
+                var sightingsToSave: [BirdSighting] = []
+                for sighting in decodedSightings.reversed() {
+                    if !sightingsToSave.contains(where: {$0.speciesCode == sighting.speciesCode && $0.locId == sighting.locId && $0.locName == sighting.locName }) {
+                        sightingsToSave.append(sighting)
+                    }
+                }
                 DispatchQueue.main.async { [weak self] in
-                    self?.notableSightings = decodedSightings
+                    self?.notableSightings = sightingsToSave.reversed()
                 }
             } catch {
                 print(error.localizedDescription)
@@ -701,7 +571,7 @@ class BirdSightingService: ObservableObject {
                 }
             }
             guard let speciesMedia = self?.speciesMedia else {
-                Logger.assetMetadata.trace("Lost reference to self, aborting")
+                Logger.assetMetadata.trace("Lost reference to self or speciesMedia, aborting")
                 return
             }
             var allAssetMetadata: [BirdSpeciesAssetMetadata] = []
@@ -712,21 +582,10 @@ class BirdSightingService: ObservableObject {
                 allAssetMetadata.append(metadata)
             }
             
-            if (sighting.speciesMediaMetadata?.contains(allAssetMetadata) != true) {
+            if (self?.speciesMedia.contains(allAssetMetadata) != true) {
                 DispatchQueue.main.async(execute:  {
-                    Logger.assetMetadata.trace("Updating sighting with acquired metadata of \(sighting.comName ?? "unknown")")
-                    sighting.speciesMediaMetadata = allAssetMetadata
-                    self?.notableSightings.first(where: {$0.subId == sighting.subId })?.speciesMediaMetadata = allAssetMetadata
-                    self?.sightings.first(where: {$0.subId == sighting.subId })?.speciesMediaMetadata = allAssetMetadata
-                    self?.retrieveImageData(of: allAssetMetadata)
-                    
-                    /*let newSighting = BirdSighting(subId: sighting.subId, userDisplayName: sighting.userDisplayName ?? "", speciesMediaMetadata: (sighting.speciesMediaMetadata ?? []) + allAssetMetadata, speciesCode: sighting.speciesCode, comName: sighting.comName, sciName: sighting.sciName, locId: sighting.locId, locName: sighting.locName, obsDt: sighting.obsDt, howMany: sighting.howMany, lat: sighting.lat, lng: sighting.lng, obsValid: sighting.obsValid, obsReviewed: sighting.obsReviewed, locationPrivate: sighting.locationPrivate)
-                    if self?.sightings.contains(sighting) == true {
-                        self?.sightings.replace([sighting], with: [newSighting], maxReplacements: 1)
-                    }
-                    if self?.notableSightings.contains(sighting) == true {
-                        self?.notableSightings.replace([sighting], with: [newSighting], maxReplacements: 1)
-                    }*/
+                    Logger.assetMetadata.trace("Updating sighting with subId \(sighting.subId ?? "") of \(sighting.comName ?? "") with acquired metadata of \(sighting.comName ?? "unknown")")
+                    self?.speciesMedia.append(contentsOf: allAssetMetadata)
                 })
             }
             if let index = self?.sightingRequests.firstIndex(of: requestId) {

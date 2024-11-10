@@ -20,7 +20,7 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     var counter: Int = 0
     @Published var deniedStatus: Bool = false
     @objc func fireTimer() {
-        counter += 2
+        counter += 5
         self.readyForUpdate = true
     }
     @Published var currentLocation: CLLocation = CLLocation(latitude: 37.333424329435715, longitude: -122.00546584232792)
@@ -121,7 +121,7 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     init(timer: Bool = true) {
         super.init()
         if timer {
-            self.timer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
+            self.timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
         }
         manager.delegate = self
     }
@@ -163,6 +163,7 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         print("Total locations: \(locations.count)")
         if readyForUpdate {
+            print("Ready for update")
             if let currentLocation = locations.first, currentLocation != self.currentLocation {
                 self.currentLocation = currentLocation
                 readyForUpdate = false
@@ -186,10 +187,12 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         manager.stopUpdatingLocation()
     }
     
-    static func getCoordinate( addressString : String,
+    static func getCoordinate( addressString : String, lat: Float?, lng: Float?,
             completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
+        
         let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(addressString) { (placemarks, error) in
+        let newOrder = addressString.split(separator: "--").reversed().joined(separator: ", ")
+        geocoder.geocodeAddressString(newOrder) { (placemarks, error) in
             if error == nil {
                 if let placemark = placemarks?[0] {
                     let location = placemark.location!
@@ -198,8 +201,23 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                     return
                 }
             }
-                
-            completionHandler(kCLLocationCoordinate2DInvalid, error as NSError?)
+            print("\(addressString), new order: \(newOrder), is not a valid address according to Apple\nTrying lat and lng")
+            let newGeocoder = CLGeocoder()
+            guard let lat = lat, let lng = lng else {
+                completionHandler(kCLLocationCoordinate2DInvalid, error as NSError?)
+                return
+            }
+            newGeocoder.reverseGeocodeLocation(CLLocation(latitude: CLLocationDegrees(lat), longitude: CLLocationDegrees(lng))) { (placemarks, error) in
+                if error == nil {
+                    if let placemark = placemarks?[0] {
+                        let location = placemark.location!
+                            
+                        completionHandler(location.coordinate, nil)
+                        return
+                    }
+                }
+                completionHandler(kCLLocationCoordinate2DInvalid, error as NSError?)
+            }
         }
     }
 }
