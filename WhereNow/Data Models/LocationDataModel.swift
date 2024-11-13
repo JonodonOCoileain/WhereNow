@@ -180,7 +180,6 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
         print(error.localizedDescription)
-        addressInfoIsUpdated = false
     }
     
     func stop() {

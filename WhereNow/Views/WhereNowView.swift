@@ -22,77 +22,43 @@ struct WhereNowView: View {
     @Environment(\.scenePhase) var scenePhase
     var body: some View {
         if ([CLAuthorizationStatus.restricted, CLAuthorizationStatus.denied].contains(where: {$0 == data.manager.authorizationStatus})) {
-            Image(systemName: "globe")
-            Text("Location status disabled")
+            Group {
+                Image(systemName: "globe")
+                Text("Location status disabled")
+            }
         } else {
             Group {
                 #if os(watchOS)
-                WhereNowPortraitView(data: data, weatherData: weatherData, birdData: birdData)
-                    .onChange(of: data.currentLocation, { oldValue, newValue in
-                        DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now(), execute: {
-                            if self.weatherData.timesAndForecasts.count == 0 {
-                                self.weatherData.cacheForecasts(using: newValue.coordinate)
-                            }
-                            if birdData.sightings.count == 0 {
-                                self.birdData.cacheSightings(using: newValue.coordinate)
-                            }
-                            if birdData.notableSightings.count < 2 {
-                                self.birdData.cacheNotableSightings(using: newValue.coordinate)
-                            }
-                        })
-                    })
+                    WhereNowPortraitView(data: data, weatherData: weatherData, birdData: birdData)
                 #else
                 if orientation.isPortrait {
                     WhereNowPortraitView(data: data, weatherData: weatherData, birdData: birdData)
-                        .onChange(of: data.currentLocation, { oldValue, newValue in
-                            DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now(), execute: {
-                                if self.weatherData.timesAndForecasts.count == 0 {
-                                    self.weatherData.cacheForecasts(using: newValue.coordinate)
-                                }
-                                if self.birdData.sightings.count == 0 {
-                                    self.birdData.cacheSightings(using: newValue.coordinate)
-                                }
-                                if self.birdData.notableSightings.count == 0 {
-                                    self.birdData.cacheNotableSightings(using: newValue.coordinate)
-                                }
-                            })
-                        })
                 } else if orientation.isLandscape {
                     WhereNowLandscapeView(data: data, weatherData: weatherData, birdData: birdData)
-                        .onChange(of: data.currentLocation, { oldValue, newValue in
-                            DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now(), execute: {
-                                if self.weatherData.timesAndForecasts.count == 0 {
-                                    self.weatherData.cacheForecasts(using: newValue.coordinate)
-                                }
-                                if self.birdData.sightings.count == 0 {
-                                    self.birdData.cacheSightings(using: newValue.coordinate)
-                                }
-                                if self.birdData.notableSightings.count == 0 {
-                                    self.birdData.cacheNotableSightings(using: newValue.coordinate)
-                                }
-                            })
-                        })
-                        
                 }
                 #endif
             }
             .onChange(of: scenePhase) { oldPhase, newPhase in
                             if newPhase == .active {
                                 print("Active")
-                                self.birdData.createFileDirectory()
                             } else if newPhase == .inactive {
                                 print("Inactive")
-                                self.birdData.resetData()
+                                //self.birdData.resetData()
                             } else if newPhase == .background {
                                 print("Background")
-                                self.birdData.resetData()
+                                //self.birdData.resetData()
                             }
-                        }
+            }
             .animation(.default, value: 1)
             .onAppear() {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.01, execute: {
-                    data.start()
-                })
+                    data.start()})
+                    
+            }
+            .task {
+                weatherData.cacheForecasts(using: data.currentLocation.coordinate)
+                await birdData.asyncCacheSightings(using: data.currentLocation.coordinate)
+                await birdData.asyncCacheNotableSightings(using: data.currentLocation.coordinate)
             }
             .onDisappear() {
                 data.stop()
@@ -181,7 +147,7 @@ struct WhereNowPortraitView: View {
                 }
                 
                 ScrollView() {
-                    VStack {
+                    LazyVStack {
                         Text("WHERE NOW!")
                             .modifier(Spinnable())
                             .padding([.bottom],10)
@@ -206,10 +172,17 @@ struct WhereNowPortraitView: View {
                         
                         if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
                             HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
-                            BirdSightingsViews(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription)
-                                .frame(minHeight: 550, maxHeight: 900)
+#if os(watchOS)
+                            NotableBirdSightingsViewsOnly(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription)
+                                .frame(height: showBirdData ? 400 : 0)
                                 .scaleEffect(showBirdData ? 1 : 0)
                                 .animation(.easeInOut, value: showBirdData)
+#else
+                            BirdSightingsViews(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription)
+                                .frame(minHeight: showBirdData ? 550 : 0, maxHeight: showBirdData ? 900 : 0)
+                                .scaleEffect(showBirdData ? 1 : 0)
+                                .animation(.easeInOut, value: showBirdData)
+                            #endif
                         }
                         
                         HeaderView(isPresenting: $showWeatherData, showTimeTracker: $showWeatherDataTime,  hideTimeTracker: $hideWeatherDataTime, title: String.weatherNowTitle, spinningText: String.andLaterTitle)

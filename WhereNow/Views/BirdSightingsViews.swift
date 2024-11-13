@@ -25,7 +25,7 @@ struct BirdSightingsViews: View {
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal) {
-                LazyHStack(alignment:.top) {
+                HStack(alignment:.top) {
                     VStack(alignment: .leading) {
                         Text("🦅 Especially Notable Bird Reports thanks to Cornell Lab of Ornithology and the Macauley Library.")
                             .frame(width: geometry.size.width)
@@ -65,14 +65,16 @@ struct BirdSightingsViews: View {
                         BirdSightingsContainerView(birdData: birdData, locationData: locationData)
                             .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
                     }
-                    .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
+                    .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 700, maxHeight: 1000)
                 }
                 .scrollTargetLayout()
-            }.frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
+            }.frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 700, maxHeight: 1000)
                 .scrollTargetBehavior(.paging)
         }
     }
 }
+
+
 
 public struct BirdSightingsContainerView: View {
     @ObservedObject var birdData: BirdSightingService
@@ -168,19 +170,21 @@ public struct BirdSightingView: View {
                                                 .resizable()
                                                 .scaledToFill()
                                         }
-#if os(iOS)
-                                        .frame(width: 64, height: 64)
+#if os(watchOS)
+                                        .frame(width: 30, height: 30)
 #else
-                                        .frame(width: 20, height: 20)
+                                        .frame(width: 64, height: 64)
 #endif
-                                        
                                     }
+#if os(watchOS)
+#else
                                     Text("Uploaded by:")
                                         .font(.caption2)
                                         .multilineTextAlignment(.center)
                                     Text(imageData.uploadedBy)
                                         .font(.caption2)
                                         .multilineTextAlignment(.center)
+#endif
                                     
                                 }
                                 .onTapGesture {
@@ -198,8 +202,7 @@ public struct BirdSightingView: View {
                                     isPresented.toggle()
                                 })
                             }
-                        }.frame(maxWidth: .infinity, maxHeight: 100)
-                            .padding(.bottom)
+                        }
                     }
                 } else {
                     Text(Fun.eBirdjis.randomElement() ?? "")
@@ -207,7 +210,6 @@ public struct BirdSightingView: View {
                         .multilineTextAlignment(.leading)
                 }
                 
-                Spacer()
                 if let commonName = sighting.comName {
                     Text(commonName)
                         .font(.system(size: descriptionSize))
@@ -329,6 +331,8 @@ public struct BirdSightingView: View {
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)
                 }
+#if os(watchOS)
+#else
                 if let name = sighting.comName, let nameURLString = name.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed), let url = URL(string:"https://www.youtube.com/results?search_query=\(nameURLString)") {
                     Link("📺 YouTube", destination: url)
                         .font(.system(size: descriptionSize))
@@ -353,10 +357,11 @@ public struct BirdSightingView: View {
                         .font(.system(size: descriptionSize))
                         .multilineTextAlignment(.leading)
                 }
+#endif
                 //Audio files
                 if relatedData.count > 0 {
                     ScrollView(.horizontal) {
-                        LazyHStack {
+                        HStack {
                             ForEach(relatedData.filter({$0.assetFormatCode == "audio"})) { key in
                                 Button(action:{
                                     if let url = URL(string: key.url) {
@@ -370,9 +375,16 @@ public struct BirdSightingView: View {
                                 },label:{
                                     VStack(alignment: .center, spacing: 2) {
                                         Image(systemName: "play.circle.fill")
+#if os(watchOS)
+                                            .frame(width: 20, height: 20)
+                                            .clipShape(.rect(cornerRadius: 4))
+                                            .buttonStyle(.bordered)
+#else
                                             .frame(width: 64, height: 64)
                                             .clipShape(.rect(cornerRadius: 8))
                                             .buttonStyle(.borderedProminent)
+#endif
+                                            
                                         Text("Uploaded by:")
                                             .font(.caption2)
                                             .multilineTextAlignment(.center)
@@ -407,7 +419,6 @@ public struct BirdSightingView: View {
                         self.coordinate = coordinate
                     }}})
         }
-        .padding()
     }
 }
 

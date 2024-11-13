@@ -74,7 +74,6 @@ class BirdSightingService: ObservableObject {
     @Published var savedImages: Int = 0
     init(sightings: [BirdSighting] = []) {
         self.sightings = sightings
-        createFileDirectory()
     }
     
     func resetData() {
@@ -110,6 +109,10 @@ class BirdSightingService: ObservableObject {
     }
     
     func saveBirdFile(data: Data, metaData: BirdSpeciesAssetMetadata) {
+        var isDirectory : ObjCBool = true
+        if !FileManager.default.fileExists(atPath: birdFilesFolderURL.path(), isDirectory: &isDirectory) {
+            self.createFileDirectory()
+        }
         let name = String(metaData.hashValue)
         guard let directoryName = metaData.comName ?? metaData.sciName else {
             Logger.assetMetadata.error("Could not generate asset data folder name for \(metaData.description ?? "Undescribed metadata")")
@@ -228,7 +231,7 @@ class BirdSightingService: ObservableObject {
         let latitudeURLQueryItem = URLQueryItem(name: "lat", value: String(coordinate.latitude))
         let longitudeURLQueryItem = URLQueryItem(name: "lng", value: String(coordinate.longitude))
         let sortingURLQueryItem = URLQueryItem(name: "sort", value: "date")
-        let maxURLQueryItem = URLQueryItem(name: "maxResults", value: "25")
+        let maxURLQueryItem = URLQueryItem(name: "maxResults", value: "100")
         let distItem = URLQueryItem(name: "dist", value: "22")
         let queryItems:[URLQueryItem] = [latitudeURLQueryItem, longitudeURLQueryItem, sortingURLQueryItem, maxURLQueryItem, distItem]
         guard let baseURL = URL(string:BirdSightingService.recentsURLString) else { return nil}
@@ -242,7 +245,7 @@ class BirdSightingService: ObservableObject {
         let latitudeURLQueryItem = URLQueryItem(name: "lat", value: String(coordinate.latitude))
         let longitudeURLQueryItem = URLQueryItem(name: "lng", value: String(coordinate.longitude))
         let sortingURLQueryItem = URLQueryItem(name: "sort", value: "date")
-        let maxURLQueryItem = URLQueryItem(name: "maxResults", value: "25")
+        let maxURLQueryItem = URLQueryItem(name: "maxResults", value: "100")
         let distItem = URLQueryItem(name: "dist", value: "22")
         let queryItems:[URLQueryItem] = [latitudeURLQueryItem, longitudeURLQueryItem, sortingURLQueryItem, maxURLQueryItem, distItem]
         guard let notablesURL = URL(string:BirdSightingService.notablesURLString) else { return nil}
@@ -260,8 +263,13 @@ class BirdSightingService: ObservableObject {
                 return
             }
             do {
-                //let something = JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
                 let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
+                
+                for i in 0...4 {
+                    if decodedSightings.count > i {
+                        self?.requestWebsiteAssetMetadataOf(sighting: decodedSightings[i])
+                    }
+                }
                 DispatchQueue.main.async { [weak self] in
                     self?.sightings = decodedSightings
                 }
@@ -275,6 +283,36 @@ class BirdSightingService: ObservableObject {
             }
         })
         dataTask.resume()
+    }
+    
+    func asyncCacheSightings(using coordinate: CLLocationCoordinate2D) async {
+        guard let request = makeRequest(using: coordinate) else { return }
+        do {
+            let data = try await URLSession(configuration: .ephemeral).data(for: request).0
+            do {
+                let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
+                
+                for i in 0...4 {
+                    if decodedSightings.count > i {
+                        try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[i])
+                    }
+                }
+                
+                DispatchQueue.main.async { [weak self] in
+                    self?.sightings = decodedSightings
+                }
+            } catch {
+                let description = error.localizedDescription
+                print(description)
+                DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 4, execute: { [weak self] in
+                    let coordinate = CoreLocation.CLLocationManager().location?.coordinate ?? coordinate
+                    self?.cacheSightings(using: coordinate)
+                })
+            }
+            
+        } catch {
+            print(error)
+        }
     }
     
     func getSightings(using coordinate: CLLocationCoordinate2D) async -> [BirdSighting] {
@@ -292,6 +330,10 @@ class BirdSightingService: ObservableObject {
     }
     
     func cacheNotableSightings(using coordinate: CLLocationCoordinate2D) {
+        var isDirectory : ObjCBool = true
+        if !FileManager.default.fileExists(atPath: birdFilesFolderURL.path(), isDirectory: &isDirectory) {
+            self.createFileDirectory()
+        }
         guard let request = makeNotablesRequest(using: coordinate) else { return }
         let dataTask = URLSession(configuration: .ephemeral).dataTask(with: request, completionHandler: { [weak self] data, response, error in
             guard let data = data else {
@@ -306,8 +348,14 @@ class BirdSightingService: ObservableObject {
                         sightingsToSave.append(sighting)
                     }
                 }
+                let notableSightings = Array(sightingsToSave.reversed())
+                for i in 0...4 {
+                    if notableSightings.count > i {
+                        self?.requestWebsiteAssetMetadataOf(sighting: notableSightings[i])
+                    }
+                }
                 DispatchQueue.main.async { [weak self] in
-                    self?.notableSightings = sightingsToSave.reversed()
+                    self?.notableSightings = notableSightings
                 }
             } catch {
                 print(error.localizedDescription)
@@ -318,6 +366,36 @@ class BirdSightingService: ObservableObject {
             }
         })
         dataTask.resume()
+    }
+    
+    func asyncCacheNotableSightings(using coordinate: CLLocationCoordinate2D) async {
+        guard let request = makeNotablesRequest(using: coordinate) else { return }
+        do {
+            let data = try await URLSession(configuration: .ephemeral).data(for: request).0
+            do {
+                let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
+                
+                for i in 0...4 {
+                    if decodedSightings.count > i {
+                        try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[i])
+                    }
+                }
+                
+                DispatchQueue.main.async { [weak self] in
+                    self?.sightings = decodedSightings
+                }
+            } catch {
+                let description = error.localizedDescription
+                print(description)
+                DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 4, execute: { [weak self] in
+                    let coordinate = CoreLocation.CLLocationManager().location?.coordinate ?? coordinate
+                    self?.cacheSightings(using: coordinate)
+                })
+            }
+            
+        } catch {
+            print(error)
+        }
     }
     
     func getNotableSightings(using coordinate: CLLocationCoordinate2D) async -> [BirdSighting] {
@@ -593,6 +671,147 @@ class BirdSightingService: ObservableObject {
             }
         })
         task.resume()
+    }
+    
+    func asyncRequestWebsiteAssetMetadataOf(sighting: BirdSighting) async throws {
+        let requestId = sighting.comName ?? sighting.sciName ?? sighting.speciesCode ?? "unknown"
+        if sightingRequests.contains(requestId) {
+            Logger.assetMetadata.trace("Request already in progress, exiting additional request function call")
+            return
+        } else {
+            sightingRequests.append(requestId)
+        }
+        Logger.assetMetadata.trace("Requesting asset metadata of \(sighting.comName ?? "Unknown bird")")
+        guard let speciesCode = sighting.speciesCode else {
+            Logger.assetMetadata.trace("Failure to find speciesCode")
+            sightingRequests.removeAll(where: { $0 == requestId })
+            return
+        }
+        guard let speciesURLString = speciesCode.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {
+            Logger.assetMetadata.error("Failure to make SpeciesCode URL")
+            sightingRequests.removeAll(where: { $0 == requestId })
+            return
+        }
+        guard let url = URL(string: "https://ebird.org/species/" + speciesURLString) else {
+            Logger.assetMetadata.error("Failure to make species url of \(speciesCode): \(speciesURLString)")
+            sightingRequests.removeAll(where: { $0 == requestId })
+            return
+        }
+        
+        let sessionConfig = URLSessionConfiguration.default
+        let session = URLSession(configuration: sessionConfig)
+        var request: URLRequest = URLRequest(url: url)
+        request.httpMethod = "GET"
+        do {
+            let response = try await session.data(for: request)
+            let data = response.0
+            let error = response.1
+            let parsedData = String(data: data, encoding: String.Encoding.utf8)
+            var assets = parsedData?.components(separatedBy: "\"assetId\" : ")
+            Logger.assetMetadata.trace("Parsing revealed \(assets?.count ?? 0) asset references")
+            assets?.indices.reversed().forEach {
+                if $0 % 2 == 0 { assets?.remove(at: $0) }
+            }
+            
+            Logger.assetMetadata.trace("After reversing order of asset references and removing every other reference, there are \(assets?.count ?? 0) references")
+            
+            var ids: [Int] = []
+            var assetIds: [String] = []
+            var citationURLs: [String] = []
+            
+            for item in (assets ?? []) {
+                let components = item.components(separatedBy: ",")
+                if let assetInfo = components.first, let assetId = Int(assetInfo) {
+                    ids.append(assetId)
+                    assetIds.append("https://cdn.download.ams.birds.cornell.edu/api/v1/asset/"  + "\(assetId)")
+                    Logger.assetMetadata.trace("Appending assetId \(assetId)")
+                    //assetIds.append("https://macaulaylibrary.org/asset/" + "\(assetId)")
+                }
+                for component in components {
+                    let array = component.split(separator: "\"citationUrl\" : ")
+                    if let url = array.last {
+                        Logger.assetMetadata.trace("Appending citationURL \(url)")
+                        citationURLs.append(String(url))
+                    }
+                }
+            }
+            
+            var assetFormatCodeArray = parsedData?.components(separatedBy: "\"assetFormatCode\" : ")
+            assetFormatCodeArray?.indices.reversed().forEach {
+                if $0 % 2 == 0 { assetFormatCodeArray?.remove(at: $0) }
+            }
+            var assetFormatCodes: [String] = []
+            for item in (assetFormatCodeArray ?? []) {
+                let components = item.components(separatedBy: ",")
+                if let assetInfo = components.first {
+                    let assetFormatCode = String(assetInfo).replacingOccurrences(of: "\"", with: "")
+                    Logger.assetMetadata.trace("Appending userName \(assetFormatCode)")
+                    assetFormatCodes.append(assetFormatCode)
+                }
+            }
+            
+            var userArray = parsedData?.components(separatedBy: "\"userDisplayName\" : ")
+            userArray?.indices.reversed().forEach {
+                if $0 % 2 == 0 { userArray?.remove(at: $0) }
+            }
+            var userNames: [String] = []
+            for item in (userArray ?? []) {
+                let components = item.components(separatedBy: ",")
+                if let userName = components.first {
+                    userNames.append(userName)
+                    Logger.assetMetadata.trace("Appending userName \(userName)")
+                }
+            }
+            
+            var baseArray = parsedData?.components(separatedBy: "\"mlBaseDownloadUrl\" : ")
+            baseArray?.indices.reversed().forEach {
+                if $0 % 2 == 0 { baseArray?.remove(at: $0) }
+            }
+            var baseURLs: [String] = []
+            for item in (baseArray ?? []) {
+                let components = item.components(separatedBy: ",")
+                if let baseURL = components.first {
+                    Logger.assetMetadata.trace("Appending baseURL \(baseURL)")
+                    baseURLs.append(baseURL)
+                }
+            }
+            
+            var citationNameArray = parsedData?.components(separatedBy: "\"citationName\" : ")
+            citationNameArray?.indices.reversed().forEach {
+                if $0 % 2 == 0 { citationNameArray?.remove(at: $0) }
+            }
+            var citationNames: [String] = []
+            for item in (citationNameArray ?? []) {
+                let components = item.components(separatedBy: ",")
+                if let citationName = components.first {
+                    Logger.assetMetadata.trace("Appending citation \(citationName)")
+                    citationNames.append(citationName)
+                }
+            }
+            let speciesMedia = self.speciesMedia
+            var allAssetMetadata: [BirdSpeciesAssetMetadata] = []
+            for (index, code) in assetFormatCodes.enumerated() {
+                let metadata = BirdSpeciesAssetMetadata(identifier: ids[index], expectedIndex: (speciesMedia.compactMap({$0.speciesCode == code}).count) + 1, speciesCode: speciesCode, assetFormatCode: code, url: assetIds[index], uploadedBy: userNames[index], citationUrl: citationURLs[index], baseURL: baseURLs[index], comName: sighting.comName, sciName: sighting.sciName)
+                Logger.assetMetadata.trace("Adding asset metadata of \(sighting.comName ?? "*missing comName*") to new array")
+                
+                allAssetMetadata.append(metadata)
+            }
+            
+            if (self.speciesMedia.contains(allAssetMetadata) != true) {
+                DispatchQueue.main.async(execute:  {
+                    Logger.assetMetadata.trace("Updating sighting with subId \(sighting.subId ?? "") of \(sighting.comName ?? "") with acquired metadata of \(sighting.comName ?? "unknown")")
+                    self.speciesMedia.append(contentsOf: allAssetMetadata)
+                })
+            }
+            if let index = self.sightingRequests.firstIndex(of: requestId) {
+                self.sightingRequests.remove(at: index)
+            }
+        } catch {
+            if let err
+                = error as? URLError {
+                Logger.assetMetadata.error("Failure to return data using SpeciesCodeURLRequest, reporting error: \(err.localizedDescription)")
+            }
+        }
     }
 }
 
