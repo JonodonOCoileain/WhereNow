@@ -10,8 +10,7 @@ import CoreLocation
 
 class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
-    #if os(watchOS)
-    #else
+    #if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
     var snapshotManager: MapSnapshotManager = MapSnapshotManager()
     #endif
     @Published var image: Image?
@@ -26,8 +25,7 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var currentLocation: CLLocation = CLLocation(latitude: 37.333424329435715, longitude: -122.00546584232792)
     {
         didSet {
-#if os(watchOS)
-#else
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
             snapshotManager.snapshot(at: currentLocation.coordinate) { snapshotResult in
                 switch snapshotResult {
                 case .success(let newImageResult):
@@ -137,7 +135,10 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         case .authorizedWhenInUse, .authorizedAlways:  // Location services are available.
             deniedStatus = false
             manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+#if os(tvOS)
+#else
             manager.startUpdatingLocation()
+#endif
             break
             
         case .restricted, .denied:  // Location services currently unavailable.
