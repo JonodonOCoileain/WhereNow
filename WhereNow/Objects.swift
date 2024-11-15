@@ -7,7 +7,6 @@
 
 
 import MapKit
-import WidgetKit
 import Foundation
 import CoreLocation
 import SwiftUI

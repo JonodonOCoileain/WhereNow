@@ -7,7 +7,6 @@
 
 import Foundation
 import CoreLocation
-import Contacts
 
 final class LocationManager: NSObject {
     // MARK: - Config
@@ -99,8 +98,10 @@ final class LocationManager: NSObject {
         DispatchQueue.main.async {
             let locationManager = CLLocationManager()
             self.locationManager = locationManager
-
+#if os(tvOS)
+#else
             locationManager.activityType = Config.activityType
+#endif
             locationManager.desiredAccuracy = Config.desiredAccuracy
             locationManager.delegate = self
             self.locationManager?.requestWhenInUseAuthorization()
@@ -126,8 +127,10 @@ extension LocationManager: CLLocationManagerDelegate {
             // Ignore changes where we don't have any pending completion handlers.
             return
         }
-
+#if os(tvOS)
+#else
         self.locationManager?.startUpdatingLocation()
+#endif
     }
 
     func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

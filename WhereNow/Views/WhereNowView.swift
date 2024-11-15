@@ -6,13 +6,17 @@
 //
 
 import SwiftUI
-import WidgetKit
 import CoreLocation
+#if canImport(UIKit)
 import UIKit
+#endif
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 struct WhereNowView: View {
 #if os(watchOS)
-#else
+#elseif canImport(UIKit.UIDeviceOrientation)
     @State private var orientation = UIDeviceOrientation.portrait
 #endif
     static var countTime:Double = 0.1
@@ -20,6 +24,9 @@ struct WhereNowView: View {
     @ObservedObject var weatherData: USAWeatherService = USAWeatherService()
     @ObservedObject var birdData: BirdSightingService = BirdSightingService()
     @Environment(\.scenePhase) var scenePhase
+    
+    @State var tabViewSelected: Bool = true
+    
     var body: some View {
         if ([CLAuthorizationStatus.restricted, CLAuthorizationStatus.denied].contains(where: {$0 == data.manager.authorizationStatus})) {
             Group {
@@ -28,14 +35,26 @@ struct WhereNowView: View {
             }
         } else {
             Group {
+                
                 #if os(watchOS)
                     WhereNowPortraitView(data: data, weatherData: weatherData, birdData: birdData)
                 #else
+#if canImport(UIKit.UIDeviceOrientation)
                 if orientation.isPortrait {
-                    WhereNowPortraitView(data: data, weatherData: weatherData, birdData: birdData)
+                    VStack {
+                        Text("WHERE NOW!")
+                            .modifier(UpdatedSpinnable(tapToggler: $tabViewSelected, tapActionNotification: ($tabViewSelected.wrappedValue ? "Portait mode tabview selected" : "Portrait mode long scrollView selected")))
+                            .padding([.bottom],10)
+                        if tabViewSelected {
+                            WhereNowPortraitViewTabbed(data: data, weatherData: weatherData, birdData: birdData)
+                        } else {
+                            WhereNowPortraitView(data: data, weatherData: weatherData, birdData: birdData)
+                        }
+                    }
                 } else if orientation.isLandscape {
                     WhereNowLandscapeView(data: data, weatherData: weatherData, birdData: birdData)
                 }
+                #endif
                 #endif
             }
             .onChange(of: scenePhase) { oldPhase, newPhase in
@@ -62,7 +81,9 @@ struct WhereNowView: View {
             }
             .onDisappear() {
                 data.stop()
+                #if canImport(WidgetKit)
                 WidgetCenter.shared.reloadAllTimelines()
+#endif
             }
             .alert(isPresented: self.$data.deniedStatus) {
                 Alert(
@@ -77,7 +98,7 @@ struct WhereNowView: View {
 #endif
                     }))
             }
-            #if os(iOS)
+#if canImport(UIKit.UIDeviceOrientation)
             .onRotate { newOrientation in
                 if !newOrientation.isFlat {
                     orientation = newOrientation
@@ -85,11 +106,11 @@ struct WhereNowView: View {
                     orientation = .portrait
                 }
             }
-            #endif
+#endif
         }
     }
 }
-#if os(iOS)
+#if canImport(UIKit.UIDeviceOrientation)
 struct DeviceRotationViewModifier: ViewModifier {
     let action: (UIDeviceOrientation) -> Void
     
@@ -133,7 +154,6 @@ struct WhereNowPortraitView: View {
     @State var showWeatherDataTime: Double = Date().timeIntervalSince1970
     @State var hideWeatherDataTime: Double = 0.0
     
-    
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -148,44 +168,43 @@ struct WhereNowPortraitView: View {
                 
                 ScrollView() {
                     LazyVStack {
-                        Text("WHERE NOW!")
-                            .modifier(Spinnable())
-                            .padding([.bottom],10)
-                        
-                        HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Here now!")
-                            .frame(maxWidth: .infinity)
-
-                        VStack {
-                            Text(self.data.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
-                                .multilineTextAlignment(.center)
+                        Group {
+                            HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Here now!")
+                                .frame(maxWidth: .infinity)
+                            
+                            VStack {
+                                Text(self.data.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
+                                    .multilineTextAlignment(.center)
 #if os(watchOS)
 #else
-                            if let image = self.data.image {
-                                MapSnapshotView(image: image)
-                            }
+                                if let image = self.data.image {
+                                    MapSnapshotView(image: image)
+                                }
 #endif
+                            }
+                            .scaleEffect(showLocation ? 1 : 0)
+                            .offset(y: hideLocationTime > showLocationTime ? -200 * (Date().timeIntervalSince1970 - hideLocationTime)/0.35 : (hideLocationTime < showLocationTime && showLocationTime >= 0.35+Date().timeIntervalSince1970  ? -10 * (showLocationTime - Date().timeIntervalSince1970)/0.35 : 0))
+                            .frame(maxHeight: showLocationTime < Date().timeIntervalSince1970 - 0.35 && showLocationTime > hideLocationTime ? .infinity : Date().timeIntervalSince1970 > hideLocationTime + 0.35 && hideLocationTime > showLocationTime ? 0 : Date().timeIntervalSince1970 < hideLocationTime + 0.35 && Date().timeIntervalSince1970 > hideLocationTime ? 500 * (Date().timeIntervalSince1970 - hideLocationTime)/0.35 : .infinity)
+                            .animation(.easeInOut, value: showLocation)
                         }
-                        .scaleEffect(showLocation ? 1 : 0)
-                        .offset(y: hideLocationTime > showLocationTime ? -200 * (Date().timeIntervalSince1970 - hideLocationTime)/0.35 : (hideLocationTime < showLocationTime && showLocationTime >= 0.35+Date().timeIntervalSince1970  ? -10 * (showLocationTime - Date().timeIntervalSince1970)/0.35 : 0))
-                        .frame(maxHeight: showLocationTime < Date().timeIntervalSince1970 - 0.35 && showLocationTime > hideLocationTime ? .infinity : Date().timeIntervalSince1970 > hideLocationTime + 0.35 && hideLocationTime > showLocationTime ? 0 : Date().timeIntervalSince1970 < hideLocationTime + 0.35 && Date().timeIntervalSince1970 > hideLocationTime ? 500 * (Date().timeIntervalSince1970 - hideLocationTime)/0.35 : .infinity)
-                        .animation(.easeInOut, value: showLocation)
-                        
-                        if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
-                            HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
+                        Group {
+                            if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
+                                HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
 #if os(watchOS)
-                            NotableBirdSightingsViewsOnly(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription)
-                                .frame(height: showBirdData ? 400 : 0)
-                                .scaleEffect(showBirdData ? 1 : 0)
-                                .animation(.easeInOut, value: showBirdData)
+                                WatchNotableBirdSightingsViews(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription)
+                                    .frame(width: geometry.size.width, height: showBirdData ? 300 : 0)
+                                    .scaleEffect(showBirdData ? 1 : 0)
+                                    .animation(.easeInOut, value: showBirdData)
 #else
-                            BirdSightingsViews(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription)
-                                .frame(minHeight: showBirdData ? 550 : 0, maxHeight: showBirdData ? 900 : 0)
-                                .scaleEffect(showBirdData ? 1 : 0)
-                                .animation(.easeInOut, value: showBirdData)
-                            #endif
+                                BirdSightingsViews(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription)
+                                    .frame(minHeight: showBirdData ? 550 : 0, maxHeight: showBirdData ? 900 : 0)
+                                    .scaleEffect(showBirdData ? 1 : 0)
+                                    .animation(.easeInOut, value: showBirdData)
+#endif
+                            }
                         }
-                        
-                        HeaderView(isPresenting: $showWeatherData, showTimeTracker: $showWeatherDataTime,  hideTimeTracker: $hideWeatherDataTime, title: String.weatherNowTitle, spinningText: String.andLaterTitle)
+                        Group {
+                            HeaderView(isPresenting: $showWeatherData, showTimeTracker: $showWeatherDataTime,  hideTimeTracker: $hideWeatherDataTime, title: String.weatherNowTitle, spinningText: String.andLaterTitle)
                             VStack(alignment:.center) {
                                 ForEach(weatherData.timesAndForecasts, id: \.self) { element in
                                     VStack(alignment:.center) {
@@ -203,18 +222,19 @@ struct WhereNowPortraitView: View {
                                             .multilineTextAlignment(.leading)
                                     }
                                 }
-                            
-                            Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
-                                .multilineTextAlignment(.center)
-                                .font(.caption2)
-                                .padding()
-                            Text(weatherData.forecastOffice?.description() ?? "")
-                                .multilineTextAlignment(.center)
-                                .font(.caption2)
-                        }
+                                
+                                Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
+                                    .multilineTextAlignment(.center)
+                                    .font(.caption2)
+                                    .padding()
+                                Text(weatherData.forecastOffice?.description() ?? "")
+                                    .multilineTextAlignment(.center)
+                                    .font(.caption2)
+                            }
                             .scaleEffect(showWeatherData ? 1 : 0)
                             .animation(.easeInOut, value: showWeatherData)
                             .frame(maxHeight: showWeatherData ? .infinity : 0)
+                        }
                     }
                 }
                 .padding([.top, .bottom], reversePadding ? -25 : 0)
@@ -241,6 +261,84 @@ struct WhereNowPortraitView: View {
         }.animation(.default, value: 1)
     }
 }
+
+struct WhereNowPortraitLocationView: View {
+#if os(watchOS)
+    let reversePadding = true
+#else
+    let reversePadding = false
+#endif
+    static var countTime:Double = 0.1
+    @ObservedObject var data: LocationDataModel
+    
+    var body: some View {
+        ScrollView() {
+            VStack {
+                Text(self.data.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
+                    .multilineTextAlignment(.center)
+#if os(watchOS)
+#else
+                if let image = self.data.image {
+                    MapSnapshotView(image: image)
+                }
+#endif
+            }
+        }
+    }
+}
+
+
+struct WhereNowPortraitViewTabbed: View {
+#if os(watchOS)
+    let reversePadding = true
+#else
+    let reversePadding = false
+#endif
+    static var countTime:Double = 0.1
+    @ObservedObject var data: LocationDataModel
+    @ObservedObject var weatherData: USAWeatherService
+    @ObservedObject var birdData: BirdSightingService
+    let timer = Timer.publish(every: WhereNowView.countTime, on: .main, in: .common).autoconnect()
+    @State var timeCounter:Double = 0.0
+    
+    var body: some View {
+        GeometryReader { geometry in
+            TabView {
+                LocationViewTab(locationData: data)
+                .tabItem {
+                    Label("Here Now!", systemImage: "mappin.and.ellipse")
+                }
+                
+                BirdSightingsViews(birdData: birdData, locationData: data, briefing: birdData.birdSeenCommonDescription ?? "")
+                    .tabItem {
+                        Label("Hear Now!", systemImage: "bird")
+                    }
+                
+                WeatherViewTab(weatherData: weatherData)
+                .tabItem {
+                    Label("Weather Now!", systemImage: "sun.min")
+                }
+            }
+            .padding([.top, .bottom], reversePadding ? -25 : 0)
+            .onReceive(timer) { input in
+                if timeCounter >= 2.0 {
+                    timeCounter = 0
+                }
+                timeCounter = timeCounter + WhereNowView.countTime * 2
+            }
+            .onAppear() {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: {
+                    let locationCoordinate = data.currentLocation.coordinate
+                    weatherData.cacheForecasts(using: locationCoordinate)
+                    birdData.cacheSightings(using: locationCoordinate)
+                    birdData.cacheNotableSightings(using: locationCoordinate)
+                })
+            }
+            
+        }
+    }
+}
+
 #if os(watchOS)
 #else
 struct WhereNowLandscapeView: View {
@@ -258,16 +356,15 @@ struct WhereNowLandscapeView: View {
     @State var showWeatherData: Bool = true
     @State var showWeatherDataTime: Double = 0.0
     @State var hideWeatherDataTime: Double = 0.0
-    
+    @State var tapViewSelected: Bool = false
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal) {
                 HStack {
-                    Text("HERE NOW!")
-                        .modifier(Spinnable())
+                    Text("WHERE NOW!")
                         .padding([.bottom],10)
                     
-                    HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "here now!")
+                    HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Here now!")
                     Text(self.data.addressesVeryLongFlag)
                         .multilineTextAlignment(.center)
                         .scaleEffect(showLocation ? 1 : 0)
@@ -391,35 +488,6 @@ struct WhereNowWeatherHStackView: View {
         })
     }
 }
-#if os(watchOS)
-#else
-struct MapSnapshotView: View {
-    var image: Image
-    var body: some View {
-        ZStack {
-            image
-                .resizable()
-                .scaledToFill()
-                .frame(maxWidth: 400, maxHeight: 400)
-                .edgesIgnoringSafeArea(.all)
-                .cornerRadius(20)
-                .clipped()
-                .padding()
-            
-            // The map is centered on the user location, therefore we can simply draw the blue dot in the
-            // center of our view to simulate the user coordinate.
-            Circle()
-                .foregroundColor(.blue)
-                .overlay(
-                    Circle()
-                        .stroke(Color.white, lineWidth: 3)
-                )
-                .frame(width: 15,
-                       height: 15)
-        }.padding()
-    }
-}
-#endif
 
 #if DEBUG
 struct WhereNowView_Previews: PreviewProvider {

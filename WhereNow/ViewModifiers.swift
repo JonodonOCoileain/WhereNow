@@ -19,7 +19,6 @@ struct SomeView: View {
                     .font(.largeTitle)
                     .foregroundStyle(.yellow)
                     .padding()
-                SpinningBlueRoundedRectangle()
             }
             .modifier(AppearingView(trigger: $clicked))
         }
@@ -37,13 +36,17 @@ struct TextView: View {
 }
 
 struct SpinningBlueRoundedRectangle: View {
+    @State var tapping: Bool = false
+    let setting: String
     var body: some View {
         TextView()
-            .modifier(Spinnable())
+            .modifier(UpdatedSpinnable(tapToggler: $tapping, tapActionNotification: "\(setting) \($tapping.wrappedValue ? "selected" : "deselected")"))
+        
     }
 }
 
 struct Spinnable: ViewModifier {
+    @Binding var tapToggler: Bool
     @State private var spinning = false
     @State private var spun = false
     let timer = Timer.publish(every: 0.34, on: .main, in: .common).autoconnect()
@@ -60,6 +63,7 @@ struct Spinnable: ViewModifier {
             .padding()
             .animation(.easeInOut, value: spinning)
             .onTapGesture {
+                tapToggler.toggle()
                 spinning.toggle()
                 if spinning == false {
                     spun.toggle()
@@ -95,9 +99,39 @@ struct SpecialAppearingView: ViewModifier {
     }
 }
 
-struct Modifiers_Previews: PreviewProvider {
+struct UpdatedSpinnable: ViewModifier {
+    @Binding var tapToggler: Bool
+    var tapActionNotification: String
+    @State private var spinning = false
+    @State private var spun = false
+    func body(content: Content) -> some View {
+        VStack {
+            content
+                .font(.largeTitle)
+                .foregroundStyle(.white)
+                .padding()
+                .background(.blue)
+                .clipShape(.rect(cornerRadius: 10))
+                .rotationEffect(.degrees(spinning ? 540 : spun ? 720 : 0))
+                .scaleEffect(spinning ? 1 : 0.6)
+                .onTapGesture {
+                    tapToggler.toggle()
+                    withAnimation(.smooth(duration: 0.4).delay(0)) {
+                        spinning.toggle()
+                    }
+                    withAnimation(.easeIn(duration: 0.4).delay(0.4)) {
+                        spun.toggle()
+                        spinning.toggle()
+                    }
+                }
+            Text(tapActionNotification).opacity($spinning.wrappedValue ? 1.0 : 0.0001)
+                .padding([.top], $spinning.wrappedValue ? 100 : 20)
+        }
+    }
+}
+
+struct NewView_Previews: PreviewProvider {
     static var previews: some View {
-        SomeView()
-                .previewDevice("iPhone 15 Pro")
+        SpinningBlueRoundedRectangle(setting: "Demo")
     }
 }

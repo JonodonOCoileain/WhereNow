@@ -17,7 +17,7 @@ class BirdSpeciesAssetMetadata: Codable, Equatable, Hashable, Identifiable, Obse
     
     let identifier: Int
     let expectedIndex: Int
-    let speciesCode: String
+    var speciesCode: String? = nil
     let assetFormatCode: String
     let url: String
     let uploadedBy: String

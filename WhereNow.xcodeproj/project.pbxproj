@@ -13,7 +13,7 @@
 		FC5FA7D82C63031B0002E2A8 /* WhereNowWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC5FA7CB2C6303190002E2A8 /* WhereNowWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FCE332C12C5A9C240093D3EF /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; platformFilters = (ios, macos, ); };
 		FCE332C22C5A9C240093D3EF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
-		FCE332D02C5A9C260093D3EF /* WhereNowWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FCE332D02C5A9C260093D3EF /* WhereNowWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +58,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = FC5FA7CA2C6303190002E2A8;
 			remoteInfo = WhereNowWatchWidgetExtension;
+		};
+		FC8D68EC2CE7D33400283160 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FC2491472C48A63600101DF3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FC8D68DB2CE7D33100283160;
+			remoteInfo = "Where Now for AppleTV";
+		};
+		FC8D68F62CE7D33500283160 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FC2491472C48A63600101DF3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FC8D68DB2CE7D33100283160;
+			remoteInfo = "Where Now for AppleTV";
 		};
 		FCE332CE2C5A9C260093D3EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -114,6 +128,9 @@
 		FC2492C92C494D8800101DF3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FC2492CB2C494D8800101DF3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		FC5FA7CB2C6303190002E2A8 /* WhereNowWatchWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhereNowWatchWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC8D68DC2CE7D33100283160 /* Where Now for AppleTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Where Now for AppleTV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC8D68EB2CE7D33400283160 /* Where Now for AppleTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Where Now for AppleTVTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC8D68F52CE7D33500283160 /* Where Now for AppleTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Where Now for AppleTVUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhereNowWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -142,6 +159,10 @@
 				Views/BirdDataSightingsShortView.swift,
 				Views/BirdSightingsViews.swift,
 				Views/BirdSightingView.swift,
+				Views/LocationViewTab.swift,
+				Views/Preview_Playground.swift,
+				Views/WatchNotableBirdSightingsViews.swift,
+				Views/WeatherViewTab.swift,
 				Views/WhereNowView.swift,
 				WidgetKinds.swift,
 			);
@@ -153,6 +174,7 @@
 				Info.plist,
 				LocationInformationEntry.swift,
 				Views/BirdSightingView.swift,
+				Views/WatchNotableBirdSightingsViews.swift,
 			);
 			target = FC24914E2C48A63600101DF3 /* WhereNow */;
 		};
@@ -189,6 +211,29 @@
 			);
 			target = FC5FA7CA2C6303190002E2A8 /* WhereNowWatchWidgetExtension */;
 		};
+		FC8D69072CE7D45100283160 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				BirdSighting.swift,
+				BirdSpeciesAssetMetadata.swift,
+				"Data Models/BirdSightingService.swift",
+				"Data Models/LocationDataModel.swift",
+				"Data Models/USAWeatherService.swift",
+				"Data+.swift",
+				"Double+.swift",
+				ForecastInfo.swift,
+				Fun.swift,
+				Logging.swift,
+				MapSnapshotManager.swift,
+				MapSnapshotView.swift,
+				Objects.swift,
+				"String+.swift",
+				Views/BirdSightingsViews.swift,
+				Views/LocationViewTab.swift,
+				Views/WeatherViewTab.swift,
+			);
+			target = FC8D68DB2CE7D33100283160 /* Where Now for AppleTV */;
+		};
 		FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -215,6 +260,7 @@
 				LocationInformationEntry.swift,
 				Logging.swift,
 				MapSnapshotManager.swift,
+				MapSnapshotView.swift,
 				Objects.swift,
 				routing.geojson,
 				"String+.swift",
@@ -227,13 +273,16 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		FC2491512C48A63600101DF3 /* WhereNow */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC2492ED2C4ABCB400101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC5FA7DE2C63033F0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNow; sourceTree = "<group>"; };
+		FC2491512C48A63600101DF3 /* WhereNow */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC2492ED2C4ABCB400101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC5FA7DE2C63033F0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC8D69072CE7D45100283160 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNow; sourceTree = "<group>"; };
 		FC2491622C48A63800101DF3 /* WhereNowTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WhereNowTests; sourceTree = "<group>"; };
 		FC24916C2C48A63800101DF3 /* WhereNowUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WhereNowUITests; sourceTree = "<group>"; };
 		FC2491792C48A63800101DF3 /* WhereNow Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch App"; sourceTree = "<group>"; };
 		FC24918A2C48A63900101DF3 /* WhereNow Watch AppTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch AppTests"; sourceTree = "<group>"; };
 		FC2491942C48A63900101DF3 /* WhereNow Watch AppUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch AppUITests"; sourceTree = "<group>"; };
 		FC5FA7CE2C6303190002E2A8 /* WhereNowWatchWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC5FA7DC2C63031B0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWatchWidget; sourceTree = "<group>"; };
+		FC8D68DD2CE7D33100283160 /* Where Now for AppleTV */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Where Now for AppleTV"; sourceTree = "<group>"; };
+		FC8D68EE2CE7D33400283160 /* Where Now for AppleTVTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Where Now for AppleTVTests"; sourceTree = "<group>"; };
+		FC8D68F82CE7D33500283160 /* Where Now for AppleTVUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Where Now for AppleTVUITests"; sourceTree = "<group>"; };
 		FCE332C32C5A9C240093D3EF /* WhereNowWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWidget; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -289,6 +338,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FC8D68D92CE7D33100283160 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC8D68E82CE7D33400283160 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC8D68F22CE7D33500283160 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FCE332BD2C5A9C240093D3EF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -312,6 +382,9 @@
 				FC2491942C48A63900101DF3 /* WhereNow Watch AppUITests */,
 				FCE332C32C5A9C240093D3EF /* WhereNowWidget */,
 				FC5FA7CE2C6303190002E2A8 /* WhereNowWatchWidget */,
+				FC8D68DD2CE7D33100283160 /* Where Now for AppleTV */,
+				FC8D68EE2CE7D33400283160 /* Where Now for AppleTVTests */,
+				FC8D68F82CE7D33500283160 /* Where Now for AppleTVUITests */,
 				FC2492C82C494D8800101DF3 /* Frameworks */,
 				FC2491502C48A63600101DF3 /* Products */,
 			);
@@ -328,6 +401,9 @@
 				FC2491912C48A63900101DF3 /* WhereNow Watch AppUITests.xctest */,
 				FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */,
 				FC5FA7CB2C6303190002E2A8 /* WhereNowWatchWidgetExtension.appex */,
+				FC8D68DC2CE7D33100283160 /* Where Now for AppleTV.app */,
+				FC8D68EB2CE7D33400283160 /* Where Now for AppleTVTests.xctest */,
+				FC8D68F52CE7D33500283160 /* Where Now for AppleTVUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -508,6 +584,74 @@
 			productReference = FC5FA7CB2C6303190002E2A8 /* WhereNowWatchWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		FC8D68DB2CE7D33100283160 /* Where Now for AppleTV */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC8D68FD2CE7D33500283160 /* Build configuration list for PBXNativeTarget "Where Now for AppleTV" */;
+			buildPhases = (
+				FC8D68D82CE7D33100283160 /* Sources */,
+				FC8D68D92CE7D33100283160 /* Frameworks */,
+				FC8D68DA2CE7D33100283160 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				FC8D68DD2CE7D33100283160 /* Where Now for AppleTV */,
+			);
+			name = "Where Now for AppleTV";
+			packageProductDependencies = (
+			);
+			productName = "Where Now for AppleTV";
+			productReference = FC8D68DC2CE7D33100283160 /* Where Now for AppleTV.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FC8D68EA2CE7D33400283160 /* Where Now for AppleTVTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC8D69002CE7D33500283160 /* Build configuration list for PBXNativeTarget "Where Now for AppleTVTests" */;
+			buildPhases = (
+				FC8D68E72CE7D33400283160 /* Sources */,
+				FC8D68E82CE7D33400283160 /* Frameworks */,
+				FC8D68E92CE7D33400283160 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FC8D68ED2CE7D33400283160 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FC8D68EE2CE7D33400283160 /* Where Now for AppleTVTests */,
+			);
+			name = "Where Now for AppleTVTests";
+			packageProductDependencies = (
+			);
+			productName = "Where Now for AppleTVTests";
+			productReference = FC8D68EB2CE7D33400283160 /* Where Now for AppleTVTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FC8D68F42CE7D33500283160 /* Where Now for AppleTVUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC8D69032CE7D33500283160 /* Build configuration list for PBXNativeTarget "Where Now for AppleTVUITests" */;
+			buildPhases = (
+				FC8D68F12CE7D33500283160 /* Sources */,
+				FC8D68F22CE7D33500283160 /* Frameworks */,
+				FC8D68F32CE7D33500283160 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FC8D68F72CE7D33500283160 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FC8D68F82CE7D33500283160 /* Where Now for AppleTVUITests */,
+			);
+			name = "Where Now for AppleTVUITests";
+			packageProductDependencies = (
+			);
+			productName = "Where Now for AppleTVUITests";
+			productReference = FC8D68F52CE7D33500283160 /* Where Now for AppleTVUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FCE332D12C5A9C260093D3EF /* Build configuration list for PBXNativeTarget "WhereNowWidgetExtension" */;
@@ -537,8 +681,8 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1600;
+				LastSwiftUpdateCheck = 1610;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					FC24914E2C48A63600101DF3 = {
 						CreatedOnToolsVersion = 16.0;
@@ -564,6 +708,17 @@
 					};
 					FC5FA7CA2C6303190002E2A8 = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					FC8D68DB2CE7D33100283160 = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					FC8D68EA2CE7D33400283160 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = FC8D68DB2CE7D33100283160;
+					};
+					FC8D68F42CE7D33500283160 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = FC8D68DB2CE7D33100283160;
 					};
 					FCE332BF2C5A9C240093D3EF = {
 						CreatedOnToolsVersion = 16.0;
@@ -593,6 +748,9 @@
 				FC2491902C48A63900101DF3 /* WhereNow Watch AppUITests */,
 				FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */,
 				FC5FA7CA2C6303190002E2A8 /* WhereNowWatchWidgetExtension */,
+				FC8D68DB2CE7D33100283160 /* Where Now for AppleTV */,
+				FC8D68EA2CE7D33400283160 /* Where Now for AppleTVTests */,
+				FC8D68F42CE7D33500283160 /* Where Now for AppleTVUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -641,6 +799,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FC5FA7C92C6303190002E2A8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC8D68DA2CE7D33100283160 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC8D68E92CE7D33400283160 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC8D68F32CE7D33500283160 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -706,6 +885,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FC8D68D82CE7D33100283160 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC8D68E72CE7D33400283160 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC8D68F12CE7D33500283160 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FCE332BC2C5A9C240093D3EF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -746,8 +946,19 @@
 			target = FC5FA7CA2C6303190002E2A8 /* WhereNowWatchWidgetExtension */;
 			targetProxy = FC5FA7D62C63031B0002E2A8 /* PBXContainerItemProxy */;
 		};
+		FC8D68ED2CE7D33400283160 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FC8D68DB2CE7D33100283160 /* Where Now for AppleTV */;
+			targetProxy = FC8D68EC2CE7D33400283160 /* PBXContainerItemProxy */;
+		};
+		FC8D68F72CE7D33500283160 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FC8D68DB2CE7D33100283160 /* Where Now for AppleTV */;
+			targetProxy = FC8D68F62CE7D33500283160 /* PBXContainerItemProxy */;
+		};
 		FCE332CF2C5A9C260093D3EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */;
 			targetProxy = FCE332CE2C5A9C260093D3EF /* PBXContainerItemProxy */;
 		};
@@ -788,6 +999,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -849,6 +1061,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -896,7 +1109,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -936,7 +1149,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -981,13 +1194,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1026,13 +1239,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1220,7 +1433,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1252,7 +1465,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1265,6 +1478,147 @@
 			};
 			name = Release;
 		};
+		FC8D68FE2CE7D33500283160 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Where Now for AppleTV/Preview Content\"";
+				DEVELOPMENT_TEAM = KB8WXAHJCD;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.7;
+				PRODUCT_BUNDLE_IDENTIFIER = "OCoileain.Jon.Where-Now-for-AppleTV";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 18.1;
+			};
+			name = Debug;
+		};
+		FC8D68FF2CE7D33500283160 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Where Now for AppleTV/Preview Content\"";
+				DEVELOPMENT_TEAM = KB8WXAHJCD;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.7;
+				PRODUCT_BUNDLE_IDENTIFIER = "OCoileain.Jon.Where-Now-for-AppleTV";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 18.1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FC8D69012CE7D33500283160 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KB8WXAHJCD;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "OCoileain.Jon.Where-Now-for-AppleTVTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Where Now for AppleTV.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Where Now for AppleTV";
+				TVOS_DEPLOYMENT_TARGET = 18.1;
+			};
+			name = Debug;
+		};
+		FC8D69022CE7D33500283160 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KB8WXAHJCD;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "OCoileain.Jon.Where-Now-for-AppleTVTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Where Now for AppleTV.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Where Now for AppleTV";
+				TVOS_DEPLOYMENT_TARGET = 18.1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FC8D69042CE7D33500283160 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KB8WXAHJCD;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "OCoileain.Jon.Where-Now-for-AppleTVUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = "Where Now for AppleTV";
+				TVOS_DEPLOYMENT_TARGET = 18.1;
+			};
+			name = Debug;
+		};
+		FC8D69052CE7D33500283160 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KB8WXAHJCD;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "OCoileain.Jon.Where-Now-for-AppleTVUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = "Where Now for AppleTV";
+				TVOS_DEPLOYMENT_TARGET = 18.1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		FCE332D22C5A9C260093D3EF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1273,6 +1627,7 @@
 				CODE_SIGN_ENTITLEMENTS = WhereNowWidget/WhereNowWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1295,7 +1650,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1316,6 +1671,7 @@
 				CODE_SIGN_ENTITLEMENTS = WhereNowWidget/WhereNowWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1338,7 +1694,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1422,6 +1778,33 @@
 			buildConfigurations = (
 				FC5FA7DA2C63031B0002E2A8 /* Debug */,
 				FC5FA7DB2C63031B0002E2A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FC8D68FD2CE7D33500283160 /* Build configuration list for PBXNativeTarget "Where Now for AppleTV" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC8D68FE2CE7D33500283160 /* Debug */,
+				FC8D68FF2CE7D33500283160 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FC8D69002CE7D33500283160 /* Build configuration list for PBXNativeTarget "Where Now for AppleTVTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC8D69012CE7D33500283160 /* Debug */,
+				FC8D69022CE7D33500283160 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FC8D69032CE7D33500283160 /* Build configuration list for PBXNativeTarget "Where Now for AppleTVUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC8D69042CE7D33500283160 /* Debug */,
+				FC8D69052CE7D33500283160 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

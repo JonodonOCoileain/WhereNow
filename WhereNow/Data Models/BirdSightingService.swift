@@ -254,35 +254,37 @@ class BirdSightingService: ObservableObject {
         request.addValue("\(BirdSightingService.cornellUOrnithologyAPIKey)", forHTTPHeaderField: "X-eBirdApiToken")
         return request
     }
-    
+    var cachingSightings: Bool = false
     func cacheSightings(using coordinate: CLLocationCoordinate2D) {
-        guard let request = makeRequest(using: coordinate) else { return }
-        let dataTask = URLSession(configuration: .ephemeral).dataTask(with: request, completionHandler: { [weak self] data, response, error in
-            guard let data = data else {
-                print(error?.localizedDescription ?? "Error retrieving forecast data")
-                return
-            }
-            do {
-                let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
-                
-                for i in 0...4 {
-                    if decodedSightings.count > i {
-                        self?.requestWebsiteAssetMetadataOf(sighting: decodedSightings[i])
+        if !cachingSightings {
+            guard let request = makeRequest(using: coordinate) else { return }
+            let dataTask = URLSession(configuration: .ephemeral).dataTask(with: request, completionHandler: { [weak self] data, response, error in
+                guard let data = data else {
+                    print(error?.localizedDescription ?? "Error retrieving forecast data")
+                    self?.cachingSightings = false
+                    return
+                }
+                do {
+                    let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
+                    
+                    if decodedSightings.count > 0 {
+                        self?.requestWebsiteAssetMetadataOf(sighting: decodedSightings[0])
                     }
+                    DispatchQueue.main.async { [weak self] in
+                        self?.sightings = decodedSightings
+                        self?.cachingSightings = false
+                    }
+                } catch {
+                    let description = error.localizedDescription
+                    print(description)
+                    DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 4, execute: { [weak self] in
+                        let coordinate = CoreLocation.CLLocationManager().location?.coordinate ?? coordinate
+                        self?.cacheSightings(using: coordinate)
+                    })
                 }
-                DispatchQueue.main.async { [weak self] in
-                    self?.sightings = decodedSightings
-                }
-            } catch {
-                let description = error.localizedDescription
-                print(description)
-                DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 4, execute: { [weak self] in
-                    let coordinate = CoreLocation.CLLocationManager().location?.coordinate ?? coordinate
-                    self?.cacheSightings(using: coordinate)
-                })
-            }
-        })
-        dataTask.resume()
+            })
+            dataTask.resume()
+        }
     }
     
     func asyncCacheSightings(using coordinate: CLLocationCoordinate2D) async {
@@ -329,43 +331,49 @@ class BirdSightingService: ObservableObject {
         }
     }
     
+    var cachingNotables: Bool = false
     func cacheNotableSightings(using coordinate: CLLocationCoordinate2D) {
-        var isDirectory : ObjCBool = true
-        if !FileManager.default.fileExists(atPath: birdFilesFolderURL.path(), isDirectory: &isDirectory) {
-            self.createFileDirectory()
+        if !cachingNotables {
+            var isDirectory : ObjCBool = true
+            if !FileManager.default.fileExists(atPath: birdFilesFolderURL.path(), isDirectory: &isDirectory) {
+                self.createFileDirectory()
+            }
+            guard let request = makeNotablesRequest(using: coordinate) else { return }
+            let dataTask = URLSession(configuration: .ephemeral).dataTask(with: request, completionHandler: { [weak self] data, response, error in
+                guard let data = data else {
+                    print(error?.localizedDescription ?? "Error retrieving notable bird sighting data")
+                    self?.cachingNotables = false
+                    return
+                }
+                do {
+                    let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
+                    var sightingsToSave: [BirdSighting] = []
+                    for sighting in decodedSightings.reversed() {
+                        if !sightingsToSave.contains(where: {$0.speciesCode == sighting.speciesCode && $0.locId == sighting.locId && $0.locName == sighting.locName }) {
+                            sightingsToSave.append(sighting)
+                        }
+                    }
+                    let notableSightings = Array(sightingsToSave.reversed())
+                    for i in 0...4 {
+                        if notableSightings.count > i {
+                            self?.requestWebsiteAssetMetadataOf(sighting: notableSightings[i])
+                        }
+                    }
+                    DispatchQueue.main.async { [weak self] in
+                        self?.notableSightings = notableSightings
+                        self?.cachingNotables = false
+                    }
+                } catch {
+                    self?.cachingNotables = false
+                    print(error.localizedDescription)
+                    DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 4, execute: { [weak self] in
+                        let coordinate = CoreLocation.CLLocationManager().location?.coordinate ?? coordinate
+                        self?.cacheNotableSightings(using: coordinate)
+                    })
+                }
+            })
+            dataTask.resume()
         }
-        guard let request = makeNotablesRequest(using: coordinate) else { return }
-        let dataTask = URLSession(configuration: .ephemeral).dataTask(with: request, completionHandler: { [weak self] data, response, error in
-            guard let data = data else {
-                print(error?.localizedDescription ?? "Error retrieving notable bird sighting data")
-                return
-            }
-            do {
-                let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
-                var sightingsToSave: [BirdSighting] = []
-                for sighting in decodedSightings.reversed() {
-                    if !sightingsToSave.contains(where: {$0.speciesCode == sighting.speciesCode && $0.locId == sighting.locId && $0.locName == sighting.locName }) {
-                        sightingsToSave.append(sighting)
-                    }
-                }
-                let notableSightings = Array(sightingsToSave.reversed())
-                for i in 0...4 {
-                    if notableSightings.count > i {
-                        self?.requestWebsiteAssetMetadataOf(sighting: notableSightings[i])
-                    }
-                }
-                DispatchQueue.main.async { [weak self] in
-                    self?.notableSightings = notableSightings
-                }
-            } catch {
-                print(error.localizedDescription)
-                DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 4, execute: { [weak self] in
-                    let coordinate = CoreLocation.CLLocationManager().location?.coordinate ?? coordinate
-                    self?.cacheNotableSightings(using: coordinate)
-                })
-            }
-        })
-        dataTask.resume()
     }
     
     func asyncCacheNotableSightings(using coordinate: CLLocationCoordinate2D) async {
@@ -428,7 +436,7 @@ class BirdSightingService: ObservableObject {
         let task: URLSessionDataTask = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
             if (error == nil) {
                 // Success
-                let statusCode = (response as! HTTPURLResponse).statusCode
+                //let statusCode = (response as! HTTPURLResponse).statusCode
                 
                 // This is your file-variable:
                 // data
@@ -666,9 +674,6 @@ class BirdSightingService: ObservableObject {
                     self?.speciesMedia.append(contentsOf: allAssetMetadata)
                 })
             }
-            if let index = self?.sightingRequests.firstIndex(of: requestId) {
-                self?.sightingRequests.remove(at: index)
-            }
         })
         task.resume()
     }
@@ -705,7 +710,7 @@ class BirdSightingService: ObservableObject {
         do {
             let response = try await session.data(for: request)
             let data = response.0
-            let error = response.1
+            //let error = response.1
             let parsedData = String(data: data, encoding: String.Encoding.utf8)
             var assets = parsedData?.components(separatedBy: "\"assetId\" : ")
             Logger.assetMetadata.trace("Parsing revealed \(assets?.count ?? 0) asset references")

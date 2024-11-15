@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+#if canImport(WidgetKit)
 import WidgetKit
+#endif
 #if canImport(UniformTypeIdentifiers)
 import UniformTypeIdentifiers
 #endif
@@ -34,7 +36,7 @@ struct BirdSightingsViews: View {
                             VStack(alignment: .leading, content: {
                                 BirdSightingsContainerView(birdData: birdData, locationData: locationData, notables: true)
                                     .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: geometry.size.height, maxHeight: geometry.size.height)
-                            })
+                            }).frame(width: geometry.size.width)
                         }.frame(width: geometry.size.width)
                     }
                     
@@ -73,6 +75,8 @@ struct BirdSightingsViews: View {
         }
     }
 }
+
+
 
 
 
@@ -154,11 +158,11 @@ public struct BirdSightingView: View {
     private let descriptionSize: CGFloat = 12
     @State var coordinate: CLLocationCoordinate2D?
     @State var notables: Bool? = false
+    
     public var body: some View {
-        NavigationView {
             VStack(alignment: .leading, spacing: 0) {
                 let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
-                let photosData = relatedData.filter({$0.assetFormatCode == "photo"})
+                let photosData = relatedData.filter({$0.assetFormatCode == "photo"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })
                 if photosData.count > 0 {
                     ScrollView(.horizontal) {
                         LazyHStack(alignment: .center) {
@@ -181,7 +185,7 @@ public struct BirdSightingView: View {
                                     Text("Uploaded by:")
                                         .font(.caption2)
                                         .multilineTextAlignment(.center)
-                                    Text(imageData.uploadedBy)
+                                    Text(imageData.uploadedBy.replacingOccurrences(of: "\"", with: ""))
                                         .font(.caption2)
                                         .multilineTextAlignment(.center)
 #endif
@@ -222,17 +226,16 @@ public struct BirdSightingView: View {
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)
                 }
-                if let location = sighting.locName {
-                    VStack {
+                if let location = sighting.locName?.replacingOccurrences(of: "--", with: ", ").replacingOccurrences(of: "-", with: " ") {
+                    HStack(alignment: .center, spacing: 20) {
 #if os(iOS)
-                        Text("Location: " + location)
+                        Text("Location: " + location + " 🚶🏿‍♀️")
                             .font(.system(size: descriptionSize))
                             .multilineTextAlignment(.leading)
                             .lineLimit(2)
-                            .foregroundColor(UIDevice.current.systemName == "iOS" ? .blue : .primary)
-#if os(iOS)
+                            .foregroundColor(UIDevice.current.systemName == "watchOS" ? .primary : .purple)
                             .onTapGesture(perform: {
-                                if let locName = sighting.locName?.replacingOccurrences(of: "-", with: " "), let coordinate = coordinate {
+                                if let coordinate = coordinate {
                                     
                                     self.route = nil
                                     
@@ -257,43 +260,48 @@ public struct BirdSightingView: View {
                                             print(error)
                                         }
                                     }
-                                } else if let locName = sighting.locName?.replacingOccurrences(of: "-", with: " "), let startingPoint = currentLocation, let url = URL(string:
+                                } else if let locName = sighting.locName?.replacingOccurrences(of: "--", with: ", ").replacingOccurrences(of: "-", with: " "), let startingPoint = currentLocation, let url = URL(string:
                                                                                                                                 "https://www.google.co.in/maps/dir/\(startingPoint.latitude),\(startingPoint.longitude)/\(locName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "")/") {
                                     UIApplication.shared.open(url)
                                 }
                             })
-                            .onLongPressGesture(perform: {
-                                if let locName = sighting.locName?.replacingOccurrences(of: "-", with: " "), let coordinate = coordinate {
-                                    
-                                    self.route = nil
-                                    
-                                    // Coordinate to use as a starting point for the example
-                                    guard let startingPoint = currentLocation else { return }
-                                    
-                                    // Create and configure the request
-                                    let request = MKDirections.Request()
-                                    request.source = MKMapItem(placemark: MKPlacemark(coordinate: startingPoint))
-                                    request.destination = MKMapItem(placemark: MKPlacemark(coordinate: coordinate))
-                                    request.transportType = .automobile
-                                    routeDestination = coordinate
-                                    // Get the directions based on the request
-                                    Task {
-                                        let directions = MKDirections(request: request)
-                                        do {
-                                            let response = try await directions.calculate()
-                                            guard let route = response.routes.first else { return }
-                                            
-                                            self.route = IdentifiableRoute(route: route)
-                                        } catch {
-                                            print(error)
-                                        }
+                            
+                        Text("Driving directions 🚗")
+                            .font(.system(size: descriptionSize))
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(2)
+                            .foregroundColor(UIDevice.current.systemName == "watchOS" ? .primary : .red)
+                            .onTapGesture(perform: {
+                            if let locName = sighting.locName?.replacingOccurrences(of: "-", with: " "), let coordinate = coordinate {
+                                
+                                self.route = nil
+                                
+                                // Coordinate to use as a starting point for the example
+                                guard let startingPoint = currentLocation else { return }
+                                
+                                // Create and configure the request
+                                let request = MKDirections.Request()
+                                request.source = MKMapItem(placemark: MKPlacemark(coordinate: startingPoint))
+                                request.destination = MKMapItem(placemark: MKPlacemark(coordinate: coordinate))
+                                request.transportType = .automobile
+                                routeDestination = coordinate
+                                // Get the directions based on the request
+                                Task {
+                                    let directions = MKDirections(request: request)
+                                    do {
+                                        let response = try await directions.calculate()
+                                        guard let route = response.routes.first else { return }
+                                        
+                                        self.route = IdentifiableRoute(route: route)
+                                    } catch {
+                                        print(error)
                                     }
-                                } else if let locName = sighting.locName?.replacingOccurrences(of: "-", with: " "), let startingPoint = currentLocation, let url = URL(string:
-                                                                                                                                "https://www.google.co.in/maps/dir/\(startingPoint.latitude),\(startingPoint.longitude)/\(locName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "")/") {
-                                    UIApplication.shared.open(url)
                                 }
-                            })
-#endif
+                            } else if let locName = sighting.locName?.replacingOccurrences(of: "-", with: " "), let startingPoint = currentLocation, let url = URL(string:
+                                                                                                                                                                    "https://www.google.co.in/maps/dir/\(startingPoint.latitude),\(startingPoint.longitude)/\(locName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "")/") {
+                                UIApplication.shared.open(url)
+                            }
+                        })
 #else
                         Text("Location: " + location)
                             .font(.system(size: descriptionSize))
@@ -319,7 +327,7 @@ public struct BirdSightingView: View {
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)
                 }
-                if let userName = sighting.userDisplayName {
+                if let userName = sighting.userDisplayName?.replacingOccurrences(of: "\"", with: "") {
                     Text("Seen by: \(userName)")
                         .font(.system(size: descriptionSize))
                         .multilineTextAlignment(.leading)
@@ -362,7 +370,7 @@ public struct BirdSightingView: View {
                 if relatedData.count > 0 {
                     ScrollView(.horizontal) {
                         HStack {
-                            ForEach(relatedData.filter({$0.assetFormatCode == "audio"})) { key in
+                            ForEach(relatedData.filter({$0.assetFormatCode == "audio"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })) { key in
                                 Button(action:{
                                     if let url = URL(string: key.url) {
                                         self.player.set(url: url)
@@ -388,7 +396,7 @@ public struct BirdSightingView: View {
                                         Text("Uploaded by:")
                                             .font(.caption2)
                                             .multilineTextAlignment(.center)
-                                        Text(key.uploadedBy)
+                                        Text(key.uploadedBy.replacingOccurrences(of: "\"", with: ""))
                                             .font(.caption2)
                                             .multilineTextAlignment(.center)
                                     }.onLongPressGesture {
@@ -418,7 +426,6 @@ public struct BirdSightingView: View {
                     } else {
                         self.coordinate = coordinate
                     }}})
-        }
     }
 }
 
@@ -464,10 +471,10 @@ struct FullScreenModalView: View {
                 Text(comName)
             }
             
-            let uploadedBy = data.uploadedBy
+            let uploadedBy = data.uploadedBy.replacingOccurrences(of: "\"", with: "")
             if uploadedBy.count > 0 {
                 Text("Uploaded by:")
-                Text(uploadedBy)
+                Text(uploadedBy.replacingOccurrences(of: "\"", with: ""))
             }
 
             if let description = data.description, description.count > 0 {
