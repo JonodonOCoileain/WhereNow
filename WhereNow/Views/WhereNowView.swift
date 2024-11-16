@@ -195,9 +195,10 @@ struct WhereNowPortraitView: View {
                                     .animation(.easeInOut, value: showBirdData)
 #else
                                 BirdSightingsViews(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription)
-                                    .frame(minHeight: showBirdData ? 550 : 0, maxHeight: showBirdData ? 900 : 0)
+                                    .frame(minHeight: showBirdData ? 500 : 0, maxHeight: showBirdData ? 1000 : 0)
                                     .scaleEffect(showBirdData ? 1 : 0)
                                     .animation(.easeInOut, value: showBirdData)
+                                    .padding(.horizontal)
 #endif
                             }
                         }
@@ -244,11 +245,14 @@ struct WhereNowPortraitView: View {
                     
                 }
                 .onAppear() {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: {
                         let locationCoordinate = data.currentLocation.coordinate
                         weatherData.cacheForecasts(using: locationCoordinate)
-                        birdData.cacheSightings(using: locationCoordinate)
                         birdData.cacheNotableSightings(using: locationCoordinate)
+                    })
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.2, execute: {
+                        let locationCoordinate = data.currentLocation.coordinate
+                        birdData.cacheSightings(using: locationCoordinate)
                     })
                 }
 #if os(watchOS)
@@ -308,6 +312,7 @@ struct WhereNowPortraitViewTabbed: View {
                 }
                 
                 BirdSightingsViews(birdData: birdData, locationData: data, briefing: birdData.birdSeenCommonDescription ?? "")
+                    .padding(.horizontal)
                     .tabItem {
                         Label("Hear Now!", systemImage: "bird")
                     }
@@ -325,11 +330,14 @@ struct WhereNowPortraitViewTabbed: View {
                 timeCounter = timeCounter + WhereNowView.countTime * 2
             }
             .onAppear() {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: {
                     let locationCoordinate = data.currentLocation.coordinate
                     weatherData.cacheForecasts(using: locationCoordinate)
-                    birdData.cacheSightings(using: locationCoordinate)
                     birdData.cacheNotableSightings(using: locationCoordinate)
+                })
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2, execute: {
+                    let locationCoordinate = data.currentLocation.coordinate
+                    birdData.cacheSightings(using: locationCoordinate)
                 })
             }
             
@@ -378,6 +386,7 @@ struct WhereNowLandscapeView: View {
                         if $showBirdData.wrappedValue {
                             BirdSightingsViews(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription)
                                 .frame(minHeight: 550, maxHeight: 900)
+                                .padding(.horizontal)
                         }
                     }
                     
@@ -397,14 +406,6 @@ struct WhereNowLandscapeView: View {
                         .frame(maxWidth: showWeatherData ? .infinity : 0)
                 }
             }
-            .onChange(of: data.currentLocation, { oldValue, newValue in
-                if birdData.sightings.count == 0 {
-                    birdData.cacheSightings(using: newValue.coordinate)
-                }
-                if birdData.notableSightings.count == 0 {
-                    birdData.cacheNotableSightings(using: newValue.coordinate)
-                }
-            })
         }
     }
 }

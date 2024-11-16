@@ -27,26 +27,17 @@ struct BirdSightingsViews: View {
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal) {
+                /*Text("🐥 Avian data provided by the Lab of Ornithology and Macauley Library of Cornell University")
+                    .font(.system(size: titleSize))
+                    .multilineTextAlignment(.leading)
+                    .padding([.horizontal])
+                 .padding(.bottom, 1)
+                 .lineLimit(3)*/
                 HStack(alignment:.top) {
-                    VStack(alignment: .leading) {
-                        Text("🦅 Especially Notable Bird Reports thanks to Cornell Lab of Ornithology and the Macauley Library.")
-                            .frame(width: geometry.size.width)
-                            .lineLimit(5)
-                        ScrollView() {
-                            VStack(alignment: .leading, content: {
-                                BirdSightingsContainerView(birdData: birdData, locationData: locationData, notables: true)
-                                    .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: geometry.size.height, maxHeight: geometry.size.height)
-                            }).frame(width: geometry.size.width)
-                        }.frame(width: geometry.size.width)
-                    }
+                    BirdSightingsContainerView(birdData: birdData, locationData: locationData, notables: true)
+                        .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
                     
                     VStack(alignment: .leading) {
-                        Text("🐥 Avian data provided by the Lab of Ornithology and Macauley Library of Cornell University")
-                            .font(.system(size: titleSize))
-                            .multilineTextAlignment(.leading)
-                            .padding([.horizontal])
-                            .padding(.bottom, 1)
-                            .lineLimit(3)
                         Text("🐦 Birds sighted near here recently:")
                             .font(.system(size: titleSize))
                             .multilineTextAlignment(.leading)
@@ -63,15 +54,13 @@ struct BirdSightingsViews: View {
                         }
                     }.frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
                     
-                    ScrollView {
-                        BirdSightingsContainerView(birdData: birdData, locationData: locationData)
+                    BirdSightingsContainerView(birdData: birdData, locationData: locationData)
                             .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
-                    }
-                    .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 700, maxHeight: 1000)
                 }
                 .scrollTargetLayout()
             }.frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 700, maxHeight: 1000)
                 .scrollTargetBehavior(.paging)
+                .clipped()
         }
     }
 }
@@ -98,7 +87,7 @@ public struct BirdSightingsContainerView: View {
                             .frame(width: geometry.size.width)
                     }
                 }.frame(width: geometry.size.width)
-            }.frame(width: geometry.size.width)
+            }.frame(width: geometry.size.width, height: geometry.size.height)
         }
     }
 }
@@ -138,7 +127,8 @@ class PlayerViewModel: ObservableObject {
     }
 }
 
-public struct BirdSightingView: View {
+public struct BirdSightingView: View, Identifiable {
+    public let id = UUID()
     @State private var isPresented: Bool = false
     @State private var selectedDetailTitle: String?
     @State private var selectedDetailSubtitle: String?

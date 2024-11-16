@@ -1,0 +1,23 @@
+{
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "layers" : [
+    {
+      "filename" : "Layer 0001 (Text (􁗟)).imagestacklayer"
+    },
+    {
+      "filename" : "Layer 0002 (Text (􁗟)).imagestacklayer"
+    },
+    {
+      "filename" : "Layer 0003 (Background).imagestacklayer"
+    }
+  ],
+  "properties" : {
+    "canvasSize" : {
+      "height" : 240,
+      "width" : 400
+    }
+  }
+}

@@ -267,9 +267,6 @@ class BirdSightingService: ObservableObject {
                 do {
                     let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
                     
-                    if decodedSightings.count > 0 {
-                        self?.requestWebsiteAssetMetadataOf(sighting: decodedSightings[0])
-                    }
                     DispatchQueue.main.async { [weak self] in
                         self?.sightings = decodedSightings
                         self?.cachingSightings = false
@@ -277,6 +274,7 @@ class BirdSightingService: ObservableObject {
                 } catch {
                     let description = error.localizedDescription
                     print(description)
+                    self?.cachingSightings = false
                     DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 4, execute: { [weak self] in
                         let coordinate = CoreLocation.CLLocationManager().location?.coordinate ?? coordinate
                         self?.cacheSightings(using: coordinate)
@@ -294,7 +292,7 @@ class BirdSightingService: ObservableObject {
             do {
                 let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
                 
-                for i in 0...4 {
+                for i in 0...1 {
                     if decodedSightings.count > i {
                         try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[i])
                     }
@@ -354,11 +352,7 @@ class BirdSightingService: ObservableObject {
                         }
                     }
                     let notableSightings = Array(sightingsToSave.reversed())
-                    for i in 0...4 {
-                        if notableSightings.count > i {
-                            self?.requestWebsiteAssetMetadataOf(sighting: notableSightings[i])
-                        }
-                    }
+                    
                     DispatchQueue.main.async { [weak self] in
                         self?.notableSightings = notableSightings
                         self?.cachingNotables = false
