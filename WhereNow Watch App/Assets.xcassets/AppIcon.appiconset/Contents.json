@@ -1,134 +1,143 @@
 {
   "images" : [
     {
-      "filename" : "WHERELOGO1024noAlpha-24@2x.png",
-      "idiom" : "watch",
-      "role" : "notificationCenter",
+      "filename" : "icon22@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "scale" : "2x",
-      "size" : "24x24",
-      "subtype" : "38mm"
+      "size" : "22x22"
     },
     {
-      "filename" : "WHERELOGO1024noAlpha-27-5@2x.png",
-      "idiom" : "watch",
-      "role" : "notificationCenter",
+      "filename" : "icon-notification38mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "scale" : "2x",
-      "size" : "27.5x27.5",
-      "subtype" : "42mm"
+      "size" : "24x24"
     },
     {
-      "filename" : "WHERELOGO1024noAlpha-29@2x.png",
-      "idiom" : "watch",
-      "role" : "companionSettings",
+      "filename" : "icon-notification42mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
+      "scale" : "2x",
+      "size" : "27.5x27.5"
+    },
+    {
+      "filename" : "icon-settings@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "WHERELOGO1024noAlpha-29@3x.png",
-      "idiom" : "watch",
-      "role" : "companionSettings",
-      "scale" : "3x",
-      "size" : "29x29"
-    },
-    {
-      "filename" : "WHERELOGO1024noAlpha-33@2x.png",
-      "idiom" : "watch",
-      "role" : "notificationCenter",
+      "filename" : "icon30@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "scale" : "2x",
-      "size" : "33x33",
-      "subtype" : "45mm"
+      "size" : "30x30"
     },
     {
-      "filename" : "WHERELOGO1024noAlpha-40@2x.png",
-      "idiom" : "watch",
-      "role" : "appLauncher",
+      "filename" : "icon32@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "scale" : "2x",
-      "size" : "40x40",
-      "subtype" : "38mm"
+      "size" : "32x32"
     },
     {
-      "filename" : "WHERELOGO1024noAlpha-44@2x.png",
-      "idiom" : "watch",
-      "role" : "appLauncher",
+      "filename" : "icon-notification45mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "scale" : "2x",
-      "size" : "44x44",
-      "subtype" : "40mm"
+      "size" : "33x33"
     },
     {
-      "filename" : "WHERELOGO1024noAlpha-46@2x.png",
-      "idiom" : "watch",
-      "role" : "appLauncher",
+      "filename" : "icon-launcher@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "scale" : "2x",
-      "size" : "46x46",
-      "subtype" : "41mm"
+      "size" : "40x40"
     },
     {
-      "filename" : "WHERELOGO1024noAlpha-50@2x.png",
-      "idiom" : "watch",
-      "role" : "appLauncher",
+      "filename" : "icon43.5@3x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "scale" : "2x",
-      "size" : "50x50",
-      "subtype" : "44mm"
+      "size" : "43.5x43.5"
     },
     {
-      "filename" : "WHERELOGO1024noAlpha-51@2x.png",
-      "idiom" : "watch",
-      "role" : "appLauncher",
+      "filename" : "icon40mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "scale" : "2x",
-      "size" : "51x51",
-      "subtype" : "45mm"
+      "size" : "44x44"
     },
     {
-      "idiom" : "watch",
-      "role" : "appLauncher",
+      "filename" : "icon41mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "scale" : "2x",
-      "size" : "54x54",
-      "subtype" : "49mm"
+      "size" : "46x46"
     },
     {
-      "filename" : "WHERELOGO1024noAlpha-86@2x.png",
-      "idiom" : "watch",
-      "role" : "quickLook",
+      "filename" : "icon-quicklook38mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "scale" : "2x",
-      "size" : "86x86",
-      "subtype" : "38mm"
+      "size" : "86x86"
     },
     {
-      "filename" : "WHERELOGO1024noAlpha-98@2x.png",
-      "idiom" : "watch",
-      "role" : "quickLook",
+      "filename" : "icon-quicklook42mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "scale" : "2x",
-      "size" : "98x98",
-      "subtype" : "42mm"
+      "size" : "98x98"
     },
     {
-      "filename" : "WHERELOGO1024noAlpha-108@2x.png",
-      "idiom" : "watch",
-      "role" : "quickLook",
-      "scale" : "2x",
-      "size" : "108x108",
-      "subtype" : "44mm"
-    },
-    {
-      "filename" : "WHERELOGO1024noAlpha-117@2x.png",
-      "idiom" : "watch",
-      "role" : "quickLook",
-      "scale" : "2x",
-      "size" : "117x117",
-      "subtype" : "45mm"
-    },
-    {
-      "idiom" : "watch",
-      "role" : "quickLook",
-      "scale" : "2x",
-      "size" : "129x129",
-      "subtype" : "49mm"
-    },
-    {
-      "filename" : "WHERELOGO1024noAlpha-1024@1x.png",
-      "idiom" : "watch-marketing",
-      "scale" : "1x",
+      "filename" : "watch-marketing.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
       "size" : "1024x1024"
+    },
+    {
+      "filename" : "icon44mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
+      "scale" : "2x",
+      "size" : "50x50"
+    },
+    {
+      "filename" : "icon45mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
+      "scale" : "2x",
+      "size" : "51x51"
+    },
+    {
+      "filename" : "icon49mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
+      "scale" : "2x",
+      "size" : "54x54"
+    },
+    {
+      "filename" : "icon-quicklook44mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
+      "scale" : "2x",
+      "size" : "108x108"
+    },
+    {
+      "filename" : "icon-quicklook45mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
+      "scale" : "2x",
+      "size" : "117x117"
+    },
+    {
+      "filename" : "icon-quicklook49mm@2x.png",
+      "idiom" : "universal",
+      "platform" : "watchos",
+      "scale" : "2x",
+      "size" : "129x129"
     }
   ],
   "info" : {

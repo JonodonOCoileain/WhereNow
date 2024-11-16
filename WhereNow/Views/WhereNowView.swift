@@ -7,7 +7,7 @@
 
 import SwiftUI
 import CoreLocation
-#if canImport(UIKit)
+#if os(iOS) || os(macOS)
 import UIKit
 #endif
 #if canImport(WidgetKit)
@@ -16,7 +16,7 @@ import WidgetKit
 
 struct WhereNowView: View {
 #if os(watchOS)
-#elseif canImport(UIKit.UIDeviceOrientation)
+#elseif os(iOS) || os(macOS)
     @State private var orientation = UIDeviceOrientation.portrait
 #endif
     static var countTime:Double = 0.1
@@ -38,8 +38,7 @@ struct WhereNowView: View {
                 
                 #if os(watchOS)
                     WhereNowPortraitView(data: data, weatherData: weatherData, birdData: birdData)
-                #else
-#if canImport(UIKit.UIDeviceOrientation)
+                #elseif os(iOS) || os(macOS)
                 if orientation.isPortrait {
                     VStack {
                         Text("WHERE NOW!")
@@ -54,7 +53,6 @@ struct WhereNowView: View {
                 } else if orientation.isLandscape {
                     WhereNowLandscapeView(data: data, weatherData: weatherData, birdData: birdData)
                 }
-                #endif
                 #endif
             }
             .onChange(of: scenePhase) { oldPhase, newPhase in
@@ -98,7 +96,7 @@ struct WhereNowView: View {
 #endif
                     }))
             }
-#if canImport(UIKit.UIDeviceOrientation)
+#if os(iOS) || os(macOS)
             .onRotate { newOrientation in
                 if !newOrientation.isFlat {
                     orientation = newOrientation
@@ -110,7 +108,7 @@ struct WhereNowView: View {
         }
     }
 }
-#if canImport(UIKit.UIDeviceOrientation)
+#if os(iOS) || os(macOS)
 struct DeviceRotationViewModifier: ViewModifier {
     let action: (UIDeviceOrientation) -> Void
     

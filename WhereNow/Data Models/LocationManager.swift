@@ -11,7 +11,7 @@ import CoreLocation
 final class LocationManager: NSObject {
     // MARK: - Config
 
-    private enum Config {
+    public enum Config {
         /// The type of user activity associated with the location updates.
         static let activityType: CLActivityType = .otherNavigation
 
@@ -19,7 +19,7 @@ final class LocationManager: NSObject {
         static let desiredAccuracy = kCLLocationAccuracyNearestTenMeters
 
         /// The key we use to store the last known user location.
-        static let storageKey = "LocationManager.lastKnownUserLocation"
+        static let storageKey = "lastKnownUserLocation"
     }
 
     // MARK: - Types
@@ -68,7 +68,7 @@ final class LocationManager: NSObject {
         guard let locationManager = locationManager else {
             "Expect to have a valid `locationManager` instance at this point!"
                 .log(level: .error)
-
+            
             return locationStorageManager.location(forKey: Config.storageKey)
         }
         if locationManager.authorizationStatus.isAuthorized {
@@ -79,7 +79,7 @@ final class LocationManager: NSObject {
         return locationManager.location ?? locationStorageManager.location(forKey: Config.storageKey)
     }
     
-    func locationFrom(postalCode: String) async -> CLPlacemark? {
+    static func locationFrom(postalCode: String) async -> CLPlacemark? {
         let geoCoder = CLGeocoder()
         do {
             let location = try await geoCoder.geocodeAddressString(postalCode).first
@@ -87,6 +87,17 @@ final class LocationManager: NSObject {
         } catch {
             print(error.localizedDescription)
             return nil
+        }
+    }
+    
+    func locationFrom(address: String) {
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(address, in: nil, preferredLocale: Locale.current) { placemarks, error in
+            if let placemarks = placemarks, let location = placemarks.first?.location {
+                self.locationStorageManager.set(location: location, forKey: Config.storageKey)
+            } else if let error = error {
+                print(error)
+            }
         }
     }
 

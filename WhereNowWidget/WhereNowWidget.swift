@@ -114,7 +114,7 @@ struct Provider: AppIntentTimelineProvider {
         #if os(watchOS)
         var location: CLLocation
         if let locationIntent = configuration.locationIntent {
-            let placemark = await locationManager.locationFrom(postalCode: locationIntent)
+            let placemark = await LocationManager.locationFrom(postalCode: locationIntent)
             let userRequestedLocation = placemark?.location
             location = userRequestedLocation ?? locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
         } else {
@@ -141,7 +141,7 @@ struct Provider: AppIntentTimelineProvider {
             print("Not watchOS")
             var location: CLLocation
             if let locationIntent = configuration.locationIntent {
-                let placemark = await locationManager.locationFrom(postalCode: locationIntent)
+                let placemark = await LocationManager.locationFrom(postalCode: locationIntent)
                 let userRequestedLocation = placemark?.location
                 location = userRequestedLocation ?? locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
             } else {
@@ -180,7 +180,7 @@ struct Provider: AppIntentTimelineProvider {
         #if os(watchOS)
         var location: CLLocation
         if let locationIntent = configuration.locationIntent {
-            let placemark = await locationManager.locationFrom(postalCode: locationIntent)
+            let placemark = await LocationManager.locationFrom(postalCode: locationIntent)
             let userRequestedLocation = placemark?.location
             location = userRequestedLocation ?? locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
         } else {

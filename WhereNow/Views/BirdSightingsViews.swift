@@ -143,7 +143,7 @@ public struct BirdSightingView: View {
     @State private var selectedDetailTitle: String?
     @State private var selectedDetailSubtitle: String?
     @State private var selectedBirdData: BirdSpeciesAssetMetadata?
-    #if os(iOS)
+    #if os(iOS) || os(macOS) || os(tvOS)
     @State var route: IdentifiableRoute?
     @State var routeDestination: CLLocationCoordinate2D?
     #else
@@ -180,8 +180,7 @@ public struct BirdSightingView: View {
                                         .frame(width: 64, height: 64)
 #endif
                                     }
-#if os(watchOS)
-#else
+#if os(iOS) || os(macOS) || os(tvOS)
                                     Text("Uploaded by:")
                                         .font(.caption2)
                                         .multilineTextAlignment(.center)
@@ -193,7 +192,7 @@ public struct BirdSightingView: View {
                                 }
                                 .onTapGesture {
                                     print("Tapped")
-#if os(iOS)
+#if os(iOS) || os(macOS)
                                     if let citationUrl = selectedBirdData?.citationUrl {
                                         UIApplication.shared.open(URL(string: citationUrl)!)
                                     }
@@ -228,7 +227,7 @@ public struct BirdSightingView: View {
                 }
                 if let location = sighting.locName?.replacingOccurrences(of: "--", with: ", ").replacingOccurrences(of: "-", with: " ") {
                     HStack(alignment: .center, spacing: 20) {
-#if os(iOS)
+#if os(iOS) || os(macOS) || os(tvOS)
                         Text("Location: " + location + " 🚶🏿‍♀️")
                             .font(.system(size: descriptionSize))
                             .multilineTextAlignment(.leading)
@@ -309,7 +308,7 @@ public struct BirdSightingView: View {
                             .lineLimit(2)
 #endif
                     }
-#if os(iOS)
+#if os(iOS) || os(macOS) || os(tvOS)
                     .sheet(item: $route, content: { route in
                         FullScreenModalDirectionsView(destination: routeDestination ?? CLLocationCoordinate2D(), route: route, newRoute: route, sighting: sighting, locationData: locationData)
                     })
@@ -339,8 +338,7 @@ public struct BirdSightingView: View {
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)
                 }
-#if os(watchOS)
-#else
+#if  os(iOS) || os(macOS) || os(tvOS)
                 if let name = sighting.comName, let nameURLString = name.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed), let url = URL(string:"https://www.youtube.com/results?search_query=\(nameURLString)") {
                     Link("📺 YouTube", destination: url)
                         .font(.system(size: descriptionSize))
@@ -430,7 +428,7 @@ public struct BirdSightingView: View {
 }
 
 
-#if os(iOS)
+#if os(iOS) || os(macOS) || os(tvOS)
 class IdentifiableRoute: Identifiable, ObservableObject {
     @Published var route: MKRoute
     let id: ObjectIdentifier
@@ -492,7 +490,7 @@ struct FullScreenModalView: View {
         }
     }
 }
-#if os(iOS)
+#if os(iOS) || os(macOS) || os(tvOS)
 struct FullScreenModalDirectionsView: View {
     @Environment(\.dismiss) var dismiss
     let destination: CLLocationCoordinate2D

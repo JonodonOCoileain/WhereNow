@@ -80,7 +80,7 @@ struct Provider: AppIntentTimelineProvider {
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> LocationInformationEntry {
         var location: CLLocation
         if let locationIntent = configuration.locationIntent {
-            let placemark = await locationManager.locationFrom(postalCode: locationIntent)
+            let placemark = await LocationManager.locationFrom(postalCode: locationIntent)
             let userRequestedLocation = placemark?.location
             location = userRequestedLocation ?? locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
         } else {
@@ -108,7 +108,7 @@ struct Provider: AppIntentTimelineProvider {
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<LocationInformationEntry> {
         var location: CLLocation
         if let locationIntent = configuration.locationIntent {
-            let placemark = await locationManager.locationFrom(postalCode: locationIntent)
+            let placemark = await LocationManager.locationFrom(postalCode: locationIntent)
             let userRequestedLocation = placemark?.location
             location = userRequestedLocation ?? locationManager.immediateLocation() ?? CLLocation(latitude: 0, longitude: 0)
         } else {

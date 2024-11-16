@@ -571,7 +571,6 @@ class BirdSightingService: ObservableObject {
                 } else {
                     Logger.assetMetadata.error("Failure to return data using SpeciesCodeURLRequest without a reported error")
                 }
-                self?.sightingRequests.removeAll(where: { $0 == requestId })
                 return
             }
             let parsedData = String(data: data, encoding: String.Encoding.utf8)

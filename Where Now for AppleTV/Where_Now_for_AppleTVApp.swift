@@ -11,7 +11,9 @@ import SwiftUI
 struct Where_Now_for_AppleTVApp: App {
     var body: some Scene {
         WindowGroup {
-            WhereNowTV()
+            VStack {
+                WhereNowTV()
+            }
         }
     }
 }

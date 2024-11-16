@@ -1,0 +1,273 @@
+//
+//  ContentView.swift
+//  Where Now for AppleTV
+//
+//  Created by Jon on 11/15/24.
+//
+
+import SwiftUI
+import CoreLocation
+
+struct WhereNowTV: View {
+    let reversePadding = false
+    static var countTime:Double = 0.1
+    let locationManager: LocationManager = LocationManager(locationStorageManager: UserDefaults.standard)
+    @ObservedObject var locationData: LocationDataModel = LocationDataModel()
+    @ObservedObject var weatherData: USAWeatherService = USAWeatherService()
+    @ObservedObject var birdData: BirdSightingService = BirdSightingService()
+    let timer = Timer.publish(every: WhereNowTV.countTime, on: .main, in: .common).autoconnect()
+    @State var timeCounter:Double = 0.0
+    @State var addressInfo: String = "" {
+        didSet {
+            locationManager.locationFrom(address: self.addressInfo)
+            
+            if let locationCoordinate = locationData.immediateLocation()?.coordinate {
+                weatherData.cacheForecasts(using: locationCoordinate)
+                birdData.cacheSightings(using: locationCoordinate)
+                birdData.cacheNotableSightings(using: locationCoordinate)
+            }
+        }
+    }
+
+    var body: some View {
+        GeometryReader { geometry in
+            VStack {
+                TabView {
+                    LocationViewTab(locationData: locationData)
+                        .tabItem {
+                            Label("Here Now!", systemImage: "mappin.and.ellipse")
+                        }
+                    
+                    TVBirdSightingsViews(birdData: birdData, locationData: locationData, briefing: birdData.birdSeenCommonDescription ?? "")
+                        .tabItem {
+                            Label("Hear Now!", systemImage: "bird")
+                        }
+                    
+                    WeatherViewTab(weatherData: weatherData)
+                        .tabItem {
+                            Label("Weather Now!", systemImage: "sun.min")
+                        }
+                    
+                    VStack {
+                        Text("For location services, enter your location below:")
+                        TextField("Location (exempli gratia: address)", text: $addressInfo).padding([.horizontal, .bottom])
+                    }
+                    .tabItem {
+                        Label("Settings Now!", systemImage: "gear")
+                    }
+                }
+                .padding([.top, .bottom], reversePadding ? -25 : 0)
+                .onReceive(timer) { input in
+                    if timeCounter >= 2.0 {
+                        timeCounter = 0
+                    }
+                    timeCounter = timeCounter + WhereNowTV.countTime * 2
+                }
+                .onAppear {
+                    locationData.start()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: {
+                        let locationCoordinate = locationData.currentLocation.coordinate
+                        weatherData.cacheForecasts(using: locationCoordinate)
+                        birdData.cacheSightings(using: locationCoordinate)
+                        birdData.cacheNotableSightings(using: locationCoordinate)
+                    })
+                }
+                .onDisappear {
+                    locationData.stop()
+                }
+            }
+        }
+    }
+}
+
+struct TVBirdSightingsViews: View {
+    @ObservedObject var birdData: BirdSightingService
+    @ObservedObject var locationData: LocationDataModel
+    let briefing: String
+    let titleSize: CGFloat = 20
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(alignment: .leading) {
+                Text("🦅 Especially Notable Bird Reports thanks to Cornell Lab of Ornithology and the Macauley Library.")
+                    .multilineTextAlignment(.leading)
+                    .frame(width: geometry.size.width)
+                    .lineLimit(5)
+                    .font(.system(size: titleSize))
+                    .fixedSize(horizontal: true, vertical: false)
+                ScrollView(.vertical) {
+                    VStack(alignment: .center, content: {
+                        ForEach(birdData.notableSightings, id: \.self) { sighting in
+                            BirdSightingView(sighting: sighting, locationData: locationData, currentLocation: locationData.currentLocation.coordinate, birdData: birdData, notables: true)
+                                .frame(width: geometry.size.width - 100)
+                        }
+                    })
+                    .frame(minWidth: 100, maxWidth: geometry.size.width - 100, minHeight: 250)
+                }
+                .frame(minWidth: 100, maxWidth: geometry.size.width - 100)
+            }
+            .onAppear() {
+                print("NotableBirdSightingsViews appeared")
+            }
+        }
+    }
+}
+
+
+public struct TVBirdSightingView: View {
+    private let flexible = [
+        GridItem(.flexible(minimum: 30, maximum: 120)),
+        GridItem(.flexible(minimum: 30, maximum: 120))
+    ]
+    let geometry: GeometryProxy
+    @State private var isPresented: Bool = false
+    @State private var selectedDetailTitle: String?
+    @State private var selectedDetailSubtitle: String?
+    @State private var selectedBirdData: BirdSpeciesAssetMetadata?
+    
+    @State var route: String?
+    @ObservedObject var player = PlayerViewModel()
+    @State var sighting: BirdSighting
+    @ObservedObject var locationData: LocationDataModel
+    let currentLocation: CLLocationCoordinate2D?
+    @ObservedObject var birdData: BirdSightingService
+    private let titleSize: CGFloat = 11
+    private let descriptionSize: CGFloat = 12
+    private let smallSize: CGFloat = 6
+    @State var coordinate: CLLocationCoordinate2D?
+    @State var notables: Bool? = false
+    public var body: some View {
+        VStack(alignment: .leading) {
+            let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
+            let photosData = relatedData.filter({$0.assetFormatCode == "photo"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })
+            if photosData.count > 0 {
+                LazyHGrid(rows: flexible, alignment: .top, spacing: 4, content: {
+                    ForEach(photosData, id: \.self) { imageData in
+                        VStack {
+                            if let URL = URL(string: imageData.url) {
+                                AsyncImage(url: URL) { result in
+                                    result.image?
+                                        .resizable()
+                                        .scaledToFill()
+                                }
+                                .frame(width: 28, height: 28)
+                            }
+                            Text(imageData.uploadedBy.replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: " ", with: "\n"))
+                                .lineLimit(2)
+                                .font(.system(size: smallSize))
+                                .fixedSize(horizontal: true, vertical: false)
+                        }
+                        .clipped()
+                        .onTapGesture {
+                            selectedDetailTitle = sighting.sciName
+                            selectedDetailSubtitle = sighting.comName
+                            selectedBirdData = imageData
+                            isPresented.toggle()
+                        }
+                    }
+                })
+                .frame(width: geometry.size.width - 4, height: 90)
+                .padding(.bottom)
+            } else {
+                Text(Fun.eBirdjis.randomElement() ?? "")
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+            }
+            
+            if let commonName = sighting.comName {
+                Text(commonName)
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+            }
+            if let name = sighting.sciName {
+                Text(name)
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+            }
+            if let location = sighting.locName {
+                Text("Location: \(location)")
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+            }
+            if let date = sighting.obsDt {
+                Text("Date: " + date)
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+            }
+            if let quantity = sighting.howMany {
+                Text("Quantity: \(quantity)")
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+            }
+            if let userName = sighting.userDisplayName {
+                Text("Seen by: \(userName)")
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+            }
+            if let locationPrivate = sighting.locationPrivate {
+                Text("In public location: \(locationPrivate == false)")
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+            }
+            
+            //Audio files
+            if relatedData.count > 0 {
+                ScrollView(.horizontal) {
+                    LazyHGrid(rows: flexible) {
+                        ForEach(relatedData.filter({$0.assetFormatCode == "audio"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })) { key in
+                            Button(action:{
+                                if let url = URL(string: key.url) {
+                                    self.player.set(url: url)
+                                    if self.player.isPlaying {
+                                        self.player.pause()
+                                    } else {
+                                        self.player.play()
+                                    }
+                                }
+                            },label:{
+                                VStack(alignment: .center, spacing: 2) {
+                                    Image(systemName: "play.circle")
+                                        .frame(width: 4, height: 4)
+                                    Text(key.uploadedBy.replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: " ", with: "\n"))
+                                        .font(.system(size: smallSize))
+                                        .lineLimit(3)
+                                        .multilineTextAlignment(.center)
+                                }
+                                .frame(width: 15, height: 15)
+                            })
+                        }
+                    }
+                }.frame(minWidth: geometry.size.width - 4, minHeight: 20, maxHeight: 40)
+            }
+            Spacer()
+        }
+        .sheet(item: $selectedBirdData, content: { data in
+            FullScreenModalView(data: data)
+        })
+        .onAppear(perform:  {
+            let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
+            if [nil,0].contains(relatedData.count){
+                birdData.requestWebsiteAssetMetadataOf(sighting: sighting)
+            }
+            guard let locName = sighting.locName else { return }
+            LocationDataModel.getCoordinate(addressString: locName, lat: sighting.lat, lng: sighting.lng) { coordinate, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                } else {
+                    self.coordinate = coordinate
+                }}})
+        
+    }
+}
+
+
+#Preview {
+    WhereNowTV()
+}

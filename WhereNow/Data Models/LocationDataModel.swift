@@ -98,7 +98,7 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             task.resume()
         }
     }
-    var manager: CLLocationManager = CLLocationManager()
+    @Published var manager: CLLocationManager = CLLocationManager()
     @Published var addressInfoIsUpdated: Bool = false
     @Published var flag: String = ""
     @Published var addresses: [Address] = [] {
@@ -115,13 +115,23 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     @Published var addressesVeryLongFlag: String = ""
-    
+    let locationManager: LocationManager = LocationManager(locationStorageManager: UserDefaults.standard)
     init(timer: Bool = true) {
         super.init()
+        
         if timer {
             self.timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
         }
+        if let location = locationManager.immediateLocation() ?? manager.location {
+            self.currentLocation = location
+        }
+        
         manager.delegate = self
+    }
+    
+    func immediateLocation() -> CLLocation? {
+        let location = self.locationManager.immediateLocation() ?? manager.location
+        return location
     }
     
     deinit {
@@ -136,6 +146,8 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             deniedStatus = false
             manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
 #if os(tvOS)
+            manager.requestWhenInUseAuthorization()
+            manager.requestLocation()
 #else
             manager.startUpdatingLocation()
 #endif
