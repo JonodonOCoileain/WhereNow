@@ -26,8 +26,13 @@ final class MapSnapshotManager {
         /// The coordinate span to use when rendering the map.
         ///
         /// - SeeAlso: https://developer.apple.com/documentation/mapkit/mkcoordinatespan
+#if os(tvOS)
+        static let coordinateSpan = MKCoordinateSpan(latitudeDelta: 0.01,
+                                                     longitudeDelta: 0.01)
+#else
         static let coordinateSpan = MKCoordinateSpan(latitudeDelta: 0.005,
                                                      longitudeDelta: 0.005)
+#endif
     }
 
     // MARK: - Public methods
@@ -45,6 +50,7 @@ final class MapSnapshotManager {
         
         let options = MKMapSnapshotter.Options()
         options.region = coordinateRegion
+        options.scale = 1.0
         MKMapSnapshotter(options: options).start { snapshot, error in
             if let error = error {
                 completionHandler(.failure(error))

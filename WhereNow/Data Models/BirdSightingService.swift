@@ -377,10 +377,11 @@ class BirdSightingService: ObservableObject {
             do {
                 let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
                 
-                for i in 0...4 {
-                    if decodedSightings.count > i {
-                        try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[i])
-                    }
+                if decodedSightings.count == 1 {
+                    try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[0])
+                } else if decodedSightings.count == 2 {
+                    try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[0])
+                    try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[1])
                 }
                 
                 DispatchQueue.main.async { [weak self] in

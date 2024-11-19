@@ -195,7 +195,7 @@ struct WhereNowPortraitView: View {
                                     .animation(.easeInOut, value: showBirdData)
 #else
                                 BirdSightingsViews(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription)
-                                    .frame(minHeight: showBirdData ? 500 : 0, maxHeight: showBirdData ? 1000 : 0)
+                                    .frame(minHeight: showBirdData ? 700 : 0, maxHeight: showBirdData ? 1000 : 0)
                                     .scaleEffect(showBirdData ? 1 : 0)
                                     .animation(.easeInOut, value: showBirdData)
                                     .padding(.horizontal)
@@ -385,7 +385,7 @@ struct WhereNowLandscapeView: View {
                         HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
                         if $showBirdData.wrappedValue {
                             BirdSightingsViews(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription)
-                                .frame(minHeight: 550, maxHeight: 900)
+                                .frame(minHeight: 700, maxHeight: 1000)
                                 .padding(.horizontal)
                         }
                     }

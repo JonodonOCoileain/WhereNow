@@ -153,6 +153,7 @@
 				LocationInformation.swift,
 				Logging.swift,
 				Objects.swift,
+				routing.geojson,
 				"String+.swift",
 				ViewModifiers.swift,
 				Views/BirdDataSightingsShortView.swift,
@@ -203,6 +204,7 @@
 				LocationInformationEntry.swift,
 				Logging.swift,
 				Objects.swift,
+				routing.geojson,
 				ViewModifiers.swift,
 				Views/BirdDataSightingsShortView.swift,
 				WidgetKinds.swift,
@@ -230,6 +232,13 @@
 				Views/BirdSightingsViews.swift,
 				Views/LocationViewTab.swift,
 				Views/WeatherViewTab.swift,
+			);
+			target = FC8D68DB2CE7D33100283160 /* Where Now for AppleTV */;
+		};
+		FCE052C82CE99A0A00625063 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				routing.geojson,
 			);
 			target = FC8D68DB2CE7D33100283160 /* Where Now for AppleTV */;
 		};
@@ -261,6 +270,7 @@
 				MapSnapshotManager.swift,
 				MapSnapshotView.swift,
 				Objects.swift,
+				routing.geojson,
 				"String+.swift",
 				ViewModifiers.swift,
 				Views/BirdDataSightingsShortView.swift,
@@ -278,7 +288,7 @@
 		FC24918A2C48A63900101DF3 /* WhereNow Watch AppTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch AppTests"; sourceTree = "<group>"; };
 		FC2491942C48A63900101DF3 /* WhereNow Watch AppUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch AppUITests"; sourceTree = "<group>"; };
 		FC5FA7CE2C6303190002E2A8 /* WhereNowWatchWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC5FA7DC2C63031B0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWatchWidget; sourceTree = "<group>"; };
-		FC8D68DD2CE7D33100283160 /* Where Now for AppleTV */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Where Now for AppleTV"; sourceTree = "<group>"; };
+		FC8D68DD2CE7D33100283160 /* Where Now for AppleTV */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FCE052C82CE99A0A00625063 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Where Now for AppleTV"; sourceTree = "<group>"; };
 		FC8D68EE2CE7D33400283160 /* Where Now for AppleTVTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Where Now for AppleTVTests"; sourceTree = "<group>"; };
 		FC8D68F82CE7D33500283160 /* Where Now for AppleTVUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Where Now for AppleTVUITests"; sourceTree = "<group>"; };
 		FCE332C32C5A9C240093D3EF /* WhereNowWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWidget; sourceTree = "<group>"; };
@@ -1112,7 +1122,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1153,7 +1163,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1198,7 +1208,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1243,7 +1253,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1437,7 +1447,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1469,7 +1479,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1493,8 +1503,9 @@
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Where-Now-for-AppleTV-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
 				INFOPLIST_KEY_NSLocationUsageDescription = "This app can show you its location, local weather information, and local bird sighting data using GPS-derived data.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app provides data such as weather information and local bird sightings based on your location.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1503,7 +1514,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1525,8 +1536,9 @@
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Where-Now-for-AppleTV-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
 				INFOPLIST_KEY_NSLocationUsageDescription = "This app can show you its location, local weather information, and local bird sighting data using GPS-derived data.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app provides data such as weather information and local bird sightings based on your location.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1535,7 +1547,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1658,7 +1670,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1702,7 +1714,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

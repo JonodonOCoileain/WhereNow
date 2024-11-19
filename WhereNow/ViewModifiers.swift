@@ -31,7 +31,7 @@ struct SomeView: View {
 
 struct TextView: View {
     var body: some View {
-        Text("Hello")
+        Text("WHERE NOW!")
     }
 }
 
@@ -104,24 +104,64 @@ struct UpdatedSpinnable: ViewModifier {
     var tapActionNotification: String
     @State private var spinning = false
     @State private var spun = false
+    @State private var wobble1 = false
+    @State private var wobble2 = false
+    @State private var randomOrder: CGFloat = CGFloat([-1,1].randomElement() ?? 1)
+    @State private var randomDuration1: CGFloat = CGFloat([0.1,0.15].randomElement() ?? 1)
+    @State private var randomDuration2: CGFloat = CGFloat([0.1,0.15].randomElement() ?? 1)
+    @State private var randomDuration3: CGFloat = CGFloat([0.1,0.15].randomElement() ?? 1)
+    @State private var randomDuration4: CGFloat = CGFloat([0.1,0.15].randomElement() ?? 1)
+    
+    static let wobbleDegrees:CGFloat = -23.4
+    static let wobbleDegrees2:CGFloat = CGFloat.goldenRatio * UpdatedSpinnable.wobbleDegrees * -1
+    
+    let wobbleStartTime: Double = 1.0//Double.goldenRatio / 2
+    
     func body(content: Content) -> some View {
         VStack {
+            #if targetEnvironment(simulator)
+            Button(action: {
+                spinning = false
+                spun = false
+                wobble1 = false
+                wobble2 = false
+            }, label: { Text("Reset") })
+            Text("randomOrder: \(randomOrder)")
+            #endif
             content
+                .onChange(of: spun) { _,_  in
+                    self.randomOrder = CGFloat([-1,1].randomElement() ?? 1)
+                    self.randomDuration1 = CGFloat([0,1].randomElement() ?? 1)
+                }
                 .font(.largeTitle)
                 .foregroundStyle(.white)
                 .padding()
                 .background(.blue)
                 .clipShape(.rect(cornerRadius: 10))
+                .rotationEffect(.degrees(wobble1 ? randomOrder * UpdatedSpinnable.wobbleDegrees2 : 0))
+                .rotationEffect(.degrees(wobble2 ? randomOrder *  UpdatedSpinnable.wobbleDegrees : 0))
                 .rotationEffect(.degrees(spinning ? 540 : spun ? 720 : 0))
                 .scaleEffect(spinning ? 1 : 0.6)
                 .onTapGesture {
                     tapToggler.toggle()
-                    withAnimation(.smooth(duration: 0.4).delay(0)) {
+                    withAnimation(.smooth(duration: CGFloat.goldenRatio/4).delay(0)) {
                         spinning.toggle()
                     }
-                    withAnimation(.easeIn(duration: 0.4).delay(0.4)) {
+                    withAnimation(.easeIn(duration: CGFloat.goldenRatio/4).delay(CGFloat.goldenRatio/4)) {
                         spun.toggle()
                         spinning.toggle()
+                    }
+                    withAnimation(.easeIn(duration: randomDuration1).delay(wobbleStartTime)) {
+                        wobble1 = true
+                    }
+                    withAnimation(.linear(duration: randomDuration2).delay(wobbleStartTime + randomDuration1)) {
+                        wobble1 = false
+                    }
+                    withAnimation(.linear(duration: randomDuration3).delay(wobbleStartTime + randomDuration1 + randomDuration2)) {
+                        wobble2 = true
+                    }
+                    withAnimation(.easeOut(duration: randomDuration4).delay(wobbleStartTime + randomDuration1 + randomDuration2 + randomDuration3)) {
+                        wobble2 = false
                     }
                 }
             Text(tapActionNotification).opacity($spinning.wrappedValue ? 1.0 : 0.0001)
@@ -135,3 +175,12 @@ struct NewView_Previews: PreviewProvider {
         SpinningBlueRoundedRectangle(setting: "Demo")
     }
 }
+
+extension CGFloat {
+    static let goldenRatio:CGFloat = (1 + sqrt(5)) / 2
+}
+
+extension Double {
+    static let goldenRatio:Double = (1 + sqrt(5)) / 2
+}
+
