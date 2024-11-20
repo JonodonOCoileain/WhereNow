@@ -24,7 +24,6 @@ struct WhereNowView: View {
     @ObservedObject var weatherData: USAWeatherService = USAWeatherService()
     @ObservedObject var birdData: BirdSightingService = BirdSightingService()
     @Environment(\.scenePhase) var scenePhase
-    
     @State var tabViewSelected: Bool = true
     
     var body: some View {
@@ -35,7 +34,6 @@ struct WhereNowView: View {
             }
         } else {
             Group {
-                
                 #if os(watchOS)
                     WhereNowPortraitView(data: data, weatherData: weatherData, birdData: birdData)
                 #elseif os(iOS) || os(macOS)
@@ -151,6 +149,9 @@ struct WhereNowPortraitView: View {
     @State var showWeatherData: Bool = true
     @State var showWeatherDataTime: Double = Date().timeIntervalSince1970
     @State var hideWeatherDataTime: Double = 0.0
+    @State var appNameTapped: Bool = false
+    
+    private let smallFont: Font = .system(size: 20)
     
     var body: some View {
         GeometryReader { geometry in
@@ -166,6 +167,11 @@ struct WhereNowPortraitView: View {
                 
                 ScrollView() {
                     LazyVStack {
+#if os(watchOS)
+                        Text("WHERE NOW!")
+                            .font(smallFont)
+                            .modifier(UpdatedSpinnable(tapToggler: $appNameTapped, tapActionNotification: ""))
+#endif
                         Group {
                             HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Here now!")
                                 .frame(maxWidth: .infinity)
@@ -189,8 +195,8 @@ struct WhereNowPortraitView: View {
                             if let birdSeenCommonDescription = birdData.birdSeenCommonDescription {
                                 HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
 #if os(watchOS)
-                                WatchNotableBirdSightingsViews(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription)
-                                    .frame(width: geometry.size.width, height: showBirdData ? 300 : 0)
+                                WatchBirdSightingsViews(birdData: birdData, locationData: data, briefing: birdSeenCommonDescription, width: geometry.size.width)
+                                    .frame(minHeight: showBirdData ? 300 : 0, maxHeight: showBirdData ? 750 : 0)
                                     .scaleEffect(showBirdData ? 1 : 0)
                                     .animation(.easeInOut, value: showBirdData)
 #else
@@ -420,8 +426,13 @@ struct HeaderView: View {
     @State private var textIsSpinning = 0.0
     var body: some View {
         HStack(content: {
+            #if os(watchOS)
+            Text(title)
+                .font(.caption)
+            #else
             Text(title)
                 .font(.title)
+            #endif
             if let spinningText = spinningText {
                 Text(spinningText)
                     .font(.caption)

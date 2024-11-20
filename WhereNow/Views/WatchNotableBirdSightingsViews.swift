@@ -7,40 +7,45 @@
 
 import SwiftUI
 
-struct WatchNotableBirdSightingsViews: View {
+struct WatchBirdSightingsViews: View {
     @ObservedObject var birdData: BirdSightingService
     @ObservedObject var locationData: LocationDataModel
     let briefing: String
     let titleSize: CGFloat = 11
     let descriptionSize: CGFloat = 12
-    let verySmallSize: CGFloat = 12
+    let verySmallSize: CGFloat = 9
+    let width: CGFloat
     var body: some View {
-        GeometryReader { geometry in
-            VStack(alignment: .leading) {
-                Text("🦅 Especially Notable Bird Reports thanks to Cornell Lab of Ornithology and the Macauley Library.")
-                    .multilineTextAlignment(.leading)
-                    .frame(width: geometry.size.width)
-                    .lineLimit(5)
-                    .font(.system(size: verySmallSize))
-                    .fixedSize(horizontal: true, vertical: false)
-                ScrollView(.horizontal) {
-                    HStack(alignment: .top, content: {
-                        ForEach(birdData.notableSightings, id: \.self) { sighting in
-                            WatchBirdSightingView(geometry: geometry, sighting: sighting, locationData: locationData, currentLocation: locationData.currentLocation.coordinate, birdData: birdData, notables: true)
-                                .frame(width: geometry.size.width - 3)
-                                .clipped()
-                        }
-                    })
-                    .scrollTargetLayout()
-                    .frame(minWidth: geometry.size.width, maxWidth: .infinity, minHeight: 250, maxHeight: 280)
-                }
-                .scrollTargetBehavior(.paging)
-                .frame(width: geometry.size.width)
-                Spacer()
-            }.frame(width: geometry.size.width, height: 300)
-            .onAppear() {
-                print("NotableBirdSightingsViews appeared")
+        VStack(alignment: .leading) {
+            Text("🦅 Especially Notable Bird Reports")
+                .multilineTextAlignment(.leading)
+                .frame(width: width)
+                .lineLimit(5)
+                .font(.system(size: descriptionSize))
+                .fixedSize(horizontal: true, vertical: false)
+                .clipped()
+            Text("Made available by Cornell University")
+                .multilineTextAlignment(.leading)
+                .frame(width: width)
+                .lineLimit(5)
+                .font(.system(size: verySmallSize))
+                .fixedSize(horizontal: true, vertical: false)
+                .clipped()
+            
+            ScrollView(.horizontal) {
+                HStack(alignment: .top, content: {
+                    ForEach(birdData.notableSightings, id: \.self) { sighting in
+                        WatchBirdSightingView(sighting: sighting, locationData: locationData, currentLocation: locationData.currentLocation.coordinate, birdData: birdData, notables: true, width: width)
+                            .clipped()
+                    }
+                })
+                .scrollTargetLayout()
             }
+            .scrollIndicatorsFlash(onAppear: true)
+            .scrollTargetBehavior(.paging)
+        }
+        .onAppear() {
+            print("NotableBirdSightingsViews appeared")
         }
     }
 }

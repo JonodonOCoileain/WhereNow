@@ -21,10 +21,14 @@ import MapKit
 
 public struct WatchBirdSightingView: View {
     private let flexible = [
-        GridItem(.flexible(minimum: 30, maximum: 120)),
-        GridItem(.flexible(minimum: 30, maximum: 120))
+        GridItem(.flexible(minimum: 40, maximum: 120)),
+        GridItem(.flexible(minimum: 40, maximum: 120))
     ]
-    let geometry: GeometryProxy
+    private let audio = [
+        GridItem(.flexible(minimum: 40, maximum: 60)),
+        GridItem(.flexible(minimum: 40, maximum: 60)),
+        GridItem(.flexible(minimum: 40, maximum: 60))
+    ]
     @State private var isPresented: Bool = false
     @State private var selectedDetailTitle: String?
     @State private var selectedDetailSubtitle: String?
@@ -36,16 +40,85 @@ public struct WatchBirdSightingView: View {
     @ObservedObject var locationData: LocationDataModel
     let currentLocation: CLLocationCoordinate2D?
     @ObservedObject var birdData: BirdSightingService
-    private let titleSize: CGFloat = 11
+    private let titleSize: CGFloat = 14
     private let descriptionSize: CGFloat = 12
-    private let smallSize: CGFloat = 6
+    private let smallSize: CGFloat = 7
     @State var coordinate: CLLocationCoordinate2D?
     @State var notables: Bool? = false
+    let width: CGFloat
     public var body: some View {
         VStack(alignment: .leading) {
             let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
             let photosData = relatedData.filter({$0.assetFormatCode == "photo"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })
+            Text("Sighting:")
+                .font(.system(size: titleSize))
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: width)
+            if let commonName = sighting.comName {
+                Text(commonName)
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+                    .frame(maxWidth: width)
+            }
+            if let name = sighting.sciName {
+                Text(name)
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+                    .frame(maxWidth: width)
+            }
+            if let location = sighting.locName {
+                Text("Location:")
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: width)
+                Text("\(location)")
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: width)
+            }
+            if let date = sighting.obsDt {
+                Text("Date: " + date)
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+                    .frame(maxWidth: width)
+            }
+            if let quantity = sighting.howMany {
+                Text("Quantity: \(quantity)")
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+                    .frame(maxWidth: width)
+            }
+            if let userName = sighting.userDisplayName {
+                Text("Seen by: \(userName)")
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+                    .frame(maxWidth: width)
+            }
+            if let locationPrivate = sighting.locationPrivate {
+                Text(locationPrivate == true ? "In private location" : "In public location")
+                    .font(.system(size: descriptionSize))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+                    .frame(maxWidth: width)
+            }
+            let audioData = relatedData.filter({$0.assetFormatCode == "audio"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })
+            
+            if relatedData.count > 0 {
+                Text("Relevant media:")
+                    .font(.system(size: titleSize))
+                    .padding(.top)
+            }
             if photosData.count > 0 {
+                Text("Photos")
+                    .font(.system(size: descriptionSize))
+                    .padding([.leading])
+                    .frame(maxWidth: width)
+                
                 LazyHGrid(rows: flexible, alignment: .top, spacing: 4, content: {
                     ForEach(photosData, id: \.self) { imageData in
                         VStack {
@@ -60,6 +133,7 @@ public struct WatchBirdSightingView: View {
                             Text(imageData.uploadedBy.replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: " ", with: "\n"))
                                 .lineLimit(2)
                                 .font(.system(size: smallSize))
+                                .frame(maxWidth: width)
                                 .fixedSize(horizontal: true, vertical: false)
                         }
                         .clipped()
@@ -71,62 +145,17 @@ public struct WatchBirdSightingView: View {
                         }
                     }
                 })
-                .frame(width: geometry.size.width - 4, height: 90)
+                .frame(width: width - 2, height: 100)
                 .padding(.bottom)
-            } else {
-                Text(Fun.eBirdjis.randomElement() ?? "")
-                    .font(.system(size: descriptionSize))
-                    .multilineTextAlignment(.leading)
             }
-            
-            if let commonName = sighting.comName {
-                Text(commonName)
-                    .font(.system(size: descriptionSize))
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(2)
-            }
-            if let name = sighting.sciName {
-                Text(name)
-                    .font(.system(size: descriptionSize))
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(2)
-            }
-            if let location = sighting.locName {
-                Text("Location: \(location)")
-                    .font(.system(size: descriptionSize))
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(2)
-            }
-            if let date = sighting.obsDt {
-                Text("Date: " + date)
-                    .font(.system(size: descriptionSize))
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(2)
-            }
-            if let quantity = sighting.howMany {
-                Text("Quantity: \(quantity)")
-                    .font(.system(size: descriptionSize))
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(2)
-            }
-            if let userName = sighting.userDisplayName {
-                Text("Seen by: \(userName)")
-                    .font(.system(size: descriptionSize))
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(2)
-            }
-            if let locationPrivate = sighting.locationPrivate {
-                Text("In public location: \(locationPrivate == false)")
-                    .font(.system(size: descriptionSize))
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(2)
-            }
-            
             //Audio files
-            if relatedData.count > 0 {
-                ScrollView(.horizontal) {
-                    LazyHGrid(rows: flexible) {
-                        ForEach(relatedData.filter({$0.assetFormatCode == "audio"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })) { key in
+            if audioData.count > 0 {
+                    Text("Audio")
+                        .font(.system(size: descriptionSize))
+                        .padding([.leading])
+                        .frame(maxWidth: width)
+                    LazyVGrid(columns: audio, alignment: .center, spacing: 1) {
+                        ForEach(audioData) { key in
                             Button(action:{
                                 if let url = URL(string: key.url) {
                                     self.player.set(url: url)
@@ -137,22 +166,17 @@ public struct WatchBirdSightingView: View {
                                     }
                                 }
                             },label:{
-                                VStack(alignment: .center, spacing: 2) {
-                                    Image(systemName: "play.circle")
-                                        .frame(width: 4, height: 4)
-                                    Text(key.uploadedBy.replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: " ", with: "\n"))
-                                        .font(.system(size: smallSize))
-                                        .lineLimit(3)
-                                        .multilineTextAlignment(.center)
-                                }
-                                .frame(width: 15, height: 15)
+                                Text(key.uploadedBy.replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: " ", with: "\n"))
+                                    .font(.system(size: smallSize))
+                                    .lineLimit(5)
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: width / 3)
                             })
                         }
-                    }
-                }.frame(minWidth: geometry.size.width - 4, minHeight: 20, maxHeight: 40)
+                    }.frame(maxWidth: width)
             }
-            Spacer()
         }
+        .frame(width: width - 3)
         .sheet(item: $selectedBirdData, content: { data in
             FullScreenModalView(data: data)
         })

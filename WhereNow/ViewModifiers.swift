@@ -119,7 +119,7 @@ struct UpdatedSpinnable: ViewModifier {
     
     func body(content: Content) -> some View {
         VStack {
-            #if targetEnvironment(simulator)
+            #if targetEnvironment(simulator) && os(iOS)
             Button(action: {
                 spinning = false
                 spun = false
@@ -164,8 +164,13 @@ struct UpdatedSpinnable: ViewModifier {
                         wobble2 = false
                     }
                 }
-            Text(tapActionNotification).opacity($spinning.wrappedValue ? 1.0 : 0.0001)
-                .padding([.top], $spinning.wrappedValue ? 100 : 20)
+            if tapActionNotification.count > 0 {
+                Text(tapActionNotification).opacity($spinning.wrappedValue ? 1.0 : 0.0001)
+                    .padding([.top], $spinning.wrappedValue ? 100 : 20)
+            } else {
+                Text(tapActionNotification).opacity($spinning.wrappedValue ? 1.0 : 0.0001)
+                    .padding([.top], $spinning.wrappedValue ? 40 : 0)
+            }
         }
     }
 }
