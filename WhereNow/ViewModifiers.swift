@@ -181,11 +181,5 @@ struct NewView_Previews: PreviewProvider {
     }
 }
 
-extension CGFloat {
-    static let goldenRatio:CGFloat = (1 + sqrt(5)) / 2
-}
 
-extension Double {
-    static let goldenRatio:Double = (1 + sqrt(5)) / 2
-}
 

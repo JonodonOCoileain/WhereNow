@@ -4,8 +4,14 @@
 <dict>
 	<key>MKDirectionsApplicationSupportedModes</key>
 	<array>
+		<string>MKDirectionsModeBike</string>
 		<string>MKDirectionsModeCar</string>
 		<string>MKDirectionsModePedestrian</string>
+		<string>MKDirectionsModeBus</string>
+		<string>MKDirectionsModeFerry</string>
+		<string>MKDirectionsModeSubway</string>
+		<string>MKDirectionsModeTrain</string>
+		<string>MKDirectionsModePlane</string>
 	</array>
 </dict>
 </plist>

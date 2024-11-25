@@ -292,11 +292,11 @@ class BirdSightingService: ObservableObject {
             do {
                 let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
                 
-                for i in 0...1 {
+                /*for i in 0...1 {
                     if decodedSightings.count > i {
                         try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[i])
                     }
-                }
+                }*/
                 
                 DispatchQueue.main.async { [weak self] in
                     self?.sightings = decodedSightings
@@ -377,12 +377,12 @@ class BirdSightingService: ObservableObject {
             do {
                 let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
                 
-                if decodedSightings.count == 1 {
+                /*if decodedSightings.count == 1 {
                     try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[0])
                 } else if decodedSightings.count == 2 {
                     try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[0])
                     try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[1])
-                }
+                }*/
                 
                 DispatchQueue.main.async { [weak self] in
                     self?.sightings = decodedSightings

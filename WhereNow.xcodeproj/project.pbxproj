@@ -140,6 +140,7 @@
 			membershipExceptions = (
 				BirdSighting.swift,
 				BirdSpeciesAssetMetadata.swift,
+				"CGFloat+.swift",
 				"CoreLocation+Extension.swift",
 				"Data Models/BirdSightingService.swift",
 				"Data Models/LocationDataModel.swift",
@@ -150,6 +151,7 @@
 				ErrorCases.swift,
 				ForecastInfo.swift,
 				Fun.swift,
+				GameView.swift,
 				LocationInformation.swift,
 				Logging.swift,
 				Objects.swift,
@@ -190,6 +192,7 @@
 			membershipExceptions = (
 				BirdSighting.swift,
 				BirdSpeciesAssetMetadata.swift,
+				"CGFloat+.swift",
 				"CoreLocation+Extension.swift",
 				"Data Models/BirdSightingService.swift",
 				"Data Models/LocationDataModel.swift",
@@ -200,6 +203,7 @@
 				ErrorCases.swift,
 				ForecastInfo.swift,
 				Fun.swift,
+				GameView.swift,
 				LocationInformation.swift,
 				LocationInformationEntry.swift,
 				Logging.swift,
@@ -216,6 +220,7 @@
 			membershipExceptions = (
 				BirdSighting.swift,
 				BirdSpeciesAssetMetadata.swift,
+				"CGFloat+.swift",
 				"Data Models/BirdSightingService.swift",
 				"Data Models/LocationDataModel.swift",
 				"Data Models/LocationManager.swift",
@@ -224,6 +229,7 @@
 				"Double+.swift",
 				ForecastInfo.swift,
 				Fun.swift,
+				GameView.swift,
 				Logging.swift,
 				MapSnapshotManager.swift,
 				MapSnapshotView.swift,
@@ -254,6 +260,7 @@
 			membershipExceptions = (
 				BirdSighting.swift,
 				BirdSpeciesAssetMetadata.swift,
+				"CGFloat+.swift",
 				"CoreLocation+Extension.swift",
 				"Data Models/BirdSightingService.swift",
 				"Data Models/LocationDataModel.swift",
@@ -264,6 +271,7 @@
 				ErrorCases.swift,
 				ForecastInfo.swift,
 				Fun.swift,
+				GameView.swift,
 				LocationInformation.swift,
 				LocationInformationEntry.swift,
 				Logging.swift,
@@ -1122,7 +1130,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1163,7 +1171,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1208,7 +1216,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1253,7 +1261,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1447,7 +1455,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1479,7 +1487,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1499,7 +1507,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Where Now for AppleTV/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "Where\\ Now\\ for\\ AppleTV/Preview\\ Content WhereNow/routing.geojson";
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1514,7 +1522,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1532,7 +1540,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Where Now for AppleTV/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "Where\\ Now\\ for\\ AppleTV/Preview\\ Content WhereNow/routing.geojson";
 				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1547,7 +1555,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1670,7 +1678,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1714,7 +1722,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
