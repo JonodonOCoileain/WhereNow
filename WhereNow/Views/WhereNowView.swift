@@ -327,6 +327,11 @@ struct WhereNowPortraitViewTabbed: View {
                 .tabItem {
                     Label("Weather Now!", systemImage: "sun.min")
                 }
+                
+                GameView()
+                    .tabItem {
+                        Label("Game Now!", systemImage: "gamecontroller")
+                    }
             }
             .padding([.top, .bottom], reversePadding ? -25 : 0)
             .onReceive(timer) { input in
