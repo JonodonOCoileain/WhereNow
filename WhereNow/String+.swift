@@ -33,5 +33,7 @@ extension String {
 extension String {
     static var weatherNowTitle = "Weather Now!"
     static var andLaterTitle = "(And later!)"
+    static var gameNowTitle = "Game Now!"
+    static var chomp = "chomp!"
 }
 

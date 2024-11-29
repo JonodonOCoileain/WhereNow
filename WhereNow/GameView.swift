@@ -9,13 +9,13 @@ import SwiftUI
 import AVFAudio
 // by Luca Angeletti
 extension String {
-    func image() -> UIImage {
-        let size = CGSize(width: 40, height: 40)
+    func toUIImage() -> UIImage {
+        let size = CGSize(width: 50, height: 50)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         UIColor.white.set()
         let rect = CGRect(origin: .zero, size: size)
-        UIRectFill(CGRect(origin: .zero, size: size))
-        (self as AnyObject).draw(in: rect, withAttributes: [.font: UIFont.systemFont(ofSize: 40)])
+        //UIRectFill(CGRect(origin: .zero, size: size))
+        (self as AnyObject).draw(in: rect, withAttributes: [.font: UIFont.systemFont(ofSize: 50)])
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image ?? UIImage()
@@ -169,8 +169,9 @@ struct RotateObjectInEllipsePath: View {
                 .strokeBorder(Color.clear, lineWidth: 2)
                 .frame(width: width, height: height)
                 .overlay(
-                    Image(uiImage: imageName.toImage())
+                    Image(uiImage: imageName.toUIImage())
                         .resizable()
+                        .backgroundStyle(.clear)
                         .frame(width: RotateObjectInEllipsePath.imageSize, height: RotateObjectInEllipsePath.imageSize)
                         .rotationEffect(.degrees(angle))
                         .offset(x: ellipseX, y: ellipseY)
