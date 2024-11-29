@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct WatchBirdSightingsViews: View {
-    @ObservedObject var birdData: BirdSightingService
-    @ObservedObject var locationData: LocationDataModel
-    let briefing: String
+    @EnvironmentObject var birdData: BirdSightingService
+    @EnvironmentObject var locationData: LocationDataModel
     let titleSize: CGFloat = 11
     let descriptionSize: CGFloat = 12
     let verySmallSize: CGFloat = 9
@@ -35,7 +34,7 @@ struct WatchBirdSightingsViews: View {
             ScrollView(.horizontal) {
                 HStack(alignment: .top, content: {
                     ForEach(birdData.notableSightings, id: \.self) { sighting in
-                        WatchBirdSightingView(sighting: sighting, locationData: locationData, currentLocation: locationData.currentLocation.coordinate, birdData: birdData, notables: true, width: width)
+                        WatchBirdSightingView(sighting: sighting, notables: true, width: width)
                             .clipped()
                     }
                 })

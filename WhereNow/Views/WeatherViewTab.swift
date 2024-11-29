@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct WeatherViewTab: View {
-    @ObservedObject var weatherData: USAWeatherService
+    @EnvironmentObject var weatherData: USAWeatherService
     var body: some View {
         ScrollView() {
             VStack(alignment:.center) {

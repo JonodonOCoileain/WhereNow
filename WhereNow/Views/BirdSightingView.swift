@@ -37,9 +37,8 @@ public struct WatchBirdSightingView: View {
     @State var route: String?
     @ObservedObject var player = PlayerViewModel()
     @State var sighting: BirdSighting
-    @ObservedObject var locationData: LocationDataModel
-    let currentLocation: CLLocationCoordinate2D?
-    @ObservedObject var birdData: BirdSightingService
+    @EnvironmentObject var locationData: LocationDataModel
+    @EnvironmentObject var birdData: BirdSightingService
     private let titleSize: CGFloat = 14
     private let descriptionSize: CGFloat = 12
     private let smallSize: CGFloat = 7

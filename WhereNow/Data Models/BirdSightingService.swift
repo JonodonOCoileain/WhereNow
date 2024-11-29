@@ -42,7 +42,7 @@ struct BirdImageMetadata: Codable {
     let urls: [String:String] //raw, full, regular, small, thumb
     let links: [String:String] //self, html, download
 }*/
-class BirdSightingService: ObservableObject {
+class BirdSightingService: ObservableObject, Observable {
     public static let notablesURLString:String =  "https://api.ebird.org/v2/data/obs/geo/recent/notable"//?lat={{lat}}&lng={{lng}}"
     public static let youTubeVideoBaseURL: String = "https://www.youtube.com/watch?v="
     public static let cornellUOrnithologyAPIKey = "4ubf1p4of0js"
@@ -83,6 +83,10 @@ class BirdSightingService: ObservableObject {
         birdSeenCommonDescription = nil
         notableBirdsSeenCommonDescription = nil
         deleteFileDirectory()
+    }
+    
+    func resetRequestHistory() {
+        sightingRequests = []
     }
     //set the name of the new folder
     private let birdFilesFolderURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent("BirdFiles")
@@ -292,12 +296,6 @@ class BirdSightingService: ObservableObject {
             do {
                 let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
                 
-                /*for i in 0...1 {
-                    if decodedSightings.count > i {
-                        try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[i])
-                    }
-                }*/
-                
                 DispatchQueue.main.async { [weak self] in
                     self?.sightings = decodedSightings
                 }
@@ -376,13 +374,6 @@ class BirdSightingService: ObservableObject {
             let data = try await URLSession(configuration: .ephemeral).data(for: request).0
             do {
                 let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
-                
-                /*if decodedSightings.count == 1 {
-                    try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[0])
-                } else if decodedSightings.count == 2 {
-                    try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[0])
-                    try await self.asyncRequestWebsiteAssetMetadataOf(sighting: decodedSightings[1])
-                }*/
                 
                 DispatchQueue.main.async { [weak self] in
                     self?.sightings = decodedSightings
@@ -801,9 +792,6 @@ class BirdSightingService: ObservableObject {
                     Logger.assetMetadata.trace("Updating sighting with subId \(sighting.subId ?? "") of \(sighting.comName ?? "") with acquired metadata of \(sighting.comName ?? "unknown")")
                     self.speciesMedia.append(contentsOf: allAssetMetadata)
                 })
-            }
-            if let index = self.sightingRequests.firstIndex(of: requestId) {
-                self.sightingRequests.remove(at: index)
             }
         } catch {
             if let err

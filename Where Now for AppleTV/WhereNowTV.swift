@@ -12,9 +12,9 @@ struct WhereNowTV: View {
     let reversePadding = false
     static var countTime:Double = 0.1
     let locationManager: LocationManager = LocationManager(locationStorageManager: UserDefaults.standard)
-    @ObservedObject var locationData: LocationDataModel = LocationDataModel()
-    @ObservedObject var weatherData: USAWeatherService = USAWeatherService()
-    @ObservedObject var birdData: BirdSightingService = BirdSightingService()
+    @StateObject var locationData: LocationDataModel = LocationDataModel()
+    @StateObject var weatherData: USAWeatherService = USAWeatherService()
+    @StateObject var birdData: BirdSightingService = BirdSightingService()
     let timer = Timer.publish(every: WhereNowTV.countTime, on: .main, in: .common).autoconnect()
     @State var timeCounter:Double = 0.0
     @State var addressInfo: String = "" {
@@ -33,17 +33,17 @@ struct WhereNowTV: View {
         GeometryReader { geometry in
             VStack {
                 TabView {
-                    LocationViewTab(locationData: locationData)
+                    LocationViewTab()
                         .tabItem {
                             Label("Here Now!", systemImage: "mappin.and.ellipse")
                         }
                     
-                    TVBirdSightingsViews(birdData: birdData, locationData: locationData, briefing: birdData.birdSeenCommonDescription ?? "")
+                    TVBirdSightingsViews()
                         .tabItem {
                             Label("Hear Now!", systemImage: "bird")
                         }
                     
-                    WeatherViewTab(weatherData: weatherData)
+                    WeatherViewTab()
                         .tabItem {
                             Label("Weather Now!", systemImage: "sun.min")
                         }
@@ -64,8 +64,9 @@ struct WhereNowTV: View {
                     timeCounter = timeCounter + WhereNowTV.countTime * 2
                 }
                 .onAppear {
-                    locationData.start()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.01, execute: {
+                        locationData.start()})
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.4, execute: {
                         let locationCoordinate = locationData.currentLocation.coordinate
                         weatherData.cacheForecasts(using: locationCoordinate)
                         birdData.cacheSightings(using: locationCoordinate)
@@ -81,9 +82,8 @@ struct WhereNowTV: View {
 }
 
 struct TVBirdSightingsViews: View {
-    @ObservedObject var birdData: BirdSightingService
-    @ObservedObject var locationData: LocationDataModel
-    let briefing: String
+    @EnvironmentObject var birdData: BirdSightingService
+    @EnvironmentObject var locationData: LocationDataModel
     let titleSize: CGFloat = 20
     var body: some View {
         GeometryReader { geometry in
@@ -97,7 +97,7 @@ struct TVBirdSightingsViews: View {
                 ScrollView(.vertical) {
                     VStack(alignment: .center, content: {
                         ForEach(birdData.notableSightings, id: \.self) { sighting in
-                            BirdSightingView(sighting: sighting, locationData: locationData, currentLocation: locationData.currentLocation.coordinate, birdData: birdData, notables: true)
+                            BirdSightingView(sighting: sighting, notables: true)
                                 .frame(width: geometry.size.width - 100)
                         }
                     })
@@ -128,7 +128,6 @@ public struct TVBirdSightingView: View {
     @ObservedObject var player = PlayerViewModel()
     @State var sighting: BirdSighting
     @ObservedObject var locationData: LocationDataModel
-    let currentLocation: CLLocationCoordinate2D?
     @ObservedObject var birdData: BirdSightingService
     private let titleSize: CGFloat = 11
     private let descriptionSize: CGFloat = 12

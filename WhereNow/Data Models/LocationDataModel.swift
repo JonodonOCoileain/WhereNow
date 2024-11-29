@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreLocation
 
-class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
+class LocationDataModel: NSObject, ObservableObject, Observable, CLLocationManagerDelegate {
     
     #if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
     var snapshotManager: MapSnapshotManager = MapSnapshotManager()
@@ -104,14 +104,18 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var addresses: [Address] = [] {
         didSet {
             guard let address = addresses.first else { return }
-            flag = ""
-            if let countryCode = address.countryCode {
-                let base : UInt32 = 127397
-                for v in countryCode.unicodeScalars {
-                    flag.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+            DispatchQueue.main.async {
+                self.flag = ""
+                if let countryCode = address.countryCode {
+                    let base : UInt32 = 127397
+                    for v in countryCode.unicodeScalars {
+                        self.flag.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+                    }
                 }
             }
-            self.addressesVeryLongFlag = self.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n")
+            DispatchQueue.main.async {
+                self.addressesVeryLongFlag = self.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n")
+            }
         }
     }
     @Published var addressesVeryLongFlag: String = ""
@@ -143,7 +147,9 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         print("authorization status: \(manager.authorizationStatus)")
         switch manager.authorizationStatus {
         case .authorizedWhenInUse, .authorizedAlways:  // Location services are available.
-            deniedStatus = false
+            DispatchQueue.main.async {
+                self.deniedStatus = false
+            }
             manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
 #if os(tvOS)
             manager.requestWhenInUseAuthorization()
@@ -154,11 +160,15 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             break
             
         case .restricted, .denied:  // Location services currently unavailable.
-            deniedStatus = true
+            DispatchQueue.main.async {
+                self.deniedStatus = true
+            }
             break
             
         case .notDetermined:        // Authorization not determined yet.
-            deniedStatus = false
+            DispatchQueue.main.async {
+                self.deniedStatus = false
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: { [weak self] in
                 self?.manager.requestWhenInUseAuthorization()
             })
@@ -178,9 +188,11 @@ class LocationDataModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         if readyForUpdate {
             print("Ready for update")
             if let currentLocation = locations.first, currentLocation != self.currentLocation {
-                self.currentLocation = currentLocation
-                readyForUpdate = false
-                addressInfoIsUpdated = true
+                DispatchQueue.main.async {
+                    self.currentLocation = currentLocation
+                    self.readyForUpdate = false
+                    self.addressInfoIsUpdated = true
+                }
             }
         }
     }

@@ -6,31 +6,64 @@
 //
 
 import SwiftUI
+import AVFAudio
+// by Luca Angeletti
+extension String {
+    func image() -> UIImage {
+        let size = CGSize(width: 40, height: 40)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        UIColor.white.set()
+        let rect = CGRect(origin: .zero, size: size)
+        UIRectFill(CGRect(origin: .zero, size: size))
+        (self as AnyObject).draw(in: rect, withAttributes: [.font: UIFont.systemFont(ofSize: 40)])
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image ?? UIImage()
+    }
+}
 
-enum TypeOfFood: CaseIterable {
+enum TypeOfFood: Int, CaseIterable {
     case nut
-    case berry
+    case blueberry
     case worm
-    case clam
+    case oyster
     case crab
     case fish
-    case urchin
+    case lobstah
     case frenchFry
     case pizza
     case carrot
+    case snail
     
     var imageName: String {
         switch self {
-        case .nut: return "nut"
-        case .berry: return "berry"
-        case .clam: return "clam"
-        case .crab: return "crab"
-        case .fish: return "fish"
-        case .urchin: return "urchin"
-        case .pizza: return "pizza"
-        case .worm: return "worm"
-        case .frenchFry: return "frenchFry"
-        case .carrot: return "carrot"
+        case .nut: return "🌰"
+        case .blueberry: return "🫐"
+        case .oyster: return "🦪"
+        case .crab: return "🦀"
+        case .fish: return "🐠"
+        case .lobstah: return "🦞"
+        case .pizza: return "🍕"
+        case .worm: return "🪱"
+        case .frenchFry: return "🍟"
+        case .carrot: return "🥕"
+        case .snail: return "🐌"
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .nut: return Color.brown
+        case .blueberry: return Color.blue
+        case .oyster: return Color.red
+        case .crab: return Color.red
+        case .fish: return Color.blue
+        case .lobstah: return Color.red
+        case .pizza: return Color.red
+        case .worm: return Color.brown
+        case .frenchFry: return Color(red: 1.0, green: 0.8431372549, blue: 0)
+        case .carrot: return Color.orange
+        case .snail: return Color.brown
         }
     }
 }
@@ -118,9 +151,9 @@ struct RotateObjectInEllipsePath: View {
     @Binding var tapped: Bool
     @State var score: Int = 0
     @Binding var chomp: Bool
-    let foods: [TypeOfFood] = [.carrot]//TypeOfFood.allCases
+    @State var foods: [TypeOfFood] = TypeOfFood.allCases
     let timer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
-    @State var food = TypeOfFood.carrot
+    @State var food = Food(id: 0, type: TypeOfFood(rawValue: Int.random(in: 0...TypeOfFood.allCases.count)) ?? .carrot, coordinate: CGPoint())
     let height: CGFloat// = 450.0
     let width: CGFloat// = 250.0
     static let imageSize: CGFloat = 35
@@ -131,16 +164,17 @@ struct RotateObjectInEllipsePath: View {
     var currentLocation: CGPoint? = nil
     var body: some View {
         VStack {
+            let imageName = food.type.imageName
             Ellipse()
                 .strokeBorder(Color.clear, lineWidth: 2)
                 .frame(width: width, height: height)
                 .overlay(
-                    Image(systemName: food.imageName)
+                    Image(uiImage: imageName.toImage())
                         .resizable()
                         .frame(width: RotateObjectInEllipsePath.imageSize, height: RotateObjectInEllipsePath.imageSize)
                         .rotationEffect(.degrees(angle))
                         .offset(x: ellipseX, y: ellipseY)
-                        .opacity(ellipseY < 1 || chomp == true ? 1.0 : 0)
+                        .opacity(ellipseY < 1 && chomp == false ? 1.0 : 0)
                 )
                 .overlay(content: {
                     ScoreView(score: $score)
@@ -150,7 +184,7 @@ struct RotateObjectInEllipsePath: View {
             Spacer()
                 .frame(height: 40)
         }// VStack
-        .animation(.default)
+        .animation(.default, value: 1)
         .onReceive(timer) { _ in
             angle += 1
             let theta = CGFloat(.pi * angle / 180)
@@ -160,11 +194,20 @@ struct RotateObjectInEllipsePath: View {
         .onChange(of: ellipseY) { oldValue, newValue in
             if oldValue < 0 && newValue >= 0 {
                 chomp = false
+                let point = food.coordinate
+                foods.removeAll(where: { $0 == food.type })
+                if foods.isEmpty {
+                    foods = TypeOfFood.allCases
+                }
+                if let nextFood = foods.randomElement() {
+                    foods.removeAll(where: { $0 == foods.randomElement()})
+                    food = Food(id: food.id + 1, type: nextFood, coordinate: point)
+                }
             }
         }
         .onChange(of: tapped) { oldValue, newValue in
-            let maximum = (BirdView.birdWidth / 2) - (BirdView.birdWidth * 0.35)
-            let minimum = 0 - (BirdView.birdWidth / 2) - (BirdView.birdWidth * 0.35)
+            let maximum = (BirdView.birdWidth / 2) - (BirdView.birdWidth * 0.45)
+            let minimum = 0 - (BirdView.birdWidth / 2) - (BirdView.birdWidth * 0.25)
             if newValue && ellipseY < 0 &&  ellipseX >= minimum && ellipseX <= maximum {
                 chomp = true
                 print("chomp detection at \(ellipseX), \(ellipseY)")
@@ -206,7 +249,8 @@ struct SpinWhenTapped: ViewModifier {
     static let wobbleDegrees2:CGFloat = CGFloat.goldenRatio * SpinWhenTapped.wobbleDegrees * -1
     
     let wobbleStartTime: Double = 1.0//Double.goldenRatio / 2
-    
+    @State var audioPlayer: AVAudioPlayer!
+
     func body(content: Content) -> some View {
         VStack {
             Spacer()
@@ -221,6 +265,19 @@ struct SpinWhenTapped: ViewModifier {
                 .rotationEffect(.degrees(wobble2 ? randomOrder *  SpinWhenTapped.wobbleDegrees : 0))
                 .rotationEffect(.degrees(spinning ? 540 : spun ? 720 : 0))
                 .scaleEffect(spinning ? 2.0 : 1.0)
+                .onChange(of: spinning) { oldValue, newValue in
+                    if newValue {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + Double(randomDuration1 + randomDuration2 + randomDuration3), execute: {
+                            if  self.chomp {
+                                if let sound = Bundle.main.path(forResource: "whistle", ofType: "m4a") {
+                                    print("whistle")
+                                    self.audioPlayer = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: sound))
+                                    self.audioPlayer.play()
+                                }
+                            }
+                        })
+                    }
+                }
                 .onTapGesture {
                     glow = true
                     tapToggler = true
@@ -248,7 +305,6 @@ struct SpinWhenTapped: ViewModifier {
                     }
                     withAnimation(.easeOut(duration: randomDuration4).delay(wobbleStartTime + randomDuration1 + randomDuration2 + randomDuration3)) {
                         wobble2 = false
-                        chomp = false
                     }
                 }
                 .padding([.bottom], $spinning.wrappedValue ? SpinWhenTapped.jumpHeight : 0)

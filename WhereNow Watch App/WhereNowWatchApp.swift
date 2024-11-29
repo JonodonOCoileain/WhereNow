@@ -1,6 +1,6 @@
 //
 //  WhereNowApp.swift
-//  WhereNow
+//  WhereNow Watch App
 //
 //  Created by Jon on 7/17/24.
 //
@@ -8,29 +8,28 @@
 import SwiftUI
 
 @main
-struct WhereNowApp: App {
+struct WhereNow_Watch_App: App {
     @StateObject var locationData: LocationDataModel = LocationDataModel()
     @StateObject var weatherData: USAWeatherService = USAWeatherService()
     @StateObject var birdData: BirdSightingService = BirdSightingService()
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.colorScheme) var colorScheme
     
+    
     var body: some Scene {
         WindowGroup {
-            WhereNowView()
+            WhereNowWatchView()
                 .environment(locationData)
                 .environment(weatherData)
                 .environment(birdData)
-                .preferredColorScheme(.dark)
                 .onAppear {
                     print("App appeared")
                 }
                 .onChange(of: scenePhase) { oldPhase, newPhase in
                                 if newPhase == .active {
+                                    print("Active")
                                     DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1.01, execute: {
                                         locationData.start()})
-                                    print("Active")
-                                   
                                     birdData.resetRequestHistory()
                                     birdData.sightings.removeAll()
                                     if let location = locationData.immediateLocation() {
@@ -45,14 +44,13 @@ struct WhereNowApp: App {
                                     locationData.stop()
                                     //self.birdData.resetData()
                                 } else if newPhase == .background {
-                                    print("Background")
                                     locationData.stop()
+                                    print("Background")
                                     //self.birdData.resetData()
                                 } else {
                                     locationData.start()
                                 }
                 }
         }
-        
     }
 }

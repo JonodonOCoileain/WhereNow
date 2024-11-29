@@ -19,9 +19,8 @@ import AVFoundation
 import MapKit
 
 struct BirdSightingsViews: View {
-    @ObservedObject var birdData: BirdSightingService
-    @ObservedObject var locationData: LocationDataModel
-    let briefing: String
+    @EnvironmentObject var birdData: BirdSightingService
+    @EnvironmentObject var locationData: LocationDataModel
     let titleSize: CGFloat = 11
     let descriptionSize: CGFloat = 12
     var body: some View {
@@ -35,7 +34,7 @@ struct BirdSightingsViews: View {
                 Spacer(minLength: 12)
                 ScrollView(.horizontal) {
                     HStack(alignment:.center) {
-                        BirdSightingsContainerView(birdData: birdData, locationData: locationData, notables: true)
+                        BirdSightingsContainerView(notables: true)
                             .frame(width: geometry.size.width)
                         
                         VStack(alignment: .leading) {
@@ -45,7 +44,7 @@ struct BirdSightingsViews: View {
                                 .padding([.horizontal])
                                 .padding(.bottom, 4)
                             ScrollView {
-                                Text("🐣 " + briefing)
+                                Text("🐣 " + (birdData.birdSeenCommonDescription ?? ""))
                                     .font(.caption)
                                     .bold()
                                     .font(.system(size: descriptionSize))
@@ -55,14 +54,14 @@ struct BirdSightingsViews: View {
                             }
                         }.frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
                         
-                        BirdSightingsContainerView(birdData: birdData, locationData: locationData)
+                        BirdSightingsContainerView()
                             .frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: CGFloat(birdData.sightings.count) * descriptionSize < geometry.size.height - titleSize ? CGFloat(birdData.sightings.count) * descriptionSize + titleSize : geometry.size.height, maxHeight: geometry.size.height)
                     }
                     .scrollTargetLayout()
                 }.frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 700, maxHeight: 1000)
                     .scrollTargetBehavior(.paging)
                     .clipped()
-            }
+            }.environmentObject(birdData)
         }
     }
 }
@@ -72,8 +71,8 @@ struct BirdSightingsViews: View {
 
 
 public struct BirdSightingsContainerView: View {
-    @ObservedObject var birdData: BirdSightingService
-    @ObservedObject var locationData: LocationDataModel
+    @EnvironmentObject var birdData: BirdSightingService
+    @EnvironmentObject var locationData: LocationDataModel
     let titleSize: CGFloat = 11
     let descriptionSize: CGFloat = 12
     @State private var isFullScreen = false
@@ -85,11 +84,13 @@ public struct BirdSightingsContainerView: View {
                 LazyVStack(alignment:.leading, spacing: 9) {
                     let sightings = notables == true ? birdData.notableSightings : birdData.sightings
                     ForEach(sightings, id: \.self) { sighting in
-                        BirdSightingView(sighting: sighting, locationData: locationData, currentLocation: locationData.currentLocation.coordinate, birdData: birdData, notables: notables)
+                        BirdSightingView(sighting: sighting, notables: notables)
                             .frame(width: geometry.size.width)
                     }
-                }.frame(width: geometry.size.width)
-            }.frame(width: geometry.size.width)
+                }
+                .frame(width: geometry.size.width)
+            }
+            .frame(width: geometry.size.width)
         }
     }
 }
@@ -143,9 +144,8 @@ public struct BirdSightingView: View, Identifiable {
     #endif
     @ObservedObject var player = PlayerViewModel()
     @State var sighting: BirdSighting
-    @ObservedObject var locationData: LocationDataModel
-    let currentLocation: CLLocationCoordinate2D?
-    @ObservedObject var birdData: BirdSightingService
+    @EnvironmentObject var locationData: LocationDataModel
+    @EnvironmentObject var birdData: BirdSightingService
     private let titleSize: CGFloat = 11
     private let descriptionSize: CGFloat = 12
     @State var coordinate: CLLocationCoordinate2D?
@@ -217,7 +217,7 @@ public struct BirdSightingView: View, Identifiable {
                         Button(action: {
                             if let coordinate = coordinate {
                                 self.route = nil
-                                guard let startingPoint = currentLocation else { return }
+                                guard let startingPoint = locationData.immediateLocation()?.coordinate else { return }
                                 let request = MKDirections.Request()
                                 request.source = MKMapItem(placemark: MKPlacemark(coordinate: startingPoint))
                                 request.destination = MKMapItem(placemark: MKPlacemark(coordinate: coordinate))
@@ -234,7 +234,7 @@ public struct BirdSightingView: View, Identifiable {
                                         print(error)
                                     }
                                 }
-                            } else if let locName = sighting.locName?.replacingOccurrences(of: "--", with: ", ").replacingOccurrences(of: "-", with: " "), let startingPoint = currentLocation, let url = URL(string:
+                            } else if let locName = sighting.locName?.replacingOccurrences(of: "--", with: ", ").replacingOccurrences(of: "-", with: " "), let startingPoint = locationData.immediateLocation()?.coordinate, let url = URL(string:
                                                                                                                                                                                                                 "https://www.google.co.in/maps/dir/\(startingPoint.latitude),\(startingPoint.longitude)/\(locName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "")/") {
                                 UIApplication.shared.open(url)
                             }
@@ -253,7 +253,7 @@ public struct BirdSightingView: View, Identifiable {
                                 self.route = nil
                                 
                                 // Coordinate to use as a starting point for the example
-                                guard let startingPoint = currentLocation else { return }
+                                guard let startingPoint = locationData.immediateLocation()?.coordinate else { return }
                                 
                                 // Create and configure the request
                                 let request = MKDirections.Request()
@@ -273,7 +273,7 @@ public struct BirdSightingView: View, Identifiable {
                                         print(error)
                                     }
                                 }
-                            } else if let locName = sighting.locName?.replacingOccurrences(of: "-", with: " "), let startingPoint = currentLocation, let url = URL(string:
+                            } else if let locName = sighting.locName?.replacingOccurrences(of: "-", with: " "), let startingPoint = locationData.immediateLocation()?.coordinate, let url = URL(string:
                                                                                                                                                                     "https://www.google.co.in/maps/dir/\(startingPoint.latitude),\(startingPoint.longitude)/\(locName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "")/") {
                                 UIApplication.shared.open(url)
                             }
@@ -481,7 +481,8 @@ struct FullScreenModalDirectionsView: View {
     @ObservedObject var newRoute: IdentifiableRoute
     @State var sighting: BirdSighting
     @ObservedObject var locationData: LocationDataModel
-    
+    let timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
+    @State var timePassed: Bool = false
     var body: some View {
         VStack {
             Spacer()
@@ -495,6 +496,9 @@ struct FullScreenModalDirectionsView: View {
         .edgesIgnoringSafeArea(.all)
         .onTapGesture {
             dismiss()
+        }
+        .onReceive(timer) { input in
+            timePassed = true
         }
         .onChange(of: locationData.currentLocation) { oldValue, newValue in
             

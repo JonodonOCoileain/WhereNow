@@ -119,7 +119,7 @@ struct UpdatedSpinnable: ViewModifier {
     
     func body(content: Content) -> some View {
         VStack {
-            #if targetEnvironment(simulator) && os(iOS)
+            /*#if targetEnvironment(simulator) && os(iOS)
             Button(action: {
                 spinning = false
                 spun = false
@@ -127,7 +127,7 @@ struct UpdatedSpinnable: ViewModifier {
                 wobble2 = false
             }, label: { Text("Reset") })
             Text("randomOrder: \(randomOrder)")
-            #endif
+            #endif*/
             content
                 .onChange(of: spun) { _,_  in
                     self.randomOrder = CGFloat([-1,1].randomElement() ?? 1)

@@ -86,7 +86,7 @@ struct ForecastOfficeAddress: Codable {
     }
 }
 
-class USAWeatherService: ObservableObject {
+class USAWeatherService: ObservableObject, Observable {
 
     typealias ForecastRequestCompletionHandler = (Result<[ForecastInfo], Error>) -> Void
     typealias ForecastRequestResult = Result<[ForecastInfo], Error>
