@@ -17,6 +17,7 @@ import UIKit
 #endif
 import AVFoundation
 import MapKit
+import OSLog
 
 struct BirdSightingsViews: View {
     @EnvironmentObject var birdData: BirdSightingService
@@ -83,8 +84,8 @@ public struct BirdSightingsContainerView: View {
             ScrollView {
                 LazyVStack(alignment:.leading, spacing: 9) {
                     let sightings = notables == true ? birdData.notableSightings : birdData.sightings
-                    ForEach(sightings, id: \.self) { sighting in
-                        BirdSightingView(sighting: sighting, notables: notables)
+                    ForEach(sightings.enumeratedArray(), id: \.element) { index, sighting in
+                        BirdSightingView(index: index, sighting: sighting, notables: notables)
                             .frame(width: geometry.size.width)
                     }
                 }
@@ -132,6 +133,7 @@ class PlayerViewModel: ObservableObject {
 
 public struct BirdSightingView: View, Identifiable {
     public let id = UUID()
+    public let index: Int
     @State private var isPresented: Bool = false
     @State private var selectedDetailTitle: String?
     @State private var selectedDetailSubtitle: String?
@@ -150,11 +152,10 @@ public struct BirdSightingView: View, Identifiable {
     private let descriptionSize: CGFloat = 12
     @State var coordinate: CLLocationCoordinate2D?
     @State var notables: Bool? = false
-    
+    @State var relatedData: [BirdSpeciesAssetMetadata] = []
     public var body: some View {
             VStack(alignment: .leading, spacing: 0) {
-                let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
-                let photosData = relatedData.filter({$0.assetFormatCode == "photo"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })
+                let photosData = relatedData.filter({$0.assetFormatCode == "photo"})
                 if photosData.count > 0 {
                     ScrollView(.horizontal) {
                         LazyHStack(alignment: .center) {
@@ -197,6 +198,51 @@ public struct BirdSightingView: View, Identifiable {
                     Text(Fun.eBirdjis.randomElement() ?? "")
                         .font(.system(size: descriptionSize))
                         .multilineTextAlignment(.leading)
+                }
+                
+                //Audio files
+                let audioData = relatedData.filter({$0.assetFormatCode == "audio"})
+                if audioData.count > 0 {
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(audioData.filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })) { key in
+                                Button(action:{
+                                    if let url = URL(string: key.url) {
+                                        self.player.set(url: url)
+                                        if self.player.isPlaying {
+                                            self.player.pause()
+                                        } else {
+                                            self.player.play()
+                                        }
+                                    }
+                                },label:{
+                                    VStack(alignment: .center, spacing: 2) {
+                                        Image(systemName: "play.circle.fill")
+#if os(watchOS)
+                                            .frame(width: 20, height: 20)
+                                            .clipShape(.rect(cornerRadius: 4))
+                                            .buttonStyle(.automatic)
+#else
+                                            .frame(width: 64, height: 64)
+                                            .clipShape(.rect(cornerRadius: 8))
+                                            .buttonStyle(.borderedProminent)
+#endif
+                                            
+                                        Text("Uploaded by:")
+                                            .font(.caption2)
+                                            .multilineTextAlignment(.center)
+                                        Text(key.uploadedBy.replacingOccurrences(of: "\"", with: ""))
+                                            .font(.caption2)
+                                            .multilineTextAlignment(.center)
+                                    }.onLongPressGesture {
+#if os(iOS)
+                                        UIApplication.shared.open(URL(string: key.citationUrl)!)
+#endif
+                                    }
+                                })
+                            }
+                        }.padding()
+                    }
                 }
                 
                 if let commonName = sighting.comName {
@@ -347,69 +393,36 @@ public struct BirdSightingView: View, Identifiable {
                     }
                 }
 #endif
-                //Audio files
-                if relatedData.count > 0 {
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(relatedData.filter({$0.assetFormatCode == "audio"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })) { key in
-                                Button(action:{
-                                    if let url = URL(string: key.url) {
-                                        self.player.set(url: url)
-                                        if self.player.isPlaying {
-                                            self.player.pause()
-                                        } else {
-                                            self.player.play()
-                                        }
-                                    }
-                                },label:{
-                                    VStack(alignment: .center, spacing: 2) {
-                                        Image(systemName: "play.circle.fill")
-#if os(watchOS)
-                                            .frame(width: 20, height: 20)
-                                            .clipShape(.rect(cornerRadius: 4))
-                                            .buttonStyle(.automatic)
-#else
-                                            .frame(width: 64, height: 64)
-                                            .clipShape(.rect(cornerRadius: 8))
-                                            .buttonStyle(.borderedProminent)
-#endif
-                                            
-                                        Text("Uploaded by:")
-                                            .font(.caption2)
-                                            .multilineTextAlignment(.center)
-                                        Text(key.uploadedBy.replacingOccurrences(of: "\"", with: ""))
-                                            .font(.caption2)
-                                            .multilineTextAlignment(.center)
-                                    }.onLongPressGesture {
-#if os(iOS)
-                                        UIApplication.shared.open(URL(string: key.citationUrl)!)
-#endif
-                                    }
-                                })
-                            }
-                        }.padding()
-                    }
-                }
             }
             .sheet(item: $selectedBirdData, content: { data in
                 FullScreenModalView(data: data)
             })
-            .onAppear(perform:  {
-                let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
-                if [nil,0].contains(relatedData.count){
-                    birdData.requestWebsiteAssetMetadataOf(sighting: sighting)
+            .task(id: sighting.id) {
+                if let locName = sighting.locName {
+                    DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 0.05, execute: {
+                        LocationDataModel.getCoordinate(addressString: locName, lat: sighting.lat, lng: sighting.lng) { coordinate, error in
+                            if let error = error {
+                                print(error.localizedDescription)
+                                return
+                            } else {
+                                self.coordinate = coordinate
+                            }}
+                    })
                 }
-                guard let locName = sighting.locName else { return }
-                LocationDataModel.getCoordinate(addressString: locName, lat: sighting.lat, lng: sighting.lng) { coordinate, error in
-                    if let error = error {
-                        print(error.localizedDescription)
-                        return
-                    } else {
-                        self.coordinate = coordinate
-                    }}})
+                
+                
+                let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
+                if let speciesCode = sighting.speciesCode, self.relatedData.count == 0 {
+                    do {
+                        self.relatedData = try await birdData.asyncRequestWebsiteAssetMetadataO(speciesCode: speciesCode, comName: sighting.comName ?? "", sciName: sighting.sciName ?? "", subId: sighting.subId ?? "")
+                    } catch {
+                        print("error")
+                    }
+                }
+            }
+                
     }
 }
-
 
 #if os(iOS) || os(macOS) || os(tvOS)
 class IdentifiableRoute: Identifiable, ObservableObject {
@@ -484,21 +497,32 @@ struct FullScreenModalDirectionsView: View {
     let timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
     @State var timePassed: Bool = false
     var body: some View {
-        VStack {
-            Spacer()
-            RouteSummaryView(route: route)
-            Spacer()
-            RouteMapView(route: route, newRoute: newRoute)
-            
-            Spacer()
-            RouteStepsView(steps: route.route.steps, newRoute: newRoute)
-        }
-        .edgesIgnoringSafeArea(.all)
-        .onTapGesture {
-            dismiss()
-        }
-        .onReceive(timer) { input in
-            timePassed = true
+        ScrollView {
+            VStack {
+                Spacer()
+                RouteSummaryView(route: route)
+                Spacer()
+                RouteMapView(route: route, newRoute: newRoute)
+                
+                Spacer()
+                RouteStepsView(steps: route.route.steps, newRoute: newRoute)
+                
+                
+                if let locName = sighting.locName?.replacingOccurrences(of: "--", with: ", ").replacingOccurrences(of: "-", with: " "), let startingPoint = locationData.immediateLocation()?.coordinate, let url = URL(string:
+                                                                                                                                                                                                                            "https://www.google.co.in/maps/dir/\(startingPoint.latitude),\(startingPoint.longitude)/\(locName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "")/") {
+                    Spacer()
+                    Button(action: { UIApplication.shared.open(url) }, label: { Text("Open in Google Maps") })
+                    Spacer()
+                    Button(action: { self.openMapForPlace(latitude: destination.latitude, longitude: destination.longitude, name: locName) }, label: { Text("Open in Apple Maps") })
+                }
+            }
+            .edgesIgnoringSafeArea(.all)
+            .onTapGesture {
+                dismiss()
+            }
+            .onReceive(timer) { input in
+                timePassed = true
+            }
         }
         .onChange(of: locationData.currentLocation) { oldValue, newValue in
             
@@ -523,6 +547,20 @@ struct FullScreenModalDirectionsView: View {
                 }
             }
         }
+    }
+    
+    func openMapForPlace(latitude: CLLocationDegrees, longitude: CLLocationDegrees, name: String) {
+        let regionDistance:CLLocationDistance = 1000
+        let coordinates = CLLocationCoordinate2DMake(latitude, longitude)
+        let regionSpan = MKCoordinateRegion(center: coordinates, latitudinalMeters: regionDistance, longitudinalMeters: regionDistance)
+        let options = [
+            MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
+            MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)
+        ]
+        let placemark = MKPlacemark(coordinate: coordinates, addressDictionary: nil)
+        let mapItem = MKMapItem(placemark: placemark)
+        mapItem.name = name
+        mapItem.openInMaps(launchOptions: options)
     }
 }
 

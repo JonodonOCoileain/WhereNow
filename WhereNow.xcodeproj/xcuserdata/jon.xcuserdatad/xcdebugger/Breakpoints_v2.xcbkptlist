@@ -18,6 +18,36 @@
             endingLineNumber = "77"
             landmarkName = "snapshot(of:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "DA78C280-E36F-40B6-8F67-F5EAE2DCAABA - 3ffea046195804ca"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for Where_Now_for_AppleTV.MapSnapshotManager.snapshot(of: __C.CLLocationCoordinate2D) async -&gt; Swift.Result&lt;SwiftUI.Image, Swift.Error&gt;"
+                  moduleName = "Where Now for AppleTV.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/MapSnapshotManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "80"
+                  endingLineNumber = "80">
+               </Location>
+               <Location
+                  uuid = "DA78C280-E36F-40B6-8F67-F5EAE2DCAABA - ef7d20fcd6b64760"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for WhereNow.MapSnapshotManager.snapshot(of: __C.CLLocationCoordinate2D) async -&gt; Swift.Result&lt;SwiftUI.Image, Swift.Error&gt;"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/MapSnapshotManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "80"
+                  endingLineNumber = "80">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -34,6 +64,36 @@
             endingLineNumber = "57"
             landmarkName = "snapshot(at:completionHandler:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "87E5236D-DC40-4EFD-9C41-B1A130CAAE1A - 3fa4eac2b905e7b3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable (Swift.Optional&lt;__C.MKMapSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Where_Now_for_AppleTV.MapSnapshotManager.snapshot(at: __C.CLLocationCoordinate2D, completionHandler: (Swift.Result&lt;SwiftUI.Image, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Where Now for AppleTV.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/MapSnapshotManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "57"
+                  endingLineNumber = "57">
+               </Location>
+               <Location
+                  uuid = "87E5236D-DC40-4EFD-9C41-B1A130CAAE1A - bba05a9b09f5c3eb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable (Swift.Optional&lt;__C.MKMapSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in WhereNow.MapSnapshotManager.snapshot(at: __C.CLLocationCoordinate2D, completionHandler: (Swift.Result&lt;SwiftUI.Image, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/MapSnapshotManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "57"
+                  endingLineNumber = "57">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -50,6 +110,156 @@
             endingLineNumber = "62"
             landmarkName = "snapshot(at:completionHandler:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "4A472092-5A58-454E-90B8-0BCDAE7D24BC - 3fa4eac2b905e614"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable (Swift.Optional&lt;__C.MKMapSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Where_Now_for_AppleTV.MapSnapshotManager.snapshot(at: __C.CLLocationCoordinate2D, completionHandler: (Swift.Result&lt;SwiftUI.Image, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Where Now for AppleTV.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/MapSnapshotManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "62"
+                  endingLineNumber = "62">
+               </Location>
+               <Location
+                  uuid = "4A472092-5A58-454E-90B8-0BCDAE7D24BC - bba05a9b09f5c24c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable (Swift.Optional&lt;__C.MKMapSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in WhereNow.MapSnapshotManager.snapshot(at: __C.CLLocationCoordinate2D, completionHandler: (Swift.Result&lt;SwiftUI.Image, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/MapSnapshotManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "62"
+                  endingLineNumber = "62">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D25EEC9C-CD3A-4FDA-9D0E-423BD2D594EC"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WhereNow/Data Models/BirdSightingService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "421"
+            endingLineNumber = "421"
+            landmarkName = "requestWebsiteOf(speciesCode:sighting:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D25EEC9C-CD3A-4FDA-9D0E-423BD2D594EC - 7ec5ba4dba83326c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Where_Now_for_AppleTV.BirdSightingService.requestWebsiteOf(speciesCode: Swift.String, sighting: Where_Now_for_AppleTV.BirdSighting) -&gt; ()"
+                  moduleName = "Where Now for AppleTV.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "421"
+                  endingLineNumber = "421">
+               </Location>
+               <Location
+                  uuid = "D25EEC9C-CD3A-4FDA-9D0E-423BD2D594EC - 4088d5cf9c3f1c0b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WhereNow.BirdSightingService.requestWebsiteOf(speciesCode: Swift.String, sighting: WhereNow.BirdSighting) -&gt; ()"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "421"
+                  endingLineNumber = "421">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WhereNow/Data Models/BirdSightingService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "657"
+            endingLineNumber = "657"
+            landmarkName = "requestWebsiteAssetMetadataOf(sighting:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1 - 656904edf84cd65a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Where_Now_for_AppleTV.BirdSightingService.requestWebsiteAssetMetadataOf(sighting: Where_Now_for_AppleTV.BirdSighting) -&gt; ()"
+                  moduleName = "Where Now for AppleTV.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "657"
+                  endingLineNumber = "657">
+               </Location>
+               <Location
+                  uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1 - 8d9fc0d473a191f6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Where_Now_for_AppleTV.BirdSpeciesAssetMetadata) -&gt; Swift.Bool in Where_Now_for_AppleTV.BirdSightingService.requestWebsiteAssetMetadataOf(sighting: Where_Now_for_AppleTV.BirdSighting) -&gt; ()"
+                  moduleName = "Where Now for AppleTV.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "657"
+                  endingLineNumber = "657">
+               </Location>
+               <Location
+                  uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1 - bfd6e814a80f1f73"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WhereNow.BirdSightingService.requestWebsiteAssetMetadataOf(sighting: WhereNow.BirdSighting) -&gt; ()"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "657"
+                  endingLineNumber = "657">
+               </Location>
+               <Location
+                  uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1 - a8113c370fd620a5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (WhereNow.BirdSpeciesAssetMetadata) -&gt; Swift.Bool in WhereNow.BirdSightingService.requestWebsiteAssetMetadataOf(sighting: WhereNow.BirdSighting) -&gt; ()"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "657"
+                  endingLineNumber = "657">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

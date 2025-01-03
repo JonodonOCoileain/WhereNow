@@ -42,11 +42,13 @@ struct WhereNow_Watch_App: App {
                                 } else if newPhase == .inactive {
                                     print("Inactive")
                                     locationData.stop()
-                                    //self.birdData.resetData()
+                                    self.birdData.resetMetadata()
+                                    self.birdData.resetRequestHistory()
                                 } else if newPhase == .background {
                                     locationData.stop()
                                     print("Background")
-                                    //self.birdData.resetData()
+                                    self.birdData.resetMetadata()
+                                    self.birdData.resetRequestHistory()
                                 } else {
                                     locationData.start()
                                 }

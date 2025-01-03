@@ -45,10 +45,11 @@ public struct WatchBirdSightingView: View {
     @State var coordinate: CLLocationCoordinate2D?
     @State var notables: Bool? = false
     let width: CGFloat
+    @State var relatedData: [BirdSpeciesAssetMetadata] = []
+    
     public var body: some View {
         VStack(alignment: .leading) {
-            let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
-            let photosData = relatedData.filter({$0.assetFormatCode == "photo"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })
+            let photosData = relatedData.filter({$0.assetFormatCode == "photo"})
             Text("Sighting:")
                 .font(.system(size: titleSize))
                 .multilineTextAlignment(.leading)
@@ -105,7 +106,7 @@ public struct WatchBirdSightingView: View {
                     .lineLimit(2)
                     .frame(maxWidth: width)
             }
-            let audioData = relatedData.filter({$0.assetFormatCode == "audio"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })
+            let audioData = relatedData.filter({$0.assetFormatCode == "audio"})
             
             if relatedData.count > 0 {
                 Text("Relevant media:")
@@ -179,19 +180,29 @@ public struct WatchBirdSightingView: View {
         .sheet(item: $selectedBirdData, content: { data in
             FullScreenModalView(data: data)
         })
-        .onAppear(perform:  {
-            let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
-            if [nil,0].contains(relatedData.count){
-                birdData.requestWebsiteAssetMetadataOf(sighting: sighting)
+        .task(id: sighting.id) {
+            if let locName = sighting.locName {
+                DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 0.05, execute: {
+                    LocationDataModel.getCoordinate(addressString: locName, lat: sighting.lat, lng: sighting.lng) { coordinate, error in
+                        if let error = error {
+                            print(error.localizedDescription)
+                            return
+                        } else {
+                            self.coordinate = coordinate
+                        }}
+                })
             }
-            guard let locName = sighting.locName else { return }
-            LocationDataModel.getCoordinate(addressString: locName, lat: sighting.lat, lng: sighting.lng) { coordinate, error in
-                if let error = error {
-                    print(error.localizedDescription)
-                    return
-                } else {
-                    self.coordinate = coordinate
-                }}})
+            
+            
+            let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
+            if let speciesCode = sighting.speciesCode, self.relatedData.count == 0 {
+                do {
+                    self.relatedData = try await birdData.asyncRequestWebsiteAssetMetadataO(speciesCode: speciesCode, comName: sighting.comName ?? "", sciName: sighting.sciName ?? "", subId: sighting.subId ?? "")
+                } catch {
+                    print("error")
+                }
+            }
+        }
         
     }
 }

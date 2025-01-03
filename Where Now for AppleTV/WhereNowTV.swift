@@ -96,8 +96,8 @@ struct TVBirdSightingsViews: View {
                     .fixedSize(horizontal: true, vertical: false)
                 ScrollView(.vertical) {
                     VStack(alignment: .center, content: {
-                        ForEach(birdData.notableSightings, id: \.self) { sighting in
-                            BirdSightingView(sighting: sighting, notables: true)
+                        ForEach(birdData.notableSightings.enumeratedArray(), id: \.element) { index, sighting in
+                            BirdSightingView(index: index, sighting: sighting, notables: true)
                                 .frame(width: geometry.size.width - 100)
                         }
                     })
@@ -111,7 +111,6 @@ struct TVBirdSightingsViews: View {
         }
     }
 }
-
 
 public struct TVBirdSightingView: View {
     private let flexible = [
@@ -134,10 +133,11 @@ public struct TVBirdSightingView: View {
     private let smallSize: CGFloat = 6
     @State var coordinate: CLLocationCoordinate2D?
     @State var notables: Bool? = false
+    @State var relatedData: [BirdSpeciesAssetMetadata] = []
+    
     public var body: some View {
         VStack(alignment: .leading) {
-            let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
-            let photosData = relatedData.filter({$0.assetFormatCode == "photo"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })
+            let photosData = relatedData.filter({$0.assetFormatCode == "photo"})
             if photosData.count > 0 {
                 LazyHGrid(rows: flexible, alignment: .top, spacing: 4, content: {
                     ForEach(photosData, id: \.self) { imageData in
@@ -219,7 +219,7 @@ public struct TVBirdSightingView: View {
             if relatedData.count > 0 {
                 ScrollView(.horizontal) {
                     LazyHGrid(rows: flexible) {
-                        ForEach(relatedData.filter({$0.assetFormatCode == "audio"}).filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })) { key in
+                        ForEach(relatedData.filter({$0.assetFormatCode == "audio"})) { key in
                             Button(action:{
                                 if let url = URL(string: key.url) {
                                     self.player.set(url: url)
@@ -249,19 +249,29 @@ public struct TVBirdSightingView: View {
         .sheet(item: $selectedBirdData, content: { data in
             FullScreenModalView(data: data)
         })
-        .onAppear(perform:  {
-            let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
-            if [nil,0].contains(relatedData.count){
-                birdData.requestWebsiteAssetMetadataOf(sighting: sighting)
+        .task(id: sighting.id) {
+            if let locName = sighting.locName {
+                DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 0.05, execute: {
+                    LocationDataModel.getCoordinate(addressString: locName, lat: sighting.lat, lng: sighting.lng) { coordinate, error in
+                        if let error = error {
+                            print(error.localizedDescription)
+                            return
+                        } else {
+                            self.coordinate = coordinate
+                        }}
+                })
             }
-            guard let locName = sighting.locName else { return }
-            LocationDataModel.getCoordinate(addressString: locName, lat: sighting.lat, lng: sighting.lng) { coordinate, error in
-                if let error = error {
-                    print(error.localizedDescription)
-                    return
-                } else {
-                    self.coordinate = coordinate
-                }}})
+            
+            
+            let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
+            if let speciesCode = sighting.speciesCode, self.relatedData.count == 0 {
+                do {
+                    self.relatedData = try await birdData.asyncRequestWebsiteAssetMetadataO(speciesCode: speciesCode, comName: sighting.comName ?? "", sciName: sighting.sciName ?? "", subId: sighting.subId ?? "")
+                } catch {
+                    print("error")
+                }
+            }
+        }
         
     }
 }

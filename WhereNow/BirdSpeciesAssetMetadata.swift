@@ -13,7 +13,7 @@ import AVFoundation
 import OSLog
 
 class BirdSpeciesAssetMetadata: Codable, Equatable, Hashable, Identifiable, ObservableObject {
-    var id: Int { identifier }
+    var id: Int { identifier + expectedIndex + url.count }
     
     let identifier: Int
     let expectedIndex: Int

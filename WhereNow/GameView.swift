@@ -7,7 +7,7 @@
 
 import SwiftUI
 import AVFAudio
-// by Luca Angeletti
+
 extension String {
     func toUIImage() -> UIImage {
         let size = CGSize(width: 50, height: 50)
@@ -136,12 +136,15 @@ struct ScoreView: View {
     var body: some View {VStack {
         Text(score == 0 ? "Tap the bird now to play!" : "\(score)")
             .foregroundStyle(.blue)
+        
         if score > 0 {
             Button(action: {
                 score = 0
             }) {
                 Text("Reset")
-            }.buttonStyle(.bordered)
+            }
+            .buttonStyle(.bordered)
+            .padding(.top, 40)
         }
     }
     }
@@ -179,7 +182,7 @@ struct RotateObjectInEllipsePath: View {
                 )
                 .overlay(content: {
                     ScoreView(score: $score)
-                        .padding(.top, 270)
+                        .padding(.top, 350)
                 })
             
             Spacer()

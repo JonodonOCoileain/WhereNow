@@ -10,6 +10,7 @@ import SwiftUI
 import CoreLocation
 import AVFoundation
 import OSLog
+import Network
 
 /*struct BirdImagesResponse: Codable {
     let results: [BirdImageMetadata]
@@ -63,6 +64,7 @@ class BirdSightingService: ObservableObject, Observable {
         didSet {
             let commonNames = notableSightings.compactMap({$0.comName})
             notableBirdsSeenCommonDescription = commonNames.joined(separator: ", ")
+            lastNotablesUpdateTime = Date()
         }
     }
     
@@ -71,22 +73,31 @@ class BirdSightingService: ObservableObject, Observable {
     @Published var speciesMedia: [BirdSpeciesAssetMetadata] = []
     //Array of unique IDs to track requests and prevent duplicative and redundant work
     private var sightingRequests: [String] = []
+    private var metadataRequests: [String] = []
     @Published var savedImages: Int = 0
     init(sightings: [BirdSighting] = []) {
         self.sightings = sightings
     }
     
+    @Published var lastNotablesUpdateTime: Date? = nil
+    
     func resetData() {
-        sightings = []
-        notableSightings = []
-        speciesMedia  = []
+        sightings.removeAll()
+        notableSightings.removeAll()
+        speciesMedia.removeAll()
         birdSeenCommonDescription = nil
         notableBirdsSeenCommonDescription = nil
         deleteFileDirectory()
     }
     
     func resetRequestHistory() {
-        sightingRequests = []
+        sightingRequests.removeAll()
+        metadataRequests.removeAll()
+    }
+    
+    func resetMetadata() {
+        speciesMedia.removeAll()
+        metadataRequests.removeAll()
     }
     //set the name of the new folder
     private let birdFilesFolderURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent("BirdFiles")
@@ -521,7 +532,129 @@ class BirdSightingService: ObservableObject, Observable {
         task.resume()
     }
     
+    func asyncRequestWebsiteAssetMetadataO(speciesCode: String, comName: String, sciName: String, subId: String) async throws -> [BirdSpeciesAssetMetadata] {
+        Logger.assetMetadata.trace("Requesting asset metadata of \(speciesCode)")
+        
+        guard let speciesURLString = speciesCode.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {
+            Logger.assetMetadata.error("Failure to make SpeciesCode URL")
+            return []
+        }
+        guard let url = URL(string: "https://ebird.org/species/" + speciesURLString) else {
+            Logger.assetMetadata.error("Failure to make species url of \(speciesCode): \(speciesURLString)")
+            return []
+        }
+        let randomIntId = arc4random()
+        let sessionConfig = URLSessionConfiguration.ephemeral
+        let session = URLSession(configuration: sessionConfig)
+        var request: URLRequest = URLRequest(url: url)
+        request.httpMethod = "GET"
+        do {
+            let response = try await session.data(for: request)
+            let data = response.0
+            //let error = response.1
+            let parsedData = String(data: data, encoding: String.Encoding.utf8)
+            var assets = parsedData?.components(separatedBy: "\"assetId\" : ")
+            Logger.assetMetadata.trace("Parsing revealed \(assets?.count ?? 0) asset references")
+            assets?.indices.reversed().forEach {
+                if $0 % 2 == 0 { assets?.remove(at: $0) }
+            }
+            
+            Logger.assetMetadata.trace("After reversing order of asset references and removing every other reference, there are \(assets?.count ?? 0) references")
+            
+            var ids: [Int] = []
+            var assetIds: [String] = []
+            var citationURLs: [String] = []
+            
+            for item in (assets ?? []) {
+                let components = item.components(separatedBy: ",")
+                if let assetInfo = components.first, let assetId = Int(assetInfo) {
+                    ids.append(assetId)
+                    assetIds.append("https://cdn.download.ams.birds.cornell.edu/api/v1/asset/"  + "\(assetId)")
+                    Logger.assetMetadata.trace("Appending assetId \(assetId)")
+                    //assetIds.append("https://macaulaylibrary.org/asset/" + "\(assetId)")
+                }
+                for component in components {
+                    let array = component.split(separator: "\"citationUrl\" : ")
+                    if let url = array.last {
+                        Logger.assetMetadata.trace("Appending citationURL \(url)")
+                        citationURLs.append(String(url))
+                    }
+                }
+            }
+            
+            var assetFormatCodeArray = parsedData?.components(separatedBy: "\"assetFormatCode\" : ")
+            assetFormatCodeArray?.indices.reversed().forEach {
+                if $0 % 2 == 0 { assetFormatCodeArray?.remove(at: $0) }
+            }
+            var assetFormatCodes: [String] = []
+            for item in (assetFormatCodeArray ?? []) {
+                let components = item.components(separatedBy: ",")
+                if let assetInfo = components.first {
+                    let assetFormatCode = String(assetInfo).replacingOccurrences(of: "\"", with: "")
+                    Logger.assetMetadata.trace("Appending userName \(assetFormatCode)")
+                    assetFormatCodes.append(assetFormatCode)
+                }
+            }
+            
+            var userArray = parsedData?.components(separatedBy: "\"userDisplayName\" : ")
+            userArray?.indices.reversed().forEach {
+                if $0 % 2 == 0 { userArray?.remove(at: $0) }
+            }
+            var userNames: [String] = []
+            for item in (userArray ?? []) {
+                let components = item.components(separatedBy: ",")
+                if let userName = components.first {
+                    userNames.append(userName)
+                    Logger.assetMetadata.trace("Appending userName \(userName)")
+                }
+            }
+            
+            var baseArray = parsedData?.components(separatedBy: "\"mlBaseDownloadUrl\" : ")
+            baseArray?.indices.reversed().forEach {
+                if $0 % 2 == 0 { baseArray?.remove(at: $0) }
+            }
+            var baseURLs: [String] = []
+            for item in (baseArray ?? []) {
+                let components = item.components(separatedBy: ",")
+                if let baseURL = components.first {
+                    Logger.assetMetadata.trace("Appending baseURL \(baseURL)")
+                    baseURLs.append(baseURL)
+                }
+            }
+            
+            var citationNameArray = parsedData?.components(separatedBy: "\"citationName\" : ")
+            citationNameArray?.indices.reversed().forEach {
+                if $0 % 2 == 0 { citationNameArray?.remove(at: $0) }
+            }
+            var citationNames: [String] = []
+            for item in (citationNameArray ?? []) {
+                let components = item.components(separatedBy: ",")
+                if let citationName = components.first {
+                    Logger.assetMetadata.trace("Appending citation \(citationName)")
+                    citationNames.append(citationName)
+                }
+            }
+            var allAssetMetadata: [BirdSpeciesAssetMetadata] = []
+            
+            for (index, code) in assetFormatCodes.enumerated() {
+                let metadata = BirdSpeciesAssetMetadata(identifier: ids[index], expectedIndex: (allAssetMetadata.compactMap({$0.speciesCode == code}).count), speciesCode: speciesCode, assetFormatCode: code, url: assetIds[index], uploadedBy: userNames[index], citationUrl: citationURLs[index], baseURL: baseURLs[index], comName: comName, sciName: sciName)
+                Logger.assetMetadata.trace("Adding asset metadata of \(speciesCode) to new array")
+                
+                allAssetMetadata.append(metadata)
+            }
+            
+            return allAssetMetadata
+        } catch {
+            if let err
+                = error as? URLError {
+                Logger.assetMetadata.error("Failure to return data using SpeciesCodeURLRequest, reporting error: \(err.localizedDescription)")
+            }
+            return []
+        }
+    }
+    private var queue = OperationQueue()
     func requestWebsiteAssetMetadataOf(sighting: BirdSighting) {
+        guard !speciesMedia.contains(where: { $0.comName == sighting.comName}) else { return }
         let requestId = sighting.comName ?? sighting.sciName ?? sighting.speciesCode ?? "unknown"
         if sightingRequests.contains(requestId) {
             Logger.assetMetadata.trace("Request already in progress, exiting additional request function call")
@@ -660,32 +793,26 @@ class BirdSightingService: ObservableObject, Observable {
                 })
             }
         })
-        task.resume()
+        
+        queue.addOperation({
+            task.resume()
+        })
     }
     
-    func asyncRequestWebsiteAssetMetadataOf(sighting: BirdSighting) async throws {
-        let requestId = sighting.comName ?? sighting.sciName ?? sighting.speciesCode ?? "unknown"
-        if sightingRequests.contains(requestId) {
-            Logger.assetMetadata.trace("Request already in progress, exiting additional request function call")
-            return
-        } else {
-            sightingRequests.append(requestId)
+    func asyncRequestWebsiteAssetMetadataOf(speciesCode: String, comName: String, sciName: String, subId: String) async throws -> [BirdSpeciesAssetMetadata] {
+        guard !speciesMedia.contains(where: { $0.speciesCode == speciesCode }) && !metadataRequests.contains(speciesCode) else {
+            return []
         }
-        Logger.assetMetadata.trace("Requesting asset metadata of \(sighting.comName ?? "Unknown bird")")
-        guard let speciesCode = sighting.speciesCode else {
-            Logger.assetMetadata.trace("Failure to find speciesCode")
-            sightingRequests.removeAll(where: { $0 == requestId })
-            return
-        }
+        metadataRequests.insert(speciesCode, at: 0)
+        Logger.assetMetadata.trace("Requesting asset metadata of \(speciesCode)")
+        
         guard let speciesURLString = speciesCode.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {
             Logger.assetMetadata.error("Failure to make SpeciesCode URL")
-            sightingRequests.removeAll(where: { $0 == requestId })
-            return
+            return []
         }
         guard let url = URL(string: "https://ebird.org/species/" + speciesURLString) else {
             Logger.assetMetadata.error("Failure to make species url of \(speciesCode): \(speciesURLString)")
-            sightingRequests.removeAll(where: { $0 == requestId })
-            return
+            return []
         }
         
         let sessionConfig = URLSessionConfiguration.default
@@ -781,24 +908,30 @@ class BirdSightingService: ObservableObject, Observable {
             let speciesMedia = self.speciesMedia
             var allAssetMetadata: [BirdSpeciesAssetMetadata] = []
             for (index, code) in assetFormatCodes.enumerated() {
-                let metadata = BirdSpeciesAssetMetadata(identifier: ids[index], expectedIndex: (speciesMedia.compactMap({$0.speciesCode == code}).count) + 1, speciesCode: speciesCode, assetFormatCode: code, url: assetIds[index], uploadedBy: userNames[index], citationUrl: citationURLs[index], baseURL: baseURLs[index], comName: sighting.comName, sciName: sighting.sciName)
-                Logger.assetMetadata.trace("Adding asset metadata of \(sighting.comName ?? "*missing comName*") to new array")
+                let metadata = BirdSpeciesAssetMetadata(identifier: ids[index], expectedIndex: (speciesMedia.compactMap({$0.speciesCode == code}).count) + 1, speciesCode: speciesCode, assetFormatCode: code, url: assetIds[index], uploadedBy: userNames[index], citationUrl: citationURLs[index], baseURL: baseURLs[index], comName: comName, sciName: sciName)
+                Logger.assetMetadata.trace("Adding asset metadata of \(speciesCode) to new array")
                 
                 allAssetMetadata.append(metadata)
             }
             
             if (self.speciesMedia.contains(allAssetMetadata) != true) {
                 DispatchQueue.main.async(execute:  {
-                    Logger.assetMetadata.trace("Updating sighting with subId \(sighting.subId ?? "") of \(sighting.comName ?? "") with acquired metadata of \(sighting.comName ?? "unknown")")
+                    Logger.assetMetadata.trace("Updating sighting with subId \(subId) of \(comName) with acquired metadata of \(comName)")
                     self.speciesMedia.append(contentsOf: allAssetMetadata)
                 })
             }
+            return allAssetMetadata
         } catch {
             if let err
                 = error as? URLError {
                 Logger.assetMetadata.error("Failure to return data using SpeciesCodeURLRequest, reporting error: \(err.localizedDescription)")
             }
+            return []
         }
     }
 }
 
+func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+    guard let error else { return }
+    print("Error: \(error)")
+}

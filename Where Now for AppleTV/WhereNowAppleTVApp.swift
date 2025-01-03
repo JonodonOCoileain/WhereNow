@@ -38,10 +38,12 @@ struct Where_Now_for_AppleTVApp: App {
                                         }
                                     } else if newPhase == .inactive {
                                         print("Inactive")
-                                        //self.birdData.resetData()
+                                        self.birdData.resetMetadata()
+                                        self.birdData.resetRequestHistory()
                                     } else if newPhase == .background {
                                         print("Background")
-                                        //self.birdData.resetData()
+                                        self.birdData.resetMetadata()
+                                        self.birdData.resetRequestHistory()
                                     }
                     }
             }

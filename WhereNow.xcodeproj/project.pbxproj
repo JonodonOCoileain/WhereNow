@@ -141,6 +141,7 @@
 				BirdSighting.swift,
 				BirdSpeciesAssetMetadata.swift,
 				"CGFloat+.swift",
+				"Collection+.swift",
 				"CoreLocation+Extension.swift",
 				"Data Models/BirdSightingService.swift",
 				"Data Models/LocationDataModel.swift",
@@ -157,6 +158,7 @@
 				Objects.swift,
 				routing.geojson,
 				"String+.swift",
+				"UIImage+.swift",
 				ViewModifiers.swift,
 				Views/BirdDataSightingsShortView.swift,
 				Views/BirdSightingsViews.swift,
@@ -197,6 +199,7 @@
 				BirdSighting.swift,
 				BirdSpeciesAssetMetadata.swift,
 				"CGFloat+.swift",
+				"Collection+.swift",
 				"CoreLocation+Extension.swift",
 				"Data Models/BirdSightingService.swift",
 				"Data Models/LocationDataModel.swift",
@@ -213,6 +216,7 @@
 				Logging.swift,
 				Objects.swift,
 				routing.geojson,
+				"UIImage+.swift",
 				ViewModifiers.swift,
 				Views/BirdDataSightingsShortView.swift,
 				whistle.m4a,
@@ -226,6 +230,7 @@
 				BirdSighting.swift,
 				BirdSpeciesAssetMetadata.swift,
 				"CGFloat+.swift",
+				"Collection+.swift",
 				"Data Models/BirdSightingService.swift",
 				"Data Models/LocationDataModel.swift",
 				"Data Models/LocationManager.swift",
@@ -240,14 +245,13 @@
 				MapSnapshotView.swift,
 				Objects.swift,
 				"String+.swift",
+				"UIImage+.swift",
 				Views/BirdSightingsViews.swift,
 				Views/HeaderView.swift,
 				Views/LocationAccessDisabledView.swift,
 				Views/LocationViewTab.swift,
 				Views/WeatherViewTab.swift,
 				Views/WhereNowPortraitLocationView.swift,
-				Views/WhereNowPortraitViewTabbed.swift,
-				Views/WhereNowView.swift,
 				Views/WhereNowWeatherHStackView.swift,
 				whistle.m4a,
 			);
@@ -273,6 +277,7 @@
 				BirdSighting.swift,
 				BirdSpeciesAssetMetadata.swift,
 				"CGFloat+.swift",
+				"Collection+.swift",
 				"CoreLocation+Extension.swift",
 				"Data Models/BirdSightingService.swift",
 				"Data Models/LocationDataModel.swift",
@@ -292,6 +297,7 @@
 				Objects.swift,
 				routing.geojson,
 				"String+.swift",
+				"UIImage+.swift",
 				ViewModifiers.swift,
 				Views/BirdDataSightingsShortView.swift,
 				whistle.m4a,
@@ -1143,7 +1149,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1184,7 +1190,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1229,7 +1235,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1274,7 +1280,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1468,7 +1474,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1500,7 +1506,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1535,7 +1541,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1568,7 +1574,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1691,7 +1697,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1735,7 +1741,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

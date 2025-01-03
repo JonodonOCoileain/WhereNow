@@ -43,10 +43,13 @@ struct WhereNowApp: App {
                                 } else if newPhase == .inactive {
                                     print("Inactive")
                                     locationData.stop()
-                                    //self.birdData.resetData()
+                                    self.birdData.resetMetadata()
+                                    self.birdData.resetRequestHistory()
                                 } else if newPhase == .background {
                                     print("Background")
                                     locationData.stop()
+                                    self.birdData.resetMetadata()
+                                    self.birdData.resetRequestHistory()
                                     //self.birdData.resetData()
                                 } else {
                                     locationData.start()
