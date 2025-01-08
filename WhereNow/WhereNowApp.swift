@@ -27,7 +27,7 @@ struct WhereNowApp: App {
                 }
                 .onChange(of: scenePhase) { oldPhase, newPhase in
                                 if newPhase == .active {
-                                    DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1.01, execute: {
+                                    DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 0.01, execute: {
                                         locationData.start()})
                                     print("Active")
                                    
@@ -48,7 +48,7 @@ struct WhereNowApp: App {
                                 } else if newPhase == .background {
                                     print("Background")
                                     locationData.stop()
-                                    self.birdData.resetMetadata()
+                                self.birdData.resetMetadata()
                                     self.birdData.resetRequestHistory()
                                     //self.birdData.resetData()
                                 } else {

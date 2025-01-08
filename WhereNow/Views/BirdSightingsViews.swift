@@ -360,7 +360,7 @@ public struct BirdSightingView: View, Identifiable {
                         .lineLimit(2)
                 }
                 if let locationPrivate = sighting.locationPrivate {
-                    Text("In public location: \(locationPrivate == false)")
+                    Text("In \(locationPrivate ? "private" : "public") location")
                         .font(.system(size: descriptionSize))
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)

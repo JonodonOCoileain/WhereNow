@@ -54,7 +54,7 @@ class BirdSighting: Codable, Hashable, Identifiable, ObservableObject, Equatable
         let obsDt = obsDt ?? ""
         let locationPrivate = locationPrivate ?? false
         
-        let description = "\(commonName)\n\(sciName)\nSeen by: \(userDisplayName)\nQuantity: \(howMany)\nAt Location: \(locName)\nOn Date: \(obsDt)\nIn public location: \(locationPrivate == false)"
+        let description = "\(commonName)\n\(sciName)\nSeen by: \(userDisplayName)\nQuantity: \(howMany)\nAt Location: \(locName)\nOn Date: \(obsDt)\nIn \(locationPrivate ? "private" : "public") location"
         return description
     }
     
