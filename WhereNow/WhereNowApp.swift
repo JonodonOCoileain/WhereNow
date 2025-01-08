@@ -45,12 +45,14 @@ struct WhereNowApp: App {
                                     locationData.stop()
                                     self.birdData.resetMetadata()
                                     self.birdData.resetRequestHistory()
+                                    self.birdData.resetData()
+                                    self.weatherData.timesAndForecasts = []
                                 } else if newPhase == .background {
                                     print("Background")
                                     locationData.stop()
-                                self.birdData.resetMetadata()
+                                    self.birdData.resetMetadata()
                                     self.birdData.resetRequestHistory()
-                                    //self.birdData.resetData()
+                                    self.weatherData.timesAndForecasts = []
                                 } else {
                                     locationData.start()
                                 }

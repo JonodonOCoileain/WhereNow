@@ -26,9 +26,9 @@ struct WhereNowWatchView: View {
             .animation(.default, value: 1)
             .task {
                 if let immediateLocation = locationData.immediateLocation()?.coordinate {
-                    weatherData.cacheForecasts(using: immediateLocation)
                     await birdData.asyncCacheSightings(using: immediateLocation)
                     await birdData.asyncCacheNotableSightings(using: immediateLocation)
+                    weatherData.cacheForecasts(using: immediateLocation)
                 }
             }
             .onDisappear() {

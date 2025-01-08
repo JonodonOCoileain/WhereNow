@@ -53,14 +53,16 @@ struct WhereNowPortraitViewTabbed: View {
                 timeCounter = timeCounter + WhereNowView.countTime * 2
             }
             .onAppear() {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: {
-                    let locationCoordinate = locationData.currentLocation.coordinate
-                    weatherData.cacheForecasts(using: locationCoordinate)
-                    birdData.cacheNotableSightings(using: locationCoordinate)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: {
+                    if let locationCoordinate = locationData.currentLocation?.coordinate {
+                        weatherData.cacheForecasts(using: locationCoordinate)
+                        birdData.cacheNotableSightings(using: locationCoordinate)
+                    }
                 })
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.2, execute: {
-                    let locationCoordinate = locationData.currentLocation.coordinate
-                    birdData.cacheSightings(using: locationCoordinate)
+                    if let locationCoordinate = locationData.currentLocation?.coordinate {
+                        birdData.cacheSightings(using: locationCoordinate)
+                    }
                 })
             }
         }

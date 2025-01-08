@@ -64,10 +64,10 @@ struct WhereNowTV: View {
                     timeCounter = timeCounter + WhereNowTV.countTime * 2
                 }
                 .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.01, execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
                         locationData.start()})
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.4, execute: {
-                        let locationCoordinate = locationData.currentLocation.coordinate
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                        guard let locationCoordinate = locationData.currentLocation?.coordinate else { return }
                         weatherData.cacheForecasts(using: locationCoordinate)
                         birdData.cacheSightings(using: locationCoordinate)
                         birdData.cacheNotableSightings(using: locationCoordinate)

@@ -90,7 +90,7 @@ class USAWeatherService: ObservableObject, Observable {
 
     typealias ForecastRequestCompletionHandler = (Result<[ForecastInfo], Error>) -> Void
     typealias ForecastRequestResult = Result<[ForecastInfo], Error>
-    
+    @Published var locationOfCachedData: CLLocationCoordinate2D? = nil
     public static let BaseURL: URL = URL(string: "https://api.weather.gov/")!
     
     @Published var timesAndForecasts: [ForecastInfo] = []
@@ -137,7 +137,7 @@ class USAWeatherService: ObservableObject, Observable {
             if let properties = pointInfo?["properties"] as? [String:Any], let forecastURL = properties["forecast"] as? String, let URL = URL(string: forecastURL) {
                 self?.forecastOfficeURL = properties["forecastOffice"] as? String
                 var components = URLComponents(url: URL, resolvingAgainstBaseURL: false)!
-                let units: String = "si"//"us" //"si" is the other option
+                let units: String = "us"//"us" //"si" is the other option
                 components.queryItems = [
                     URLQueryItem(name: "units", value: units)
                 ]
@@ -152,7 +152,9 @@ class USAWeatherService: ObservableObject, Observable {
                         let response = try JSONDecoder().decode(NWSForecastResponse.self, from: data)
                         if let periods = response.properties?.periods {
                             DispatchQueue.main.async { [weak self] in
-                                self?.timesAndForecasts = self?.syncParseForecast(periods: periods) ?? []
+                                self?.locationOfCachedData = coordinate
+                                let parsedForecasts = self?.syncParseForecastUS(periods: periods) ?? []
+                                self?.timesAndForecasts = parsedForecasts
                             }
                         }
                     } catch {
@@ -179,7 +181,7 @@ class USAWeatherService: ObservableObject, Observable {
             if let properties = pointInfo?["properties"] as? [String:Any], let forecastURL = properties["forecast"] as? String, let URL = URL(string: forecastURL) {
                 self.forecastOfficeURL = properties["forecastOffice"] as? String
                 var components = URLComponents(url: URL, resolvingAgainstBaseURL: false)!
-                let units: String = "si"//"us" //the other option is 'si'
+                let units: String = "us"//"us" //the other option is 'si'
                 components.queryItems = [
                     URLQueryItem(name: "units", value: units)
                 ]
@@ -255,6 +257,45 @@ class USAWeatherService: ObservableObject, Observable {
             timesAndForecasts.append(ForecastInfo(name: element, forecast: details.joined(separator: " "), shortDescription: shortDescriptions[index], windSpeed: windSpeeds[index], windDirection: windDirections[index]))
         }
         
+        return timesAndForecasts
+    }
+    func syncParseForecastUS(periods: [NWSForecast]) -> [ForecastInfo] {
+        let names = periods.compactMap({$0.name})
+        let allDetails = periods.compactMap({$0.detailedForecast})
+        let shortDescriptions = periods.compactMap({$0.shortForecast})
+        let windDirections = periods.compactMap({$0.windDirection})
+        let windSpeeds = periods.compactMap({$0.windSpeed})
+        var didTemp = false
+        var timesAndForecasts: [ForecastInfo] = []
+        for (index, element) in names.enumerated() {
+            let detailsString = allDetails[index]
+            var details = detailsString.split(separator:" ")
+            for (index, detailElement) in details.enumerated() {
+                if didTemp == false && index > 0, details[index - 1] == "near" || details[index - 1] == "around" || (details[index - 1] == "as" && details[index - 2] == "high") {
+                    let cleanedDetails = detailElement.components(separatedBy: CharacterSet.decimalDigits.inverted)
+                    for cleanedDetail in cleanedDetails.filter({$0.count>0}) {
+                        let temp = Int(round(Double(cleanedDetail) ?? 0))
+                        let hadComma = detailElement.contains(",")
+                        let hadPeriod = detailElement.contains(".")
+                        let hadSemicolon = detailElement.contains(";")
+                        let hadColon = detailElement.contains(":")
+                        details[index] = "\(temp)°F" + (hadComma ? "," : "") + (hadPeriod ? "." : "") + (hadSemicolon ? ";" : "") + (hadColon ? ":" : "")
+                        didTemp = true
+                    }
+                } else if detailElement.contains("pm"), detailElement.components(separatedBy: CharacterSet.decimalDigits.inverted).count > 1 {
+                    let regex = try! NSRegularExpression(pattern: "([0-9])pm")
+                    let range = NSMakeRange(0, detailElement.count)
+                    let modString = regex.stringByReplacingMatches(in: String(detailElement), options: [], range: range, withTemplate: "$1PM")
+                    details[index] = "\(modString)"
+                } else if detailElement.contains("am"), detailElement.components(separatedBy: CharacterSet.decimalDigits.inverted).count > 1 {
+                    let regex = try! NSRegularExpression(pattern: "([0-9])am")
+                    let range = NSMakeRange(0, detailElement.count)
+                    let modString = regex.stringByReplacingMatches(in: String(detailElement), options: [], range: range, withTemplate: "$1AM")
+                    details[index] = "\(modString)"
+                }
+            }
+            timesAndForecasts.append(ForecastInfo(name: element, forecast: details.joined(separator: " "), shortDescription: shortDescriptions[index], windSpeed: windSpeeds[index], windDirection: windDirections[index]))
+        }
         return timesAndForecasts
     }
     

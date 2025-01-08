@@ -22,9 +22,10 @@ class LocationDataModel: NSObject, ObservableObject, Observable, CLLocationManag
         counter += 5
         self.readyForUpdate = true
     }
-    @Published var currentLocation: CLLocation = CLLocation(latitude: 37.333424329435715, longitude: -122.00546584232792)
+    @Published var currentLocation: CLLocation? = nil
     {
         didSet {
+            guard let currentLocation = currentLocation else { return }
 #if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
             snapshotManager.snapshot(at: currentLocation.coordinate) { snapshotResult in
                 switch snapshotResult {
@@ -46,7 +47,7 @@ class LocationDataModel: NSObject, ObservableObject, Observable, CLLocationManag
                     guard let self = self else {
                         return
                     }
-                    CLGeocoder().reverseGeocodeLocation(self.currentLocation, completionHandler: {(placemarks, error) -> Void in
+                    CLGeocoder().reverseGeocodeLocation(currentLocation, completionHandler: {(placemarks, error) -> Void in
                         guard error == nil else {
                             print("Reverse geocoder failed with error" + (error?.localizedDescription ?? "undescribed error"))
                             return
@@ -76,7 +77,7 @@ class LocationDataModel: NSObject, ObservableObject, Observable, CLLocationManag
                     }
                 } catch {
                     print(error.localizedDescription)
-                    CLGeocoder().reverseGeocodeLocation(self.currentLocation, completionHandler: {(placemarks, error) -> Void in
+                    CLGeocoder().reverseGeocodeLocation(currentLocation, completionHandler: {(placemarks, error) -> Void in
                         guard error == nil else {
                             print("Reverse geocoder failed with error" + (error?.localizedDescription ?? "undescribed error"))
                             return

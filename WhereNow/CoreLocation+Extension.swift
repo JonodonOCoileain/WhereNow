@@ -32,3 +32,30 @@ extension CoreLocation.CLLocation {
         return addresses
     }
 }
+
+extension CoreLocation.CLLocationCoordinate2D {
+    func getAddresses() async -> [Address] {
+        let coordinate = self
+        guard let url = URL(string: "https://api.tomtom.com/search/2/reverseGeocode/\(coordinate.latitude),\(coordinate.longitude).json?key=FBSjYeqToGYAeG2A5txodKfGHrql38S4&radius=100") else { return [] }
+        var addresses: [Address] = []
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let newResponse = try JSONDecoder().decode(Response.self, from: data)
+            let newAddresses = newResponse.addresses.compactMap({$0.address})
+            addresses = newAddresses
+        } catch {
+            print(error.localizedDescription)
+            do {
+                let location = CLLocation(latitude: self.latitude, longitude: self.longitude)
+                let placemarks = try await CLGeocoder().reverseGeocodeLocation(location)
+                
+                let newAddresses = placemarks.compactMap({$0.asAddress()})
+                addresses = newAddresses
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        
+        return addresses
+    }
+}

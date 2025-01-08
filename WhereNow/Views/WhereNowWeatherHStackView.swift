@@ -6,14 +6,22 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct WhereNowWeatherHStackView: View {
     @ObservedObject var data: LocationDataModel
     @ObservedObject var weatherData = USAWeatherService()
+    @State var address: Address? = nil
     var body: some View {
         Group {
             HStack(alignment: .center) {
                 ForEach(weatherData.timesAndForecasts, id: \.self) { element in
+                    if let address = address {
+                        VStack(alignment: .center) {
+                            Text("Weather forecast of")
+                            Text(address.formattedShort())
+                        }
+                    }
                     VStack() {
                         Text(Fun.emojis.randomElement() ?? "")
                             .font(.title)
@@ -22,11 +30,6 @@ struct WhereNowWeatherHStackView: View {
                             .font(.subheadline)
                             .padding([.top])
                             .multilineTextAlignment(.center)
-                        /*Text(element.time ?? "")
-                            .font(.caption2)
-                            .padding([.top, .trailing])
-                            .multilineTextAlignment(.center)
-                            .frame(minWidth: 120, maxWidth: 140, maxHeight: .infinity)*/
                         Text(element.forecast)
                             .font(.subheadline)
                             .padding([.bottom])
@@ -36,9 +39,19 @@ struct WhereNowWeatherHStackView: View {
             }
         }
         .onChange(of: data.currentLocation, { oldValue, newValue in
-            if weatherData.timesAndForecasts.count == 0 {
-                weatherData.cacheForecasts(using: newValue.coordinate)
-            }
+            guard let newValue = newValue else { return }
+            weatherData.cacheForecasts(using: newValue.coordinate)
         })
+        .task(id: weatherData.locationOfCachedData){
+            if let newValue = weatherData.locationOfCachedData {
+                address = await newValue.getAddresses().first
+            }
+        }
+    }
+}
+
+extension CLLocationCoordinate2D: @retroactive Equatable {
+    public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+        return lhs.latitude == rhs.longitude && rhs.latitude == lhs.latitude
     }
 }

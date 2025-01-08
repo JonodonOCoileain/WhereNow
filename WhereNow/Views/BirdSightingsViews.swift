@@ -527,7 +527,7 @@ struct FullScreenModalDirectionsView: View {
         .onChange(of: locationData.currentLocation) { oldValue, newValue in
             
             // Coordinate to use as a starting point for the example
-            let startingPoint = locationData.currentLocation.coordinate
+            guard let startingPoint = newValue?.coordinate else { return }
             
             // Create and configure the request
             let request = MKDirections.Request()
