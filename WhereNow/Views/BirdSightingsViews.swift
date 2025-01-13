@@ -512,8 +512,11 @@ struct FullScreenModalDirectionsView: View {
                                                                                                                                                                                                                             "https://www.google.co.in/maps/dir/\(startingPoint.latitude),\(startingPoint.longitude)/\(locName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "")/") {
                     Spacer()
                     Button(action: { UIApplication.shared.open(url) }, label: { Text("Open in Google Maps") })
+#if os(iOS) || os(macOS)
                     Spacer()
                     Button(action: { self.openMapForPlace(latitude: destination.latitude, longitude: destination.longitude, name: locName) }, label: { Text("Open in Apple Maps") })
+#endif
+                    Spacer()
                 }
             }
             .edgesIgnoringSafeArea(.all)
@@ -548,11 +551,12 @@ struct FullScreenModalDirectionsView: View {
             }
         }
     }
-    
+#if os(iOS) || os(macOS)
     func openMapForPlace(latitude: CLLocationDegrees, longitude: CLLocationDegrees, name: String) {
         let regionDistance:CLLocationDistance = 1000
         let coordinates = CLLocationCoordinate2DMake(latitude, longitude)
         let regionSpan = MKCoordinateRegion(center: coordinates, latitudinalMeters: regionDistance, longitudinalMeters: regionDistance)
+
         let options = [
             MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
             MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)
@@ -562,6 +566,7 @@ struct FullScreenModalDirectionsView: View {
         mapItem.name = name
         mapItem.openInMaps(launchOptions: options)
     }
+#endif
 }
 
 extension TimeInterval {

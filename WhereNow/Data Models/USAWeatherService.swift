@@ -193,7 +193,7 @@ class USAWeatherService: ObservableObject, Observable {
                 let response = try JSONDecoder().decode(NWSForecastResponse.self, from: forecastResponse.0)
                 let periods = response.properties?.periods ?? []
                 
-                return await parseForecast(periods: periods)
+                return await parseForecastUS(periods: periods)
             } else {
                 return []
             }
@@ -203,7 +203,7 @@ class USAWeatherService: ObservableObject, Observable {
         }
     }
     
-    func parseForecast(periods: [NWSForecast]) async -> [ForecastInfo] {
+    func parseForecastUS(periods: [NWSForecast]) async -> [ForecastInfo] {
         let names = periods.compactMap({$0.name})
         let allDetails = periods.compactMap({$0.detailedForecast})
         let shortDescriptions = periods.compactMap({$0.shortForecast})
@@ -215,33 +215,18 @@ class USAWeatherService: ObservableObject, Observable {
             let detailsString = allDetails[index]
             var details = detailsString.split(separator:" ")
             for (index, detailElement) in details.enumerated() {
-                if index < (details.count - 1), details[index+1].contains("km") {
-                    let mph = Int(round((Float(detailElement) ?? 0) * 0.621371))
-                    details[index] = "\(mph)"
-                    let addPeriod = details[index+1].contains(".")
-                    details[index+1] = "miles per hour" + (addPeriod ? "." : "")
-                    if details[index-1] == "to" {
-                        let otherMph = Int(round((Float(details[index-2]) ?? 0) * 0.621371))
-                        details[index-2] = "\(otherMph)"
-                    }
-                } else if  index < (details.count - 2), details[index+1].contains("cm") {
-                    let inches = round((Float(detailElement) ?? 0) * 0.393701 * 10) / 10
-                    details[index] = "\(inches)"
-                    details[index+1] = "inches"
-                    if details[index-1] == "to" {
-                        let otherInches = round((Float(details[index-2]) ?? 0) * 0.393701 * 10) / 10
-                        details[index-2] = "\(otherInches)"
-                    }
-                } else if index > 0, details[index - 1] == "near" || details[index - 1] == "around" || (details[index - 1] == "as" && details[index - 2] == "high") {
+                var didTemp = false
+                if didTemp == false, index > 0, details[index - 1] == "near" || details[index - 1] == "around" || (details[index - 1] == "as" && details[index - 2] == "high") {
                     let cleanedDetails = detailElement.components(separatedBy: CharacterSet.decimalDigits.inverted)
                     for cleanedDetail in cleanedDetails.filter({$0.count>0}) {
-                        let temp = Int(round(Double(cleanedDetail)?.celsiusToFahrenheit() ?? 0))
+                        let temp = Int(round(Double(cleanedDetail) ?? 0))
                         let hadComma = detailElement.contains(",")
                         let hadPeriod = detailElement.contains(".")
                         let hadSemicolon = detailElement.contains(";")
                         let hadColon = detailElement.contains(":")
                         details[index] = "\(temp)°F" + (hadComma ? "," : "") + (hadPeriod ? "." : "") + (hadSemicolon ? ";" : "") + (hadColon ? ":" : "")
                     }
+                    didTemp = true
                 } else if detailElement.contains("pm"), detailElement.components(separatedBy: CharacterSet.decimalDigits.inverted).count > 1 {
                     let regex = try! NSRegularExpression(pattern: "([0-9])pm")
                     let range = NSMakeRange(0, detailElement.count)
@@ -271,6 +256,7 @@ class USAWeatherService: ObservableObject, Observable {
             let detailsString = allDetails[index]
             var details = detailsString.split(separator:" ")
             for (index, detailElement) in details.enumerated() {
+                var didTemp = false
                 if didTemp == false && index > 0, details[index - 1] == "near" || details[index - 1] == "around" || (details[index - 1] == "as" && details[index - 2] == "high") {
                     let cleanedDetails = detailElement.components(separatedBy: CharacterSet.decimalDigits.inverted)
                     for cleanedDetail in cleanedDetails.filter({$0.count>0}) {
