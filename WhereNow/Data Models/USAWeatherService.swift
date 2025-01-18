@@ -214,8 +214,8 @@ class USAWeatherService: ObservableObject, Observable {
         for (index, element) in names.enumerated() {
             let detailsString = allDetails[index]
             var details = detailsString.split(separator:" ")
+            var didTemp = false
             for (index, detailElement) in details.enumerated() {
-                var didTemp = false
                 if didTemp == false, index > 0, details[index - 1] == "near" || details[index - 1] == "around" || (details[index - 1] == "as" && details[index - 2] == "high") {
                     let cleanedDetails = detailElement.components(separatedBy: CharacterSet.decimalDigits.inverted)
                     for cleanedDetail in cleanedDetails.filter({$0.count>0}) {
@@ -255,8 +255,8 @@ class USAWeatherService: ObservableObject, Observable {
         for (index, element) in names.enumerated() {
             let detailsString = allDetails[index]
             var details = detailsString.split(separator:" ")
+            var didTemp = false
             for (index, detailElement) in details.enumerated() {
-                var didTemp = false
                 if didTemp == false && index > 0, details[index - 1] == "near" || details[index - 1] == "around" || (details[index - 1] == "as" && details[index - 2] == "high") {
                     let cleanedDetails = detailElement.components(separatedBy: CharacterSet.decimalDigits.inverted)
                     for cleanedDetail in cleanedDetails.filter({$0.count>0}) {

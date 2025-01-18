@@ -20,6 +20,8 @@ final class LocationManager: NSObject {
 
         /// The key we use to store the last known user location.
         static let storageKey = "lastKnownUserLocation"
+        
+        static let latLongStorageKey = "latLongStorageKey"
     }
 
     // MARK: - Types
@@ -95,6 +97,7 @@ final class LocationManager: NSObject {
         geoCoder.geocodeAddressString(address, in: nil, preferredLocale: Locale.current) { placemarks, error in
             if let placemarks = placemarks, let location = placemarks.first?.location {
                 self.locationStorageManager.set(location: location, forKey: Config.storageKey)
+                UserDefaults.standard.set("\(location.coordinate.latitude),\(location.coordinate.longitude)", forKey: Config.latLongStorageKey)
             } else if let error = error {
                 print(error)
             }
@@ -152,7 +155,6 @@ extension LocationManager: CLLocationManagerDelegate {
         }
 
         locationStorageManager.set(location: userLocation, forKey: Config.storageKey)
-
         resolveRequestLocationCompletionHandlers(with: .success(userLocation))
     }
 

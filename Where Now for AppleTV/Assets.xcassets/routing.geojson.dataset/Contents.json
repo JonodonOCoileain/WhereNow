@@ -1,0 +1,13 @@
+{
+  "data" : [
+    {
+      "filename" : "routing.GeoJson",
+      "idiom" : "universal",
+      "universal-type-identifier" : "public.geojson"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

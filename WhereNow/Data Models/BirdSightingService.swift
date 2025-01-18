@@ -80,6 +80,22 @@ class BirdSightingService: ObservableObject, Observable {
     }
     
     @Published var lastNotablesUpdateTime: Date? = nil
+    @Published var searchRadius:Int = UserDefaults.standard.value(forKey: "searchRadius") as? Int ?? 25 {
+        didSet {
+            print("searchRadius: \(searchRadius)")
+            UserDefaults.standard.set(searchRadius, forKey: "searchRadius")
+            if let location = UserDefaults.standard.object(forKey: LocationManager.Config.latLongStorageKey) as? String {
+                let latLong = location.components(separatedBy: ",")
+                if latLong.count == 2 {
+                    let coordinate = CLLocationCoordinate2D(latitude: Double(latLong[0])!, longitude: Double(latLong[1])!)
+                    resetData()
+                    resetRequestHistory()
+                    cacheNotableSightings(using: coordinate)
+                    cacheSightings(using: coordinate)
+                }
+            }
+        }
+    }
     
     func resetData() {
         sightings.removeAll()
@@ -247,7 +263,7 @@ class BirdSightingService: ObservableObject, Observable {
         let longitudeURLQueryItem = URLQueryItem(name: "lng", value: String(coordinate.longitude))
         let sortingURLQueryItem = URLQueryItem(name: "sort", value: "date")
         let maxURLQueryItem = URLQueryItem(name: "maxResults", value: "100")
-        let distItem = URLQueryItem(name: "dist", value: "22")
+        let distItem = URLQueryItem(name: "dist", value: "\(searchRadius)")
         let queryItems:[URLQueryItem] = [latitudeURLQueryItem, longitudeURLQueryItem, sortingURLQueryItem, maxURLQueryItem, distItem]
         guard let baseURL = URL(string:BirdSightingService.recentsURLString) else { return nil}
         let finalURL = baseURL.appending(queryItems: queryItems)
@@ -261,7 +277,7 @@ class BirdSightingService: ObservableObject, Observable {
         let longitudeURLQueryItem = URLQueryItem(name: "lng", value: String(coordinate.longitude))
         let sortingURLQueryItem = URLQueryItem(name: "sort", value: "date")
         let maxURLQueryItem = URLQueryItem(name: "maxResults", value: "100")
-        let distItem = URLQueryItem(name: "dist", value: "22")
+        let distItem = URLQueryItem(name: "dist", value: "\(searchRadius)")
         let queryItems:[URLQueryItem] = [latitudeURLQueryItem, longitudeURLQueryItem, sortingURLQueryItem, maxURLQueryItem, distItem]
         guard let notablesURL = URL(string:BirdSightingService.notablesURLString) else { return nil}
         let finalURL = notablesURL.appending(queryItems: queryItems)

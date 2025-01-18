@@ -189,6 +189,9 @@ class LocationDataModel: NSObject, ObservableObject, Observable, CLLocationManag
         if readyForUpdate {
             print("Ready for update")
             if let currentLocation = locations.first, currentLocation != self.currentLocation {
+                DispatchQueue.global(qos: .background).async {
+                    UserDefaults.standard.setValue("\(currentLocation.coordinate.latitude),\(currentLocation.coordinate.longitude)", forKey: LocationManager.Config.latLongStorageKey)
+                }
                 DispatchQueue.main.async {
                     self.currentLocation = currentLocation
                     self.readyForUpdate = false

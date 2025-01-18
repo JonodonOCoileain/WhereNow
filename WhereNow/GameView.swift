@@ -34,6 +34,7 @@ enum TypeOfFood: Int, CaseIterable {
     case pizza
     case carrot
     case snail
+    case ogre
     
     var imageName: String {
         switch self {
@@ -48,6 +49,8 @@ enum TypeOfFood: Int, CaseIterable {
         case .frenchFry: return "🍟"
         case .carrot: return "🥕"
         case .snail: return "🐌"
+            
+        case .ogre: return "👹"
         }
     }
     
@@ -64,6 +67,7 @@ enum TypeOfFood: Int, CaseIterable {
         case .frenchFry: return Color(red: 1.0, green: 0.8431372549, blue: 0)
         case .carrot: return Color.orange
         case .snail: return Color.brown
+        case .ogre: return Color.red
         }
     }
 }
@@ -72,6 +76,9 @@ struct Food {
     let id: Int
     let type: TypeOfFood
     var coordinate: CGPoint
+    var hurtsBirds: Bool {
+        return type == .ogre
+    }
 }
 
 struct FoodView {
@@ -84,6 +91,7 @@ struct FoodView {
 struct GameView: View {
     @State var tapped: Bool = false
     @State var chomp: Bool = false
+    @State var hurt: Bool = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -91,9 +99,9 @@ struct GameView: View {
             VStack(spacing: 25) {
                 Spacer()
                 ZStack {
-                    RotateObjectInEllipsePath(tapped: $tapped, chomp: $chomp, height: BirdView.birdHeight + SpinWhenTapped.jumpHeight, width: geometry.size.width)
+                    RotateObjectInEllipsePath(tapped: $tapped, chomp: $chomp, hurt: $hurt, height: BirdView.birdHeight + SpinWhenTapped.jumpHeight, width: geometry.size.width)
                     
-                    BirdView(tapped: $tapped, chomp: $chomp)
+                    BirdView(tapped: $tapped, chomp: $chomp, hurt: $hurt)
                 }
                 /*.overlay(alignment: .center, content: {
                     ScoreView(score: score)
@@ -109,8 +117,10 @@ struct GameView: View {
 struct BirdView: View {
     @Binding var tapped: Bool
     @Binding var chomp: Bool
+    @Binding var hurt: Bool
     static let birdWidth:CGFloat = 152
     static let birdHeight: CGFloat = 102
+    @State var opacity: CGFloat = 1.0
     var body: some View {
         ZStack {
             Image("Pheonixy")
@@ -119,7 +129,14 @@ struct BirdView: View {
                 .opacity(tapped ? 0 : 1)
             Image("PurpleBird")
                 .resizable()
+                .opacity(opacity)
                 .frame(width: BirdView.birdWidth, height: BirdView.birdHeight)
+                .onChange(of: hurt) { oldValue, newValue in
+                    if oldValue == false {
+                        opacity = 0.5
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: .init{ opacity = 1.0 })
+                    }
+                }
             Image("BlueGlow")
                 .resizable()
                 .frame(width: 152, height: 102)
@@ -154,6 +171,7 @@ struct RotateObjectInEllipsePath: View {
     @Binding var tapped: Bool
     @State var score: Int = 0
     @Binding var chomp: Bool
+    @Binding var hurt: Bool
     @State var foods: [TypeOfFood] = TypeOfFood.allCases
     let timer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
     @State var food = Food(id: 0, type: TypeOfFood(rawValue: Int.random(in: 0...TypeOfFood.allCases.count)) ?? .carrot, coordinate: CGPoint())
@@ -178,7 +196,7 @@ struct RotateObjectInEllipsePath: View {
                         .frame(width: RotateObjectInEllipsePath.imageSize, height: RotateObjectInEllipsePath.imageSize)
                         .rotationEffect(.degrees(angle))
                         .offset(x: ellipseX, y: ellipseY)
-                        .opacity(ellipseY < 1 && chomp == false ? 1.0 : 0)
+                        .opacity(ellipseY < 1 && (chomp && hurt) == false ? 1.0 : 0)
                 )
                 .overlay(content: {
                     ScoreView(score: $score)
@@ -198,6 +216,7 @@ struct RotateObjectInEllipsePath: View {
         .onChange(of: ellipseY) { oldValue, newValue in
             if oldValue < 0 && newValue >= 0 {
                 chomp = false
+                hurt = false
                 let point = food.coordinate
                 foods.removeAll(where: { $0 == food.type })
                 if foods.isEmpty {
@@ -213,8 +232,13 @@ struct RotateObjectInEllipsePath: View {
             let maximum = (BirdView.birdWidth / 2) - (BirdView.birdWidth * 0.45)
             let minimum = 0 - (BirdView.birdWidth / 2) - (BirdView.birdWidth * 0.25)
             if newValue && ellipseY < 0 &&  ellipseX >= minimum && ellipseX <= maximum {
-                chomp = true
-                print("chomp detection at \(ellipseX), \(ellipseY)")
+                if food.type != .ogre {
+                    chomp = true
+                    print("chomp detection at \(ellipseX), \(ellipseY)")
+                } else {
+                    hurt = true
+                    print("hurt detection at \(ellipseX), \(ellipseY)")
+                }
             } else {
                 print("miss")
                 print("tap detection at \(ellipseX), \(ellipseY)")
@@ -226,6 +250,12 @@ struct RotateObjectInEllipsePath: View {
             if newValue == true {
                 print("Chomp!")
                 score += 100
+            }
+        }
+        .onChange(of: hurt) { _, newValue in
+            if newValue == true {
+                print("Hurt!")
+                score -= 25
             }
         }
     }

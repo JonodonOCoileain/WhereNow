@@ -62,38 +62,38 @@
             filePath = "WhereNow/Data Models/BirdSightingService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "657"
-            endingLineNumber = "657"
+            startingLineNumber = "673"
+            endingLineNumber = "673"
             landmarkName = "requestWebsiteAssetMetadataOf(sighting:)"
-            landmarkType = "7">
+            landmarkType = "9">
             <Locations>
                <Location
-                  uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1 - bfd6e814a80f1f73"
+                  uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1 - 656904edf84cd44a"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "WhereNow.BirdSightingService.requestWebsiteAssetMetadataOf(sighting: WhereNow.BirdSighting) -&gt; ()"
-                  moduleName = "WhereNow.debug.dylib"
+                  symbolName = "Where_Now_for_AppleTV.BirdSightingService.requestWebsiteAssetMetadataOf(sighting: Where_Now_for_AppleTV.BirdSighting) -&gt; ()"
+                  moduleName = "Where Now for AppleTV.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "657"
-                  endingLineNumber = "657">
+                  startingLineNumber = "673"
+                  endingLineNumber = "673">
                </Location>
                <Location
-                  uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1 - a8113c370fd620a5"
+                  uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1 - 8d9fc0d473a193e6"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (WhereNow.BirdSpeciesAssetMetadata) -&gt; Swift.Bool in WhereNow.BirdSightingService.requestWebsiteAssetMetadataOf(sighting: WhereNow.BirdSighting) -&gt; ()"
-                  moduleName = "WhereNow.debug.dylib"
+                  symbolName = "closure #1 (Where_Now_for_AppleTV.BirdSpeciesAssetMetadata) -&gt; Swift.Bool in Where_Now_for_AppleTV.BirdSightingService.requestWebsiteAssetMetadataOf(sighting: Where_Now_for_AppleTV.BirdSighting) -&gt; ()"
+                  moduleName = "Where Now for AppleTV.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "657"
-                  endingLineNumber = "657">
+                  startingLineNumber = "673"
+                  endingLineNumber = "673">
                </Location>
             </Locations>
          </BreakpointContent>

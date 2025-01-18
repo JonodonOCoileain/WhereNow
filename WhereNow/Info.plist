@@ -28,8 +28,8 @@
 	</array>
 	<key>MKDirectionsApplicationSupportedModes</key>
 	<array>
-		<string>MKDirectionsModeCar</string>
 		<string>MKDirectionsModePedestrian</string>
+		<string>MKDirectionsModeCar</string>
 	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>

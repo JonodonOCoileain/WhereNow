@@ -24,6 +24,8 @@ struct BirdSightingsViews: View {
     @EnvironmentObject var locationData: LocationDataModel
     let titleSize: CGFloat = 11
     let descriptionSize: CGFloat = 12
+    static let Distance: [Int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+    
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -32,6 +34,21 @@ struct BirdSightingsViews: View {
                     .multilineTextAlignment(.leading)
                     .padding([.horizontal])
                     .lineLimit(3)
+                HStack {
+                    Text("Sightings search radius")
+                        .font(.system(size: titleSize))
+                        .multilineTextAlignment(.leading)
+                        .padding([.vertical])
+                    Picker(selection: $birdData.searchRadius, label: Text("Sightings search radius")
+                        .font(.system(size: titleSize))
+                        .multilineTextAlignment(.leading)
+                        .padding([.vertical]))
+                                        {
+                                            ForEach(0 ..< BirdSightingsViews.Distance.count) {
+                                                index in Text("\(BirdSightingsViews.Distance[index])").tag(BirdSightingsViews.Distance[index])
+                                            }
+                                        }
+                }
                 Spacer(minLength: 12)
                 ScrollView(.horizontal) {
                     HStack(alignment:.center) {
@@ -148,8 +165,13 @@ public struct BirdSightingView: View, Identifiable {
     @State var sighting: BirdSighting
     @EnvironmentObject var locationData: LocationDataModel
     @EnvironmentObject var birdData: BirdSightingService
+    #if os(tvOS)
+    private let titleSize: CGFloat = 11
+    private let descriptionSize: CGFloat = 36
+    #else
     private let titleSize: CGFloat = 11
     private let descriptionSize: CGFloat = 12
+    #endif
     @State var coordinate: CLLocationCoordinate2D?
     @State var notables: Bool? = false
     @State var relatedData: [BirdSpeciesAssetMetadata] = []
@@ -612,7 +634,7 @@ struct RouteMapView: View {
                 .stroke(.blue, lineWidth: 5)
             
         })
-        .frame(maxWidth: .infinity, maxHeight: 450)
+        .frame(maxWidth: .infinity, minHeight: 450, maxHeight: 450)
     }
 }
 

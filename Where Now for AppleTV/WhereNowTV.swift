@@ -94,6 +94,22 @@ struct TVBirdSightingsViews: View {
                     .lineLimit(5)
                     .font(.system(size: titleSize))
                     .fixedSize(horizontal: true, vertical: false)
+                HStack {
+                    Text("Sightings search radius")
+                        .font(.system(size: titleSize))
+                        .multilineTextAlignment(.leading)
+                        .padding([.vertical])
+                        .lineLimit(3)
+                    Picker(selection: $birdData.searchRadius, label: Text("Sightings search radius")
+                        .font(.system(size: titleSize))
+                        .multilineTextAlignment(.leading)
+                        .padding([.vertical]))
+                                        {
+                                            ForEach(0 ..< BirdSightingsViews.Distance.count) {
+                                                index in Text("\(BirdSightingsViews.Distance[index])").tag(BirdSightingsViews.Distance[index])
+                                            }
+                                        }
+                }
                 ScrollView(.vertical) {
                     VStack(alignment: .center, content: {
                         ForEach(birdData.notableSightings.enumeratedArray(), id: \.element) { index, sighting in
