@@ -196,7 +196,7 @@ struct RotateObjectInEllipsePath: View {
                         .frame(width: RotateObjectInEllipsePath.imageSize, height: RotateObjectInEllipsePath.imageSize)
                         .rotationEffect(.degrees(angle))
                         .offset(x: ellipseX, y: ellipseY)
-                        .opacity(ellipseY < 1 && (chomp && hurt) == false ? 1.0 : 0)
+                        .opacity(ellipseY < 1 && chomp == false ? 1.0 : 0)
                 )
                 .overlay(content: {
                     ScoreView(score: $score)

@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreLocation
 
+
 class LocationDataModel: NSObject, ObservableObject, Observable, CLLocationManagerDelegate {
     
     #if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)

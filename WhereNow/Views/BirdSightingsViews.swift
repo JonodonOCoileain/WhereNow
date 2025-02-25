@@ -25,6 +25,7 @@ struct BirdSightingsViews: View {
     let titleSize: CGFloat = 11
     let descriptionSize: CGFloat = 12
     static let Distance: [Int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+    static let DistanceCount: IntegerLiteralType = 18
     
     var body: some View {
         GeometryReader { geometry in
@@ -44,7 +45,7 @@ struct BirdSightingsViews: View {
                         .multilineTextAlignment(.leading)
                         .padding([.vertical]))
                                         {
-                                            ForEach(0 ..< BirdSightingsViews.Distance.count) {
+                                            ForEach(0 ..< BirdSightingsViews.DistanceCount) {
                                                 index in Text("\(BirdSightingsViews.Distance[index])").tag(BirdSightingsViews.Distance[index])
                                             }
                                         }
@@ -104,6 +105,7 @@ public struct BirdSightingsContainerView: View {
                     ForEach(sightings.enumeratedArray(), id: \.element) { index, sighting in
                         BirdSightingView(index: index, sighting: sighting, notables: notables)
                             .frame(width: geometry.size.width)
+                            .padding()
                     }
                 }
                 .frame(width: geometry.size.width)
@@ -432,8 +434,6 @@ public struct BirdSightingView: View, Identifiable {
                     })
                 }
                 
-                
-                let relatedData = birdData.speciesMedia.filter({ $0.speciesCode == sighting.speciesCode })
                 if let speciesCode = sighting.speciesCode, self.relatedData.count == 0 {
                     do {
                         self.relatedData = try await birdData.asyncRequestWebsiteAssetMetadataO(speciesCode: speciesCode, comName: sighting.comName ?? "", sciName: sighting.sciName ?? "", subId: sighting.subId ?? "")

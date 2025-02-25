@@ -65,15 +65,15 @@
             startingLineNumber = "673"
             endingLineNumber = "673"
             landmarkName = "requestWebsiteAssetMetadataOf(sighting:)"
-            landmarkType = "9">
+            landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1 - 656904edf84cd44a"
+                  uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1 - bfd6e814a80f1d63"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "Where_Now_for_AppleTV.BirdSightingService.requestWebsiteAssetMetadataOf(sighting: Where_Now_for_AppleTV.BirdSighting) -&gt; ()"
-                  moduleName = "Where Now for AppleTV.debug.dylib"
+                  symbolName = "WhereNow.BirdSightingService.requestWebsiteAssetMetadataOf(sighting: WhereNow.BirdSighting) -&gt; ()"
+                  moduleName = "WhereNow.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
                   startingColumnNumber = "9223372036854775807"
@@ -82,18 +82,64 @@
                   endingLineNumber = "673">
                </Location>
                <Location
-                  uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1 - 8d9fc0d473a193e6"
+                  uuid = "B2C650DA-6831-4EA6-8B09-9663684873F1 - a8113c370fd622b5"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Where_Now_for_AppleTV.BirdSpeciesAssetMetadata) -&gt; Swift.Bool in Where_Now_for_AppleTV.BirdSightingService.requestWebsiteAssetMetadataOf(sighting: Where_Now_for_AppleTV.BirdSighting) -&gt; ()"
-                  moduleName = "Where Now for AppleTV.debug.dylib"
+                  symbolName = "closure #1 (WhereNow.BirdSpeciesAssetMetadata) -&gt; Swift.Bool in WhereNow.BirdSightingService.requestWebsiteAssetMetadataOf(sighting: WhereNow.BirdSighting) -&gt; ()"
+                  moduleName = "WhereNow.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "673"
                   endingLineNumber = "673">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B5F5F2CD-D8F0-4A29-82EE-0D70AF256E84"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WhereNow/Data Models/USAWeatherService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
+            landmarkName = "parseForecastUS(periods:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B5F5F2CD-D8F0-4A29-82EE-0D70AF256E84 - 39a701e6f074f309"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for WhereNow.USAWeatherService.parseForecastUS(periods: Swift.Array&lt;WhereNow.NWSForecast&gt;) async -&gt; Swift.Array&lt;WhereNow.ForecastInfo&gt;"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/USAWeatherService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "208"
+                  endingLineNumber = "208">
+               </Location>
+               <Location
+                  uuid = "B5F5F2CD-D8F0-4A29-82EE-0D70AF256E84 - fbc8797da865fc4d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (WhereNow.NWSForecast) -&gt; Swift.Optional&lt;Swift.String&gt; in WhereNow.USAWeatherService.parseForecastUS(periods: Swift.Array&lt;WhereNow.NWSForecast&gt;) async -&gt; Swift.Array&lt;WhereNow.ForecastInfo&gt;"
+                  moduleName = "WhereNow.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/USAWeatherService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "208"
+                  endingLineNumber = "208">
                </Location>
             </Locations>
          </BreakpointContent>

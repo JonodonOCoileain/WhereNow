@@ -27,9 +27,10 @@ struct WhereNow_Watch_App: App {
                 }
                 .onChange(of: scenePhase) { oldPhase, newPhase in
                                 if newPhase == .active {
-                                    print("Active")
-                                    DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1.01, execute: {
+                                    DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 0.01, execute: {
                                         locationData.start()})
+                                    print("Active")
+                                   
                                     birdData.resetRequestHistory()
                                     birdData.sightings.removeAll()
                                     if let location = locationData.immediateLocation() {
@@ -44,11 +45,14 @@ struct WhereNow_Watch_App: App {
                                     locationData.stop()
                                     self.birdData.resetMetadata()
                                     self.birdData.resetRequestHistory()
+                                    self.birdData.resetData()
+                                    self.weatherData.timesAndForecasts = []
                                 } else if newPhase == .background {
-                                    locationData.stop()
                                     print("Background")
+                                    locationData.stop()
                                     self.birdData.resetMetadata()
                                     self.birdData.resetRequestHistory()
+                                    self.weatherData.timesAndForecasts = []
                                 } else {
                                     locationData.start()
                                 }
