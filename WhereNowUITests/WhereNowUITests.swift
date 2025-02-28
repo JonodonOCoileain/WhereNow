@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Foundation
 
 final class WhereNowUITests: XCTestCase {
 
@@ -14,7 +15,7 @@ final class WhereNowUITests: XCTestCase {
 
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
+        
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
 
@@ -23,12 +24,28 @@ final class WhereNowUITests: XCTestCase {
     }
 
     @MainActor
-    func testExample() throws {
+    func testApp() throws {
         // UI tests must launch the application that they test.
         let app = XCUIApplication()
         app.launch()
-
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+    }
+    
+    func testTabs() throws {
+                
+        let app = XCUIApplication()
+        let tabBar = app.tabBars["Tab Bar"]
+        tabBar.buttons["Hear Now!"].tap()
+        tabBar.buttons["Weather Now!"].tap()
+        tabBar.buttons["Game Now!"].tap()
+        
+        let purplebirdImage = app/*@START_MENU_TOKEN@*/.images["PurpleBird"]/*[[".otherElements[\"Tab View\"].images[\"PurpleBird\"]",".images[\"PurpleBird\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        purplebirdImage.tap()
+        
+        /*let whereNowStaticText = app.staticTexts["WHERE NOW!"]
+        whereNowStaticText.tap()*/
+        
+        tabBar/*@START_MENU_TOKEN@*/.buttons["bird"]/*[[".buttons[\"Hear Now!\"]",".buttons[\"bird\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
     }
 
     @MainActor

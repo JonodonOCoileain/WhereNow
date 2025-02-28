@@ -7,14 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FC0B5E692D35882300D79451 /* routing.GeoJson in Frameworks */ = {isa = PBXBuildFile; fileRef = FC0B5E682D35882300D79451 /* routing.GeoJson */; };
 		FC2491762C48A63800101DF3 /* WhereNow Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FC2491752C48A63800101DF3 /* WhereNow Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FC5FA7CC2C6303190002E2A8 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; };
 		FC5FA7CD2C6303190002E2A8 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
 		FC5FA7D82C63031B0002E2A8 /* WhereNowWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC5FA7CB2C6303190002E2A8 /* WhereNowWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		FC7996512D5B9F4300612615 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = FC7996502D5B9F4300612615 /* OpenAI */; };
-		FC7996532D5BAA8500612615 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = FC7996522D5BAA8500612615 /* OpenAI */; };
-		FC7996552D5BAA8B00612615 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = FC7996542D5BAA8B00612615 /* OpenAI */; };
+		FC7998782D6FEDD400612615 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = FC7998772D6FEDD400612615 /* OpenAI */; };
+		FC79987A2D6FEDE600612615 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = FC7998792D6FEDE600612615 /* OpenAI */; };
 		FCE332C12C5A9C240093D3EF /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; platformFilters = (ios, macos, ); };
 		FCE332C22C5A9C240093D3EF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
 		FCE332D02C5A9C260093D3EF /* WhereNowWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -123,7 +121,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		FC0B5E682D35882300D79451 /* routing.GeoJson */ = {isa = PBXFileReference; lastKnownFileType = text; name = routing.GeoJson; path = ../../../../Desktop/routing.GeoJson; sourceTree = "<group>"; };
 		FC24914F2C48A63600101DF3 /* WhereNow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhereNow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC24915F2C48A63800101DF3 /* WhereNowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhereNowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2491692C48A63800101DF3 /* WhereNowUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhereNowUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -168,7 +165,6 @@
 				Views/BirdSightingsViews.swift,
 				Views/HeaderView.swift,
 				Views/LocationAccessDisabledView.swift,
-				Views/LocationViewTab.swift,
 				Views/Preview_Playground.swift,
 				Views/WatchBirdSightingView.swift,
 				Views/WatchNotableBirdSightingsViews.swift,
@@ -322,8 +318,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FC7996512D5B9F4300612615 /* OpenAI in Frameworks */,
-				FC0B5E692D35882300D79451 /* routing.GeoJson in Frameworks */,
+				FC7998782D6FEDD400612615 /* OpenAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,7 +340,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FC7996532D5BAA8500612615 /* OpenAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,7 +370,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FC7996552D5BAA8B00612615 /* OpenAI in Frameworks */,
+				FC79987A2D6FEDE600612615 /* OpenAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,7 +440,6 @@
 		FC2492C82C494D8800101DF3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FC0B5E682D35882300D79451 /* routing.GeoJson */,
 				FC2492C92C494D8800101DF3 /* WidgetKit.framework */,
 				FC2492CB2C494D8800101DF3 /* SwiftUI.framework */,
 			);
@@ -477,7 +470,7 @@
 			);
 			name = WhereNow;
 			packageProductDependencies = (
-				FC7996502D5B9F4300612615 /* OpenAI */,
+				FC7998772D6FEDD400612615 /* OpenAI */,
 			);
 			productName = WhereNow;
 			productReference = FC24914F2C48A63600101DF3 /* WhereNow.app */;
@@ -548,7 +541,6 @@
 			);
 			name = "WhereNow Watch App";
 			packageProductDependencies = (
-				FC7996522D5BAA8500612615 /* OpenAI */,
 			);
 			productName = "WhereNow Watch App";
 			productReference = FC2491752C48A63800101DF3 /* WhereNow Watch App.app */;
@@ -639,7 +631,7 @@
 			);
 			name = "Where Now for AppleTV";
 			packageProductDependencies = (
-				FC7996542D5BAA8B00612615 /* OpenAI */,
+				FC7998792D6FEDE600612615 /* OpenAI */,
 			);
 			productName = "Where Now for AppleTV";
 			productReference = FC8D68DC2CE7D33100283160 /* Where Now for AppleTV.app */;
@@ -778,7 +770,7 @@
 			);
 			mainGroup = FC2491462C48A63600101DF3;
 			packageReferences = (
-				FC79964F2D5B9F4300612615 /* XCRemoteSwiftPackageReference "OpenAI" */,
+				FC7998762D6FEDD400612615 /* XCRemoteSwiftPackageReference "OpenAI" */,
 			);
 			productRefGroup = FC2491502C48A63600101DF3 /* Products */;
 			projectDirPath = "";
@@ -1154,7 +1146,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.8.2;
+				MARKETING_VERSION = 2.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1195,7 +1187,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.8.2;
+				MARKETING_VERSION = 2.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1223,7 +1215,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhereNow/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = NO;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
 				INFOPLIST_KEY_NSLocationUsageDescription = "This app can show you its location, local weather information, and local bird sighting data using GPS-derived data.";
@@ -1240,7 +1232,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.8.2;
+				MARKETING_VERSION = 2.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1268,7 +1260,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhereNow/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = NO;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "By enabling \"Always\" access, the location data can be made available more readily.";
 				INFOPLIST_KEY_NSLocationUsageDescription = "This app can show you its location, local weather information, and local bird sighting data using GPS-derived data.";
@@ -1285,7 +1277,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.8.2;
+				MARKETING_VERSION = 2.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1479,7 +1471,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 2.8.2;
+				MARKETING_VERSION = 2.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1511,7 +1503,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 2.8.2;
+				MARKETING_VERSION = 2.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1536,7 +1528,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Where-Now-for-AppleTV-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSLocationUsageDescription = "This app can show you its location, local weather information, and local bird sighting data using GPS-derived data.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app provides data such as weather information and local bird sightings based on your location.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1545,7 +1537,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.8.2;
+				MARKETING_VERSION = 2.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1568,7 +1560,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Where-Now-for-AppleTV-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSLocationUsageDescription = "This app can show you its location, local weather information, and local bird sighting data using GPS-derived data.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app provides data such as weather information and local bird sightings based on your location.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1577,7 +1569,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.8.2;
+				MARKETING_VERSION = 2.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1700,7 +1692,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.8.2;
+				MARKETING_VERSION = 2.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1744,7 +1736,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.8.2;
+				MARKETING_VERSION = 2.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1871,7 +1863,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		FC79964F2D5B9F4300612615 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
+		FC7998762D6FEDD400612615 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MacPaw/OpenAI.git";
 			requirement = {
@@ -1882,19 +1874,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		FC7996502D5B9F4300612615 /* OpenAI */ = {
+		FC7998772D6FEDD400612615 /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = FC79964F2D5B9F4300612615 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			package = FC7998762D6FEDD400612615 /* XCRemoteSwiftPackageReference "OpenAI" */;
 			productName = OpenAI;
 		};
-		FC7996522D5BAA8500612615 /* OpenAI */ = {
+		FC7998792D6FEDE600612615 /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = FC79964F2D5B9F4300612615 /* XCRemoteSwiftPackageReference "OpenAI" */;
-			productName = OpenAI;
-		};
-		FC7996542D5BAA8B00612615 /* OpenAI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FC79964F2D5B9F4300612615 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			package = FC7998762D6FEDD400612615 /* XCRemoteSwiftPackageReference "OpenAI" */;
 			productName = OpenAI;
 		};
 /* End XCSwiftPackageProductDependency section */

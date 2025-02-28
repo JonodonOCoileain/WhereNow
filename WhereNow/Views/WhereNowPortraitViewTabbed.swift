@@ -25,26 +25,31 @@ struct WhereNowPortraitViewTabbed: View {
         GeometryReader { geometry in
             TabView {
                 LocationViewTab()
-                .tabItem {
-                    Label("Here Now!", systemImage: "mappin.and.ellipse")
-                }
+                    .tabItem {
+                        Label("Here Now!", systemImage: "mappin.and.ellipse")
+                    }
+                    .accessibilityIdentifier("Here Now!")
                 
                 BirdSightingsViews()
                     .padding(.horizontal)
                     .tabItem {
                         Label("Hear Now!", systemImage: "bird")
                     }
+                    .accessibilityIdentifier("Hear Now!")
                 
                 WeatherViewTab()
-                .tabItem {
-                    Label("Weather Now!", systemImage: "sun.min")
-                }
+                    .tabItem {
+                        Label("Weather Now!", systemImage: "sun.min")
+                    }
+                    .accessibilityIdentifier("Weather Now!")
                 
                 GameView()
                     .tabItem {
                         Label("Game Now!", systemImage: "gamecontroller")
                     }
+                    .accessibilityIdentifier("Game Now!")
             }
+            .accessibilityIdentifier("Tab View")
             .padding([.top, .bottom], reversePadding ? -25 : 0)
             .onReceive(timer) { input in
                 if timeCounter >= 2.0 {

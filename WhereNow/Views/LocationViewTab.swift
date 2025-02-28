@@ -44,6 +44,7 @@ struct LocationViewTab: View {
                 if openAIDescription.count > 0 {
                     Text("OpenAI says: \n\(openAIDescription)")
                         .font(.caption2)
+                        .padding()
                 }
             }.task {
                 let earlyDate = Calendar.current.date(byAdding: .hour, value: -1, to: Date())!
