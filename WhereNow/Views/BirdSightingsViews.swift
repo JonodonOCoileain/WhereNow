@@ -179,6 +179,20 @@ public struct BirdSightingView: View, Identifiable {
     @State var relatedData: [BirdSpeciesAssetMetadata] = []
     public var body: some View {
             VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    if let commonName = sighting.comName {
+                        Text(commonName)
+                            .font(.system(size: descriptionSize))
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(2)
+                    }
+                    if let name = sighting.sciName {
+                        Text(name)
+                            .font(.system(size: descriptionSize))
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(2)
+                    }
+                }.padding()
                 let photosData = relatedData.filter({$0.assetFormatCode == "photo"})
                 if photosData.count > 0 {
                     ScrollView(.horizontal) {
@@ -269,20 +283,8 @@ public struct BirdSightingView: View, Identifiable {
                     }
                 }
                 
-                if let commonName = sighting.comName {
-                    Text(commonName)
-                        .font(.system(size: descriptionSize))
-                        .multilineTextAlignment(.leading)
-                        .lineLimit(2)
-                }
-                if let name = sighting.sciName {
-                    Text(name)
-                        .font(.system(size: descriptionSize))
-                        .multilineTextAlignment(.leading)
-                        .lineLimit(2)
-                }
                 if let location = sighting.locName?.replacingOccurrences(of: "--", with: ", ").replacingOccurrences(of: "-", with: " ") {
-#if os(iOS) || os(macOS) || os(tvOS)
+#if os(iOS) || os(macOS)
                     HStack(alignment: .center, spacing: 20) {
                         Button(action: {
                             if let coordinate = coordinate {
