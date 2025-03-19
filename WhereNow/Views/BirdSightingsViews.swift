@@ -105,7 +105,9 @@ public struct BirdSightingsContainerView: View {
                     ForEach(sightings.enumeratedArray(), id: \.element) { index, sighting in
                         BirdSightingView(index: index, sighting: sighting, notables: notables)
                             .frame(width: geometry.size.width)
-                            .padding()
+                            .padding([.bottom, .leading, .trailing])
+                        Divider()
+                            .overlay(.purple)
                     }
                 }
                 .frame(width: geometry.size.width)
@@ -159,6 +161,7 @@ public struct BirdSightingView: View, Identifiable {
     @State private var selectedBirdData: BirdSpeciesAssetMetadata?
     #if os(iOS) || os(macOS) || os(tvOS)
     @State var route: IdentifiableRoute?
+    @State var transport: MKDirectionsTransportType? = nil
     @State var routeDestination: CLLocationCoordinate2D?
     #else
     @State var route: String?
@@ -179,20 +182,23 @@ public struct BirdSightingView: View, Identifiable {
     @State var relatedData: [BirdSpeciesAssetMetadata] = []
     public var body: some View {
             VStack(alignment: .leading, spacing: 0) {
+                
                 HStack {
                     if let commonName = sighting.comName {
-                        Text(commonName)
-                            .font(.system(size: descriptionSize))
+                        Text(commonName + ",")
+                            .font(.subheadline)
                             .multilineTextAlignment(.leading)
                             .lineLimit(2)
                     }
                     if let name = sighting.sciName {
                         Text(name)
-                            .font(.system(size: descriptionSize))
+                            .font(.subheadline)
                             .multilineTextAlignment(.leading)
                             .lineLimit(2)
                     }
-                }.padding()
+                    Spacer()
+                }.padding([.top, .bottom])
+                
                 let photosData = relatedData.filter({$0.assetFormatCode == "photo"})
                 if photosData.count > 0 {
                     ScrollView(.horizontal) {
@@ -294,6 +300,7 @@ public struct BirdSightingView: View, Identifiable {
                                 request.source = MKMapItem(placemark: MKPlacemark(coordinate: startingPoint))
                                 request.destination = MKMapItem(placemark: MKPlacemark(coordinate: coordinate))
                                 request.transportType = .walking
+                                transport = .walking
                                 routeDestination = coordinate
                                 Task {
                                     let directions = MKDirections(request: request)
@@ -332,6 +339,7 @@ public struct BirdSightingView: View, Identifiable {
                                 request.source = MKMapItem(placemark: MKPlacemark(coordinate: startingPoint))
                                 request.destination = MKMapItem(placemark: MKPlacemark(coordinate: coordinate))
                                 request.transportType = .automobile
+                                transport = .automobile
                                 routeDestination = coordinate
                                 // Get the directions based on the request
                                 Task {
@@ -358,7 +366,7 @@ public struct BirdSightingView: View, Identifiable {
                         })
                     }
                     .sheet(item: $route, content: { route in
-                        FullScreenModalDirectionsView(destination: routeDestination ?? CLLocationCoordinate2D(), route: route, newRoute: route, sighting: sighting, locationData: locationData)
+                        FullScreenModalDirectionsView(destination: routeDestination ?? CLLocationCoordinate2D(), transport: $transport.wrappedValue ?? .walking, route: route, newRoute: route, sighting: sighting, locationData: locationData)
                     })
 #else
                     Text("Location: " + location)
@@ -514,6 +522,7 @@ struct FullScreenModalView: View {
 struct FullScreenModalDirectionsView: View {
     @Environment(\.dismiss) var dismiss
     let destination: CLLocationCoordinate2D
+    let transport: MKDirectionsTransportType
     @State var route: IdentifiableRoute
     @ObservedObject var newRoute: IdentifiableRoute
     @State var sighting: BirdSighting
@@ -560,7 +569,7 @@ struct FullScreenModalDirectionsView: View {
             let request = MKDirections.Request()
             request.source = MKMapItem(placemark: MKPlacemark(coordinate: startingPoint))
             request.destination = MKMapItem(placemark: MKPlacemark(coordinate: self.destination))
-            request.transportType = .walking
+            request.transportType = transport
             // Get the directions based on the request
             Task {
                 let directions = MKDirections(request: request)

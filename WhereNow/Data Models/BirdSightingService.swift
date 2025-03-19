@@ -12,37 +12,6 @@ import AVFoundation
 import OSLog
 import Network
 
-/*struct BirdImagesResponse: Codable {
-    let results: [BirdImageMetadata]
-}
-
-struct BirdImageUser: Codable {
-    let id: String
-    let username: String
-    let name: String
-    let first_name: String
-    let last_name: String
-    let instagram_username: String
-    let twitter_username: String
-    let portfolio_url: String
-    let profile_image: [String:String] //small, medium, large keys
-    let links: [String:String] //self, html, photos, likes keys
-}
-
-struct BirdImageMetadata: Codable {
-    let id: String
-    let created_at: String
-    let width: Int
-    let height: Int
-    let color: String
-    let blur_hash: String
-    let likes: Int
-    let liked_by_user: Bool
-    let desciprtion: String
-    let user: BirdImageUser
-    let urls: [String:String] //raw, full, regular, small, thumb
-    let links: [String:String] //self, html, download
-}*/
 class BirdSightingService: ObservableObject, Observable {
     public static let notablesURLString:String =  "https://api.ebird.org/v2/data/obs/geo/recent/notable"//?lat={{lat}}&lng={{lng}}"
     public static let youTubeVideoBaseURL: String = "https://www.youtube.com/watch?v="

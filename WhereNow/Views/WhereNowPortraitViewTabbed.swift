@@ -24,11 +24,6 @@ struct WhereNowPortraitViewTabbed: View {
     var body: some View {
         GeometryReader { geometry in
             TabView {
-                LocationViewTab()
-                    .tabItem {
-                        Label("Here Now!", systemImage: "mappin.and.ellipse")
-                    }
-                    .accessibilityIdentifier("Here Now!")
                 
                 BirdSightingsViews()
                     .padding(.horizontal)
@@ -36,6 +31,12 @@ struct WhereNowPortraitViewTabbed: View {
                         Label("Hear Now!", systemImage: "bird")
                     }
                     .accessibilityIdentifier("Hear Now!")
+                
+                LocationViewTab()
+                    .tabItem {
+                        Label("Here Now!", systemImage: "mappin.and.ellipse")
+                    }
+                    .accessibilityIdentifier("Here Now!")
                 
                 WeatherViewTab()
                     .tabItem {

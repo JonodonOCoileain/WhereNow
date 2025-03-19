@@ -30,6 +30,15 @@ struct WhereNowLandscapeView: View {
                     Text("WHERE NOW!")
                         .padding([.bottom],10)
                     
+                    if birdData.birdSeenCommonDescription != nil {
+                        HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
+                        if $showBirdData.wrappedValue {
+                            BirdSightingsViews()
+                                .frame(minHeight: 700, maxHeight: 1000)
+                                .padding(.horizontal)
+                        }
+                    }
+                    
                     HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Here now!")
                     Text(self.locationData.addressesVeryLongFlag)
                         .multilineTextAlignment(.center)
@@ -39,15 +48,6 @@ struct WhereNowLandscapeView: View {
                         MapSnapshotView(image: image)
                             .scaleEffect(showLocation ? 1 : 0)
                             .animation(.easeInOut, value: showLocation)
-                    }
-                    
-                    if birdData.birdSeenCommonDescription != nil {
-                        HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
-                        if $showBirdData.wrappedValue {
-                            BirdSightingsViews()
-                                .frame(minHeight: 700, maxHeight: 1000)
-                                .padding(.horizontal)
-                        }
                     }
                     
                     HeaderView(isPresenting: $showWeatherData, showTimeTracker: $showWeatherDataTime,  hideTimeTracker: $hideWeatherDataTime, title: String.weatherNowTitle, spinningText: String.andLaterTitle)

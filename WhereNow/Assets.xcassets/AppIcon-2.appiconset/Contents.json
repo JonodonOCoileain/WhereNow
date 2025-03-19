@@ -64,9 +64,21 @@
       "size" : "60x60"
     },
     {
+      "filename" : "icon-car@2x.png",
+      "idiom" : "car",
+      "scale" : "2x",
+      "size" : "60x60"
+    },
+    {
       "filename" : "icon-60@3x.png",
       "idiom" : "universal",
       "platform" : "ios",
+      "scale" : "3x",
+      "size" : "60x60"
+    },
+    {
+      "filename" : "icon-car@3x.png",
+      "idiom" : "car",
       "scale" : "3x",
       "size" : "60x60"
     },

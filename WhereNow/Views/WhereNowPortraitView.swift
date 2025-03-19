@@ -48,6 +48,17 @@ struct WhereNowPortraitView: View {
                             .modifier(UpdatedSpinnable(tapToggler: $appNameTapped, tapActionNotification: ""))
 #endif
                         Group {
+                            if birdData.birdSeenCommonDescription != nil {
+                                HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
+                                BirdSightingsViews()
+                                    .frame(minHeight: showBirdData ? 700 : 0, maxHeight: showBirdData ? 1000 : 0)
+                                    .scaleEffect(showBirdData ? 1 : 0)
+                                    .animation(.easeInOut, value: showBirdData)
+                                    .padding(.horizontal)
+                            }
+                        }
+                        
+                        Group {
                             HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Here now!")
                                 .frame(maxWidth: .infinity)
                             
@@ -66,16 +77,7 @@ struct WhereNowPortraitView: View {
                             .frame(maxHeight: showLocationTime < Date().timeIntervalSince1970 - 0.35 && showLocationTime > hideLocationTime ? .infinity : Date().timeIntervalSince1970 > hideLocationTime + 0.35 && hideLocationTime > showLocationTime ? 0 : Date().timeIntervalSince1970 < hideLocationTime + 0.35 && Date().timeIntervalSince1970 > hideLocationTime ? 500 * (Date().timeIntervalSince1970 - hideLocationTime)/0.35 : .infinity)
                             .animation(.easeInOut, value: showLocation)
                         }
-                        Group {
-                            if birdData.birdSeenCommonDescription != nil {
-                                HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
-                                BirdSightingsViews()
-                                    .frame(minHeight: showBirdData ? 700 : 0, maxHeight: showBirdData ? 1000 : 0)
-                                    .scaleEffect(showBirdData ? 1 : 0)
-                                    .animation(.easeInOut, value: showBirdData)
-                                    .padding(.horizontal)
-                            }
-                        }
+                        
                         Group {
                             HeaderView(isPresenting: $showWeatherData, showTimeTracker: $showWeatherDataTime,  hideTimeTracker: $hideWeatherDataTime, title: String.weatherNowTitle, spinningText: String.andLaterTitle)
                             VStack(alignment:.center) {
