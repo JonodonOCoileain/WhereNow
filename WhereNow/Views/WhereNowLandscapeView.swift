@@ -30,7 +30,7 @@ struct WhereNowLandscapeView: View {
             ScrollView(.horizontal) {
                     HStack(alignment: .top) {
                         if birdData.birdSeenCommonDescription != nil {
-                            VStack {
+                            VStack(spacing: 0) {
                                 HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
                                 if $showBirdData.wrappedValue {
                                     BirdSightingsViews()
@@ -42,12 +42,15 @@ struct WhereNowLandscapeView: View {
                         
                         VStack {
                             HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Here now!")
-                            Text(self.locationData.addressesVeryLongFlag)
-                                .multilineTextAlignment(.center)
-                                .scaleEffect(showLocation ? 1 : 0)
-                                .animation(.easeInOut, value: showLocation)
-                            if let image = self.locationData.image {
-                                MapSnapshotView(image: image)
+                            HStack {
+                                if let image = self.locationData.image {
+                                    MapSnapshotView(image: image)
+                                        .scaleEffect(showLocation ? 1 : 0)
+                                        .animation(.easeInOut, value: showLocation)
+                                        .frame(width: 240, height: 240)
+                                }
+                                Text(self.locationData.addressesVeryLongFlag)
+                                    .multilineTextAlignment(.center)
                                     .scaleEffect(showLocation ? 1 : 0)
                                     .animation(.easeInOut, value: showLocation)
                             }

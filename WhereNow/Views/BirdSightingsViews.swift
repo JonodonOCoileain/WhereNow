@@ -39,16 +39,15 @@ struct BirdSightingsViews: View {
                     Text("Sightings search radius")
                         .font(.system(size: titleSize))
                         .multilineTextAlignment(.leading)
-                        .padding([.vertical])
                     Picker(selection: $birdData.searchRadius, label: Text("Sightings search radius")
                         .font(.system(size: titleSize))
                         .multilineTextAlignment(.leading)
-                        .padding([.vertical]))
-                                        {
-                                            ForEach(0 ..< BirdSightingsViews.DistanceCount) {
-                                                index in Text("\(BirdSightingsViews.Distance[index])").tag(BirdSightingsViews.Distance[index])
-                                            }
-                                        }
+                        .padding(.bottom))
+                    {
+                        ForEach(0 ..< BirdSightingsViews.DistanceCount) {
+                            index in Text("\(BirdSightingsViews.Distance[index])").tag(BirdSightingsViews.Distance[index])
+                        }
+                    }
                 }
                 Spacer(minLength: 12)
                 ScrollView(.horizontal) {

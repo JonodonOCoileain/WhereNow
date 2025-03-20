@@ -14,14 +14,11 @@ struct WhereNowWeatherHStackView: View {
     @State var address: Address? = nil
     var body: some View {
         Group {
-            VStack {
+            VStack(alignment: .leading) {
                 if let address = address {
-                    VStack(alignment: .leading) {
-                        Text("Weather forecast of")
-                        Text(address.formattedShort())
-                    }
+                        Text("Weather forecast of " + address.formattedShort())
                 }
-                HStack(alignment: .center) {
+                HStack(alignment: .top) {
                     ForEach(weatherData.timesAndForecasts, id: \.self) { element in
                         VStack() {
                             Text(Fun.emojis.randomElement() ?? "")
