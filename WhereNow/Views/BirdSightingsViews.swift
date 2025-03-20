@@ -211,16 +211,18 @@ public struct BirdSightingView: View, Identifiable {
                                 }, label: {
                                     VStack {
                                         if let URL = URL(string: imageData.url) {
-                                            AsyncImage(url: URL) { result in
-                                                result.image?
-                                                    .resizable()
-                                                    .scaledToFill()
-                                            }
+                                            ZStack {
+                                                AsyncImage(url: URL) { result in
+                                                    result.image?
+                                                        .resizable()
+                                                        .scaledToFill()
+                                                }
 #if os(watchOS)
-                                            .frame(width: 30, height: 30)
+                                                .frame(width: 30, height: 30)
 #else
-                                            .frame(width: 64, height: 64)
+                                                .frame(width: 64, height: 64)
 #endif
+                                            }
                                         }
 #if os(iOS) || os(macOS) || os(tvOS)
                                         Text("Uploaded by:")
