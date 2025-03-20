@@ -14,27 +14,29 @@ struct WhereNowWeatherHStackView: View {
     @State var address: Address? = nil
     var body: some View {
         Group {
-            HStack(alignment: .center) {
-                ForEach(weatherData.timesAndForecasts, id: \.self) { element in
-                    if let address = address {
-                        VStack(alignment: .center) {
-                            Text("Weather forecast of")
-                            Text(address.formattedShort())
-                        }
+            VStack {
+                if let address = address {
+                    VStack(alignment: .leading) {
+                        Text("Weather forecast of")
+                        Text(address.formattedShort())
                     }
-                    VStack() {
-                        Text(Fun.emojis.randomElement() ?? "")
-                            .font(.title)
-                            .multilineTextAlignment(.center)
-                        Text(element.name ?? "")
-                            .font(.subheadline)
-                            .padding([.top])
-                            .multilineTextAlignment(.center)
-                        Text(element.forecast)
-                            .font(.subheadline)
-                            .padding([.bottom])
-                            .multilineTextAlignment(.leading)
-                    }.frame(width: 250, alignment: .center)
+                }
+                HStack(alignment: .center) {
+                    ForEach(weatherData.timesAndForecasts, id: \.self) { element in
+                        VStack() {
+                            Text(Fun.emojis.randomElement() ?? "")
+                                .font(.title)
+                                .multilineTextAlignment(.center)
+                            Text(element.name ?? "")
+                                .font(.subheadline)
+                                .padding([.top])
+                                .multilineTextAlignment(.center)
+                            Text(element.forecast)
+                                .font(.subheadline)
+                                .padding([.bottom])
+                                .multilineTextAlignment(.leading)
+                        }.frame(width: 250, alignment: .center)
+                    }
                 }
             }
         }

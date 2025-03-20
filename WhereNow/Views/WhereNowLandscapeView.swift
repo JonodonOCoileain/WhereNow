@@ -25,45 +25,51 @@ struct WhereNowLandscapeView: View {
     @State var tapViewSelected: Bool = false
     var body: some View {
         GeometryReader { geometry in
+            VStack (alignment: .center) { Text("WHERE NOW!")
+                    .padding([.bottom],10)
             ScrollView(.horizontal) {
-                HStack {
-                    Text("WHERE NOW!")
-                        .padding([.bottom],10)
-                    
-                    if birdData.birdSeenCommonDescription != nil {
-                        HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
-                        if $showBirdData.wrappedValue {
-                            BirdSightingsViews()
-                                .frame(minHeight: 700, maxHeight: 1000)
-                                .padding(.horizontal)
+                    HStack(alignment: .top) {
+                        if birdData.birdSeenCommonDescription != nil {
+                            VStack {
+                                HeaderView(isPresenting: $showBirdData, showTimeTracker: $showBirdDataTime,  hideTimeTracker: $hideBirdDataTime, title: "Hear now!")
+                                if $showBirdData.wrappedValue {
+                                    BirdSightingsViews()
+                                        .frame(minWidth: 500, minHeight: 700, maxHeight: 1000)
+                                        .padding(.horizontal)
+                                }
+                            }
+                        }
+                        
+                        VStack {
+                            HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Here now!")
+                            Text(self.locationData.addressesVeryLongFlag)
+                                .multilineTextAlignment(.center)
+                                .scaleEffect(showLocation ? 1 : 0)
+                                .animation(.easeInOut, value: showLocation)
+                            if let image = self.locationData.image {
+                                MapSnapshotView(image: image)
+                                    .scaleEffect(showLocation ? 1 : 0)
+                                    .animation(.easeInOut, value: showLocation)
+                            }
+                        }
+                        
+                        VStack {
+                            HeaderView(isPresenting: $showWeatherData, showTimeTracker: $showWeatherDataTime,  hideTimeTracker: $hideWeatherDataTime, title: String.weatherNowTitle, spinningText: String.andLaterTitle)
+                            VStack(alignment: .center) {
+                                WhereNowWeatherHStackView(data: locationData, weatherData: weatherData)
+                                
+                                Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
+                                    .font(.caption2)
+                                    .multilineTextAlignment(.center)
+                                Text(weatherData.forecastOffice?.description() ?? "")
+                                    .multilineTextAlignment(.center)
+                                    .font(.caption2)
+                            }
+                            .scaleEffect(showWeatherData ? 1 : 0)
+                            .animation(.easeInOut, value: showWeatherData)
+                            .frame(maxWidth: showWeatherData ? .infinity : 0)
                         }
                     }
-                    
-                    HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Here now!")
-                    Text(self.locationData.addressesVeryLongFlag)
-                        .multilineTextAlignment(.center)
-                        .scaleEffect(showLocation ? 1 : 0)
-                        .animation(.easeInOut, value: showLocation)
-                    if let image = self.locationData.image {
-                        MapSnapshotView(image: image)
-                            .scaleEffect(showLocation ? 1 : 0)
-                            .animation(.easeInOut, value: showLocation)
-                    }
-                    
-                    HeaderView(isPresenting: $showWeatherData, showTimeTracker: $showWeatherDataTime,  hideTimeTracker: $hideWeatherDataTime, title: String.weatherNowTitle, spinningText: String.andLaterTitle)
-                    VStack(alignment: .center) {
-                        WhereNowWeatherHStackView(data: locationData, weatherData: weatherData)
-                    
-                        Text("Weather data provided by the National Weather Service, part of the National Oceanic and Atmospheric Administration (NOAA)")
-                                .font(.caption2)
-                                .multilineTextAlignment(.center)
-                        Text(weatherData.forecastOffice?.description() ?? "")
-                                .multilineTextAlignment(.center)
-                                .font(.caption2)
-                    }
-                        .scaleEffect(showWeatherData ? 1 : 0)
-                        .animation(.easeInOut, value: showWeatherData)
-                        .frame(maxWidth: showWeatherData ? .infinity : 0)
                 }
             }
         }
