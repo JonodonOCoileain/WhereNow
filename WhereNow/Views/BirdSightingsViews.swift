@@ -533,7 +533,7 @@ struct FullScreenModalDirectionsView: View {
         ScrollView {
             VStack {
                 Spacer()
-                RouteSummaryView(route: route)
+                RouteSummaryView(route: route, transport: transport)
                 Spacer()
                 RouteMapView(route: route, newRoute: newRoute)
                 
@@ -613,9 +613,12 @@ extension TimeInterval {
 
 struct RouteSummaryView: View {
     @ObservedObject var route: IdentifiableRoute
+    let transport: MKDirectionsTransportType
     var body: some View {
-        Text("Directions to \(route.route.name)").font(.title)
+        Text((transport == .walking ? "Pedestrian " : "Driving ") + "directions to \(route.route.name)").font(.title)
             .padding([.vertical])
+            .lineLimit(2)
+            .multilineTextAlignment(.center)
         Text("Expected travel time: \(route.route.expectedTravelTime.spellOut())").font(.caption)
         if Locale.current.usesMetricSystem == true {
             let distance = String(format: "%.1f", Double(round(route.route.distance.inKilometers()*Double(10)))/Double(10))
