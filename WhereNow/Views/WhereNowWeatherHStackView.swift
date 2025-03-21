@@ -32,6 +32,8 @@ struct WhereNowWeatherHStackView: View {
                                 .font(.subheadline)
                                 .padding([.bottom])
                                 .multilineTextAlignment(.leading)
+                                .lineLimit(100)
+                                .fixedSize(horizontal: false, vertical: true)
                         }.frame(width: 250, alignment: .center)
                     }
                 }
