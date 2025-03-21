@@ -35,7 +35,7 @@ struct WhereNowView: View {
                     VStack {
                         Text("WHERE NOW!")
                             .modifier(UpdatedSpinnable(tapToggler: $tabViewSelected, tapActionNotification: ($tabViewSelected.wrappedValue ? "Portait mode tabview selected" : "Portrait mode long scrollView selected")))
-                            .padding([.bottom],10)
+                            .padding(.bottom)
                         if tabViewSelected {
                             WhereNowPortraitViewTabbed()
                         } else {

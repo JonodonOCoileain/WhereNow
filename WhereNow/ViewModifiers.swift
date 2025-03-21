@@ -166,7 +166,7 @@ struct UpdatedSpinnable: ViewModifier {
                 }
             if tapActionNotification.count > 0 {
                 Text(tapActionNotification).opacity($spinning.wrappedValue ? 1.0 : 0.0001)
-                    .padding([.top], $spinning.wrappedValue ? 100 : 20)
+                    .padding([.top], $spinning.wrappedValue ? 100 : 0)
             } else {
                 Text(tapActionNotification).opacity($spinning.wrappedValue ? 1.0 : 0.0001)
                     .padding([.top], $spinning.wrappedValue ? 40 : 0)

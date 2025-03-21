@@ -22,55 +22,51 @@ struct WhereNowPortraitViewTabbed: View {
     @State var timeCounter:Double = 0.0
     
     var body: some View {
-        GeometryReader { geometry in
-            TabView {
-                
-                BirdSightingsViews()
-                    .padding(.horizontal)
-                    .tabItem {
-                        Label("Hear Now!", systemImage: "bird")
-                    }
-                    .accessibilityIdentifier("Hear Now!")
-                
-                LocationViewTab()
-                    .tabItem {
-                        Label("Here Now!", systemImage: "mappin.and.ellipse")
-                    }
-                    .accessibilityIdentifier("Here Now!")
-                
-                WeatherViewTab()
-                    .tabItem {
-                        Label("Weather Now!", systemImage: "sun.min")
-                    }
-                    .accessibilityIdentifier("Weather Now!")
-                
-                GameView()
-                    .tabItem {
-                        Label("Game Now!", systemImage: "gamecontroller")
-                    }
-                    .accessibilityIdentifier("Game Now!")
-            }
-            .accessibilityIdentifier("Tab View")
-            .padding([.top, .bottom], reversePadding ? -25 : 0)
-            .onReceive(timer) { input in
-                if timeCounter >= 2.0 {
-                    timeCounter = 0
+        TabView {
+            BirdSightingsViews()
+                .tabItem {
+                    Label("Hear Now!", systemImage: "bird")
                 }
-                timeCounter = timeCounter + WhereNowView.countTime * 2
+                .accessibilityIdentifier("Hear Now!")
+            
+            LocationViewTab()
+                .tabItem {
+                    Label("Here Now!", systemImage: "mappin.and.ellipse")
+                }
+                .accessibilityIdentifier("Here Now!")
+            
+            WeatherViewTab()
+                .tabItem {
+                    Label("Weather Now!", systemImage: "sun.min")
+                }
+                .accessibilityIdentifier("Weather Now!")
+            
+            GameView()
+                .tabItem {
+                    Label("Game Now!", systemImage: "gamecontroller")
+                }
+                .accessibilityIdentifier("Game Now!")
+        }
+        .accessibilityIdentifier("Tab View")
+        .padding([.top, .bottom], reversePadding ? -25 : 0)
+        .onReceive(timer) { input in
+            if timeCounter >= 2.0 {
+                timeCounter = 0
             }
-            .onAppear() {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: {
-                    if let locationCoordinate = locationData.currentLocation?.coordinate {
-                        weatherData.cacheForecasts(using: locationCoordinate)
-                        birdData.cacheNotableSightings(using: locationCoordinate)
-                    }
-                })
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2, execute: {
-                    if let locationCoordinate = locationData.currentLocation?.coordinate {
-                        birdData.cacheSightings(using: locationCoordinate)
-                    }
-                })
-            }
+            timeCounter = timeCounter + WhereNowView.countTime * 2
+        }
+        .onAppear() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: {
+                if let locationCoordinate = locationData.currentLocation?.coordinate {
+                    weatherData.cacheForecasts(using: locationCoordinate)
+                    birdData.cacheNotableSightings(using: locationCoordinate)
+                }
+            })
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2, execute: {
+                if let locationCoordinate = locationData.currentLocation?.coordinate {
+                    birdData.cacheSightings(using: locationCoordinate)
+                }
+            })
         }
     }
 }

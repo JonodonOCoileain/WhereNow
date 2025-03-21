@@ -22,7 +22,7 @@ struct LocationViewTab: View {
             ], model: .gpt4_o_mini)
             do {
                 let result = try await openAI.chats(query: query)
-                openAIDescription = result.choices.first?.message.content?.string ?? ""
+                openAIDescription = result.choices.first?.message.content ?? ""
                 print(result.choices.first?.message.content ?? "No response")
                 print("Result")
             } catch {

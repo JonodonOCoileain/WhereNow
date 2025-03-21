@@ -140,29 +140,33 @@
 		FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				BirdSighting.swift,
-				BirdSpeciesAssetMetadata.swift,
-				"CGFloat+.swift",
-				"Collection+.swift",
-				"CoreLocation+Extension.swift",
 				"Data Models/BirdSightingService.swift",
+				"Data Models/BirdSpeciesAssetMetadata.swift",
 				"Data Models/LocationDataModel.swift",
 				"Data Models/LocationManager.swift",
 				"Data Models/USAWeatherService.swift",
-				"Data+.swift",
-				"Double+.swift",
 				ErrorCases.swift,
-				ForecastInfo.swift,
+				"Extensions/CGFloat+.swift",
+				"Extensions/CLPlacemark+.swift",
+				"Extensions/Collection+.swift",
+				"Extensions/CoreLocation+Extension.swift",
+				"Extensions/Data+.swift",
+				"Extensions/Double+.swift",
+				"Extensions/String+.swift",
+				"Extensions/UIImage+.swift",
+				"Extensions/UserDefaults+.swift",
 				Fun.swift,
 				GameView.swift,
-				LocationInformation.swift,
 				Logging.swift,
+				"Object Models/Addresses.swift",
+				"Object Models/BirdSighting.swift",
+				"Object Models/ForecastInfo.swift",
+				"Object Models/LocationInformation.swift",
 				Objects.swift,
-				"String+.swift",
-				"UIImage+.swift",
 				ViewModifiers.swift,
 				Views/BirdDataSightingsShortView.swift,
 				Views/BirdSightingsViews.swift,
+				Views/BirdSightingView.swift,
 				Views/HeaderView.swift,
 				Views/LocationAccessDisabledView.swift,
 				Views/Preview_Playground.swift,
@@ -196,26 +200,29 @@
 		FC5FA7DE2C63033F0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				BirdSighting.swift,
-				BirdSpeciesAssetMetadata.swift,
-				"CGFloat+.swift",
-				"Collection+.swift",
-				"CoreLocation+Extension.swift",
 				"Data Models/BirdSightingService.swift",
+				"Data Models/BirdSpeciesAssetMetadata.swift",
 				"Data Models/LocationDataModel.swift",
 				"Data Models/LocationManager.swift",
 				"Data Models/USAWeatherService.swift",
-				"Data+.swift",
-				"Double+.swift",
 				ErrorCases.swift,
-				ForecastInfo.swift,
+				"Extensions/CGFloat+.swift",
+				"Extensions/CLPlacemark+.swift",
+				"Extensions/Collection+.swift",
+				"Extensions/CoreLocation+Extension.swift",
+				"Extensions/Data+.swift",
+				"Extensions/Double+.swift",
+				"Extensions/UIImage+.swift",
+				"Extensions/UserDefaults+.swift",
 				Fun.swift,
 				GameView.swift,
-				LocationInformation.swift,
 				LocationInformationEntry.swift,
 				Logging.swift,
+				"Object Models/Addresses.swift",
+				"Object Models/BirdSighting.swift",
+				"Object Models/ForecastInfo.swift",
+				"Object Models/LocationInformation.swift",
 				Objects.swift,
-				"UIImage+.swift",
 				ViewModifiers.swift,
 				Views/BirdDataSightingsShortView.swift,
 				whistle.m4a,
@@ -226,27 +233,31 @@
 		FC8D69072CE7D45100283160 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				BirdSighting.swift,
-				BirdSpeciesAssetMetadata.swift,
-				"CGFloat+.swift",
-				"Collection+.swift",
-				"CoreLocation+Extension.swift",
 				"Data Models/BirdSightingService.swift",
+				"Data Models/BirdSpeciesAssetMetadata.swift",
 				"Data Models/LocationDataModel.swift",
 				"Data Models/LocationManager.swift",
 				"Data Models/USAWeatherService.swift",
-				"Data+.swift",
-				"Double+.swift",
-				ForecastInfo.swift,
+				"Extensions/CGFloat+.swift",
+				"Extensions/CLPlacemark+.swift",
+				"Extensions/Collection+.swift",
+				"Extensions/CoreLocation+Extension.swift",
+				"Extensions/Data+.swift",
+				"Extensions/Double+.swift",
+				"Extensions/String+.swift",
+				"Extensions/UIImage+.swift",
+				"Extensions/UserDefaults+.swift",
 				Fun.swift,
 				GameView.swift,
 				Logging.swift,
 				MapSnapshotManager.swift,
 				MapSnapshotView.swift,
+				"Object Models/Addresses.swift",
+				"Object Models/BirdSighting.swift",
+				"Object Models/ForecastInfo.swift",
 				Objects.swift,
-				"String+.swift",
-				"UIImage+.swift",
 				Views/BirdSightingsViews.swift,
+				Views/BirdSightingView.swift,
 				Views/HeaderView.swift,
 				Views/LocationAccessDisabledView.swift,
 				Views/LocationViewTab.swift,
@@ -267,29 +278,32 @@
 		FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				BirdSighting.swift,
-				BirdSpeciesAssetMetadata.swift,
-				"CGFloat+.swift",
-				"Collection+.swift",
-				"CoreLocation+Extension.swift",
 				"Data Models/BirdSightingService.swift",
+				"Data Models/BirdSpeciesAssetMetadata.swift",
 				"Data Models/LocationDataModel.swift",
 				"Data Models/LocationManager.swift",
 				"Data Models/USAWeatherService.swift",
-				"Data+.swift",
-				"Double+.swift",
 				ErrorCases.swift,
-				ForecastInfo.swift,
+				"Extensions/CGFloat+.swift",
+				"Extensions/CLPlacemark+.swift",
+				"Extensions/Collection+.swift",
+				"Extensions/CoreLocation+Extension.swift",
+				"Extensions/Data+.swift",
+				"Extensions/Double+.swift",
+				"Extensions/String+.swift",
+				"Extensions/UIImage+.swift",
+				"Extensions/UserDefaults+.swift",
 				Fun.swift,
 				GameView.swift,
-				LocationInformation.swift,
 				LocationInformationEntry.swift,
 				Logging.swift,
 				MapSnapshotManager.swift,
 				MapSnapshotView.swift,
+				"Object Models/Addresses.swift",
+				"Object Models/BirdSighting.swift",
+				"Object Models/ForecastInfo.swift",
+				"Object Models/LocationInformation.swift",
 				Objects.swift,
-				"String+.swift",
-				"UIImage+.swift",
 				ViewModifiers.swift,
 				Views/BirdDataSightingsShortView.swift,
 				whistle.m4a,
@@ -1146,7 +1160,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.18;
+				MARKETING_VERSION = 2.19;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1187,7 +1201,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.18;
+				MARKETING_VERSION = 2.19;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1232,7 +1246,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.18;
+				MARKETING_VERSION = 2.19;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1277,7 +1291,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.18;
+				MARKETING_VERSION = 2.19;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1471,7 +1485,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 2.18;
+				MARKETING_VERSION = 2.19;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1503,7 +1517,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 2.18;
+				MARKETING_VERSION = 2.19;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1537,7 +1551,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.18;
+				MARKETING_VERSION = 2.19;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1569,7 +1583,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.18;
+				MARKETING_VERSION = 2.19;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1692,7 +1706,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.18;
+				MARKETING_VERSION = 2.19;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1736,7 +1750,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.18;
+				MARKETING_VERSION = 2.19;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
