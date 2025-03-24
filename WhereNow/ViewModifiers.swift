@@ -99,6 +99,17 @@ struct SpecialAppearingView: ViewModifier {
     }
 }
 
+struct FadingView: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .mask(
+                LinearGradient(colors: [.clear, .black, .black, .black, .black, .black, .black, .black, .black, .black, .black, .clear],
+                               startPoint: UnitPoint(x: 0.5, y: 0), endPoint: UnitPoint(x: 0.5, y: 1))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+            )
+    }
+}
+
 struct UpdatedSpinnable: ViewModifier {
     @Binding var tapToggler: Bool
     var tapActionNotification: String

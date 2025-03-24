@@ -97,6 +97,7 @@ public struct BirdSightingsContainerView: View {
     public var body: some View {
         ScrollView {
             LazyVStack(alignment:.leading, spacing: 9) {
+                Text("")
                 let sightings = notables == true ? birdData.notableSightings : birdData.sightings
                 ForEach(sightings.enumeratedArray(), id: \.element) { index, sighting in
                     BirdSightingView(index: index, sighting: sighting, notables: notables)
@@ -104,8 +105,10 @@ public struct BirdSightingsContainerView: View {
                     Divider()
                         .overlay(.purple)
                 }
+                Text("")
             }
         }
+        .modifier(FadingView())
     }
 }
 
