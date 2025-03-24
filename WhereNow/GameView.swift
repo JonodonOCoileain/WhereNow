@@ -9,6 +9,7 @@ import SwiftUI
 import AVFAudio
 
 extension String {
+#if canImport(UIKit)
     func toUIImage() -> UIImage {
         let size = CGSize(width: 50, height: 50)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
@@ -20,7 +21,26 @@ extension String {
         UIGraphicsEndImageContext()
         return image ?? UIImage()
     }
+    #else
+    func toNSImage() -> NSImage {
+        let label = NSTextField(labelWithString: self)
+        label.textColor = .blue
+        label.backgroundColor = .clear
+        label.sizeToFit()
+        return label.image ?? NSImage()
+    }
+#endif
 }
+#if os(macOS)
+extension NSView {
+    var image: NSImage? {
+        guard let bitmapImageRep = bitmapImageRepForCachingDisplay(in: bounds) else { return nil }
+        cacheDisplay(in: bounds, to: bitmapImageRep)
+        guard let cgImage = bitmapImageRep.cgImage else { return nil }
+        return NSImage(cgImage: cgImage, size: bounds.size)
+    }
+}
+#endif
 
 enum TypeOfFood: Int, CaseIterable {
     case nut
@@ -100,7 +120,7 @@ struct GameView: View {
                 Spacer()
                 ZStack {
                     RotateObjectInEllipsePath(tapped: $tapped, chomp: $chomp, hurt: $hurt, height: BirdView.birdHeight + SpinWhenTapped.jumpHeight, width: geometry.size.width)
-                    
+                        
                     BirdView(tapped: $tapped, chomp: $chomp, hurt: $hurt)
                 }
                 /*.overlay(alignment: .center, content: {
@@ -168,6 +188,8 @@ struct ScoreView: View {
 }
 
 struct RotateObjectInEllipsePath: View {
+    
+    
     @Binding var tapped: Bool
     @State var score: Int = 0
     @Binding var chomp: Bool
@@ -183,9 +205,29 @@ struct RotateObjectInEllipsePath: View {
     @State private var ellipseX: CGFloat = .zero
     @State private var ellipseY: CGFloat = .zero
     var currentLocation: CGPoint? = nil
+    
     var body: some View {
         VStack {
             let imageName = food.type.imageName
+            #if os(macOS)
+            Ellipse()
+                .strokeBorder(Color.clear, lineWidth: 2)
+                .frame(width: width, height: height)
+                .overlay(
+                    Image(nsImage: imageName.toNSImage())
+                        .resizable()
+                        .backgroundStyle(.clear)
+                        .frame(width: RotateObjectInEllipsePath.imageSize, height: RotateObjectInEllipsePath.imageSize)
+                        .rotationEffect(.degrees(angle))
+                        .offset(x: ellipseX, y: ellipseY)
+                        .opacity(ellipseY < 1 && chomp == false ? 1.0 : 0)
+                        .allowsHitTesting(true)
+                )
+                .overlay(content: {
+                    ScoreView(score: $score)
+                        .padding(.top, 350)
+                })
+            #else
             Ellipse()
                 .strokeBorder(Color.clear, lineWidth: 2)
                 .frame(width: width, height: height)
@@ -202,7 +244,7 @@ struct RotateObjectInEllipsePath: View {
                     ScoreView(score: $score)
                         .padding(.top, 350)
                 })
-            
+            #endif
             Spacer()
                 .frame(height: 40)
         }// VStack

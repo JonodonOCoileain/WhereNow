@@ -9,6 +9,9 @@ import Foundation
 import CoreLocation
 import MapKit
 import SwiftUI
+#if canImport(AppKit)
+import AppKit
+#endif
 
 final class MapSnapshotManager {
     // MARK: - Types
@@ -50,7 +53,6 @@ final class MapSnapshotManager {
         
         let options = MKMapSnapshotter.Options()
         options.region = coordinateRegion
-        options.scale = 1.0
         MKMapSnapshotter(options: options).start { snapshot, error in
             if let error = error {
                 completionHandler(.failure(error))
@@ -61,9 +63,13 @@ final class MapSnapshotManager {
                 completionHandler(.failure(SnapshotError.noSnapshotImage))
                 return
             }
-            
+#if canImport(UIKit)
             let image = Image(uiImage: snapshot.image)
             completionHandler(.success(image))
+            #else
+            let image = Image(nsImage: snapshot.image)
+            completionHandler(.success(image))
+            #endif
         }
     }
     
@@ -81,9 +87,16 @@ final class MapSnapshotManager {
         options.region = coordinateRegion
         do {
             let result: MKMapSnapshotter.Snapshot = try await MKMapSnapshotter(options: options).start()
+            
+            #if os(macOS)
+            let uiImage: NSImage = result.image
+            let image = Image(nsImage: uiImage)
+            return .success(image)
+            #else
             let uiImage: UIImage = result.image
             let image = Image(uiImage: uiImage)
             return .success(image)
+            #endif
         } catch {
             return .failure(error)
         }

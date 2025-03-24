@@ -14,6 +14,8 @@ import UniformTypeIdentifiers
 #endif
 #if canImport(UIKit)
 import UIKit
+#else
+import AppKit
 #endif
 import AVFoundation
 import MapKit
@@ -159,6 +161,23 @@ struct FullScreenModalView: View {
     @State var data: BirdSpeciesAssetMetadata
     var body: some View {
         VStack {
+            #if os(macOS)
+            if let image = data.image, let nsImage = NSImage(data: image) {
+                Image(nsImage: nsImage)
+                    .resizable()
+                    .scaledToFit()
+                    
+            } else {
+                let urlString = data.url
+                if let url = URL(string: urlString) {
+                    AsyncImage(url: url) { result in
+                        result.image?
+                            .resizable()
+                            .scaledToFit()
+                    }
+                }
+            }
+            #else
             if let image = data.image, let uiImage = UIImage(data: image) {
                 Image(uiImage: uiImage)
                     .resizable()
@@ -174,6 +193,7 @@ struct FullScreenModalView: View {
                     }
                 }
             }
+            #endif
             
             if let sciName = data.sciName {
                 Text(sciName)
@@ -230,7 +250,13 @@ struct FullScreenModalDirectionsView: View {
                 if let locName = sighting.locName?.replacingOccurrences(of: "--", with: ", ").replacingOccurrences(of: "-", with: " "), let startingPoint = locationData.immediateLocation()?.coordinate, let url = URL(string:
                                                                                                                                                                                                                             "https://www.google.co.in/maps/dir/\(startingPoint.latitude),\(startingPoint.longitude)/\(locName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "")/") {
                     Spacer()
-                    Button(action: { UIApplication.shared.open(url) }, label: { Text("Open in Google Maps") })
+                    Button(action: {
+                        #if os(macOS)
+                        NSWorkspace.shared.open(url)
+                        #else
+                        UIApplication.shared.open(url)
+                        #endif
+                    }, label: { Text("Open in Google Maps") })
 #if os(iOS) || os(macOS)
                     Spacer()
                     Button(action: { self.openMapForPlace(latitude: destination.latitude, longitude: destination.longitude, name: locName) }, label: { Text("Open in Apple Maps") })

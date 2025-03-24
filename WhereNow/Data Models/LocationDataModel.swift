@@ -203,9 +203,15 @@ class LocationDataModel: NSObject, ObservableObject, Observable, CLLocationManag
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        #if os(macOS)
+        if [.authorizedAlways].contains(manager.authorizationStatus) {
+            self.start()
+        }
+        #else
         if [.authorizedWhenInUse, .authorizedAlways].contains(manager.authorizationStatus) {
             self.start()
         }
+        #endif
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {

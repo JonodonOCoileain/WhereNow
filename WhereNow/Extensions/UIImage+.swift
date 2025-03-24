@@ -4,7 +4,7 @@
 //
 //  Created by Jon on 12/1/24.
 //
-
+#if canImport(UIKit)
 import UIKit
 import OSLog
 extension UIImage {
@@ -50,3 +50,4 @@ extension UIImage {
         }
     }
 }
+#endif

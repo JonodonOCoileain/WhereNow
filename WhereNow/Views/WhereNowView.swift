@@ -7,7 +7,7 @@
 
 import SwiftUI
 import CoreLocation
-#if os(iOS) || os(macOS)
+#if canImport(UIKit)
 import UIKit
 #endif
 #if canImport(WidgetKit)
@@ -15,7 +15,9 @@ import WidgetKit
 #endif
 
 struct WhereNowView: View {
+#if canImport(UIKit)
     @State private var orientation = UIDeviceOrientation.portrait
+#endif
     static var countTime:Double = 0.1
     @EnvironmentObject var locationData: LocationDataModel
     @EnvironmentObject var weatherData: USAWeatherService
@@ -29,7 +31,7 @@ struct WhereNowView: View {
         } else {
             Group {
 #if os(macOS)
-                WhereNowPortraitViewTabbed()
+                WhereNowPortraitViewTabbed(includeGame: true)
 #elseif os(iOS)
                 if orientation.isPortrait {
                     VStack {
@@ -60,18 +62,23 @@ struct WhereNowView: View {
                 WidgetCenter.shared.reloadAllTimelines()
             }
 #endif
-#if os(iOS)
+#if os(iOS) || os(macOS)
             .alert(isPresented: self.$locationData.deniedStatus) {
                 Alert(
                     title: Text("Location permissions required"),
                     message: Text("This app is about where you are! Please allow location access."),
                     primaryButton: .cancel(Text("Cancel")),
                     secondaryButton: .default(Text("Settings"), action: {
+                        #if os(macOS)
                         
+                        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Location") {
+                            NSWorkspace.shared.open(url)
+                        }
+                        #else
                         if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
                             UIApplication.shared.open(url, options: [:], completionHandler: nil)
                         }
-                        
+                        #endif
                     }))
             }
 #else

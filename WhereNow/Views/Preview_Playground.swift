@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 public struct PlaygroundView: View {
     private let flexibleColumn = [

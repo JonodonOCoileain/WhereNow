@@ -184,14 +184,20 @@ public struct BirdSightingView: View, Identifiable {
                                 }
                             } else if let locName = sighting.locName?.replacingOccurrences(of: "--", with: ", ").replacingOccurrences(of: "-", with: " "), let startingPoint = locationData.immediateLocation()?.coordinate, let url = URL(string:
                                                                                                                                                                                                                 "https://www.google.co.in/maps/dir/\(startingPoint.latitude),\(startingPoint.longitude)/\(locName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "")/") {
+                                #if canImport(UIKit)
                                 UIApplication.shared.open(url)
+#else
+NSWorkspace.shared.open(url)
+#endif
                             }
                         }, label: {
                             Text("Location: " + location + " 🚶🏿‍♀️")
                                 .font(.system(size: descriptionSize))
                                 .multilineTextAlignment(.leading)
                                 .lineLimit(2)
+#if canImport(UIKit)
                                 .foregroundColor(UIDevice.current.systemName == "watchOS" ? .primary : .purple)
+#endif
                             
                         })
                         
@@ -224,14 +230,20 @@ public struct BirdSightingView: View, Identifiable {
                                 }
                             } else if let locName = sighting.locName?.replacingOccurrences(of: "-", with: " "), let startingPoint = locationData.immediateLocation()?.coordinate, let url = URL(string:
                                                                                                                                                                     "https://www.google.co.in/maps/dir/\(startingPoint.latitude),\(startingPoint.longitude)/\(locName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "")/") {
+                                #if canImport(UIKit)
                                 UIApplication.shared.open(url)
+                                #else
+                                NSWorkspace.shared.open(url)
+                                #endif
                             }
                         }, label: {
                             Text("Driving directions 🚗")
                                 .font(.system(size: descriptionSize))
                                 .multilineTextAlignment(.leading)
                                 .lineLimit(2)
+#if canImport(UIKit)
                                 .foregroundColor(UIDevice.current.systemName == "watchOS" ? .primary : .red)
+#endif
                         })
                     }
                     .sheet(item: $route, content: { route in

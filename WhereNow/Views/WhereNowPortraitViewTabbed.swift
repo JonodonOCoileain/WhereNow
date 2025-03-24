@@ -17,7 +17,7 @@ struct WhereNowPortraitViewTabbed: View {
     @EnvironmentObject var locationData: LocationDataModel
     @EnvironmentObject var weatherData: USAWeatherService
     @EnvironmentObject var birdData: BirdSightingService
-    
+    var includeGame: Bool = true
     let timer = Timer.publish(every: WhereNowView.countTime, on: .main, in: .common).autoconnect()
     @State var timeCounter:Double = 0.0
     
@@ -40,12 +40,13 @@ struct WhereNowPortraitViewTabbed: View {
                     Label("Weather Now!", systemImage: "sun.min")
                 }
                 .accessibilityIdentifier("Weather Now!")
-            
-            GameView()
-                .tabItem {
-                    Label("Game Now!", systemImage: "gamecontroller")
-                }
-                .accessibilityIdentifier("Game Now!")
+            if includeGame {
+                GameView()
+                    .tabItem {
+                        Label("Game Now!", systemImage: "gamecontroller")
+                    }
+                    .accessibilityIdentifier("Game Now!")
+            }
         }
         .accessibilityIdentifier("Tab View")
         .padding([.top, .bottom], reversePadding ? -25 : 0)

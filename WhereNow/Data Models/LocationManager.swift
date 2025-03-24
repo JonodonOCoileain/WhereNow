@@ -180,7 +180,11 @@ extension LocationManager: CLLocationManagerDelegate {
 private extension CLAuthorizationStatus {
     /// Boolean flag whether we're authorized to access location data.
     var isAuthorized: Bool {
+        #if os(macOS)
+        self == .authorizedAlways
+        #else
         self == .authorizedAlways || self == .authorizedWhenInUse
+        #endif
     }
 }
 

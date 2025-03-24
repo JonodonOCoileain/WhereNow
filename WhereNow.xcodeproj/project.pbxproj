@@ -75,6 +75,20 @@
 			remoteGlobalIDString = FC8D68DB2CE7D33100283160;
 			remoteInfo = "Where Now for AppleTV";
 		};
+		FCE1B2E62D90DBB70013E6FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FC2491472C48A63600101DF3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCE1B2D42D90DBB50013E6FA;
+			remoteInfo = WhereNowMacOS;
+		};
+		FCE1B2F02D90DBB70013E6FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FC2491472C48A63600101DF3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCE1B2D42D90DBB50013E6FA;
+			remoteInfo = WhereNowMacOS;
+		};
 		FCE332CE2C5A9C260093D3EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FC2491472C48A63600101DF3 /* Project object */;
@@ -133,6 +147,9 @@
 		FC8D68DC2CE7D33100283160 /* Where Now for AppleTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Where Now for AppleTV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC8D68EB2CE7D33400283160 /* Where Now for AppleTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Where Now for AppleTVTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC8D68F52CE7D33500283160 /* Where Now for AppleTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Where Now for AppleTVUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCE1B2D52D90DBB50013E6FA /* WhereNowMacOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhereNowMacOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCE1B2E52D90DBB70013E6FA /* WhereNowMacOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhereNowMacOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCE1B2EF2D90DBB70013E6FA /* WhereNowMacOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhereNowMacOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhereNowWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -140,6 +157,7 @@
 		FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				CarPlaySceneDelegate.swift,
 				"Data Models/BirdSightingService.swift",
 				"Data Models/BirdSpeciesAssetMetadata.swift",
 				"Data Models/LocationDataModel.swift",
@@ -200,6 +218,7 @@
 		FC5FA7DE2C63033F0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				CarPlaySceneDelegate.swift,
 				"Data Models/BirdSightingService.swift",
 				"Data Models/BirdSpeciesAssetMetadata.swift",
 				"Data Models/LocationDataModel.swift",
@@ -233,6 +252,7 @@
 		FC8D69072CE7D45100283160 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				CarPlaySceneDelegate.swift,
 				"Data Models/BirdSightingService.swift",
 				"Data Models/BirdSpeciesAssetMetadata.swift",
 				"Data Models/LocationDataModel.swift",
@@ -268,6 +288,60 @@
 			);
 			target = FC8D68DB2CE7D33100283160 /* Where Now for AppleTV */;
 		};
+		FCE1B3012D90DBFD0013E6FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				CarPlaySceneDelegate.swift,
+				ComplicationController.swift,
+				"Data Models/BirdSightingService.swift",
+				"Data Models/BirdSpeciesAssetMetadata.swift",
+				"Data Models/LocationDataModel.swift",
+				"Data Models/LocationManager.swift",
+				"Data Models/USAWeatherService.swift",
+				ErrorCases.swift,
+				"Extensions/CGFloat+.swift",
+				"Extensions/CLPlacemark+.swift",
+				"Extensions/Collection+.swift",
+				"Extensions/CoreLocation+Extension.swift",
+				"Extensions/Data+.swift",
+				"Extensions/Double+.swift",
+				"Extensions/String+.swift",
+				"Extensions/UIImage+.swift",
+				"Extensions/UserDefaults+.swift",
+				Fun.swift,
+				GameView.swift,
+				Logging.swift,
+				MapSnapshotManager.swift,
+				MapSnapshotView.swift,
+				"Object Models/Addresses.swift",
+				"Object Models/BirdSighting.swift",
+				"Object Models/ForecastInfo.swift",
+				"Object Models/LocationInformation.swift",
+				Objects.swift,
+				ViewModifiers.swift,
+				Views/BirdDataSightingsDescriptionView.swift,
+				Views/BirdDataSightingsShortView.swift,
+				Views/BirdsDataBriefView.swift,
+				Views/BirdSightingsViews.swift,
+				Views/BirdSightingView.swift,
+				Views/HeaderView.swift,
+				Views/LocationAccessDisabledView.swift,
+				Views/LocationViewTab.swift,
+				Views/Preview_Playground.swift,
+				Views/WatchBirdSightingView.swift,
+				Views/WatchNotableBirdSightingsViews.swift,
+				Views/WeatherViewTab.swift,
+				Views/WhereNowLandscapeView.swift,
+				Views/WhereNowPortraitLocationView.swift,
+				Views/WhereNowPortraitView.swift,
+				Views/WhereNowPortraitViewTabbed.swift,
+				Views/WhereNowView.swift,
+				Views/WhereNowWeatherHStackView.swift,
+				WidgetKinds.swift,
+			);
+			target = FCE1B2D42D90DBB50013E6FA /* WhereNowMacOS */;
+		};
 		FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -278,6 +352,7 @@
 		FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				CarPlaySceneDelegate.swift,
 				"Data Models/BirdSightingService.swift",
 				"Data Models/BirdSpeciesAssetMetadata.swift",
 				"Data Models/LocationDataModel.swift",
@@ -314,7 +389,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		FC2491512C48A63600101DF3 /* WhereNow */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC2492ED2C4ABCB400101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC5FA7DE2C63033F0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC8D69072CE7D45100283160 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNow; sourceTree = "<group>"; };
+		FC2491512C48A63600101DF3 /* WhereNow */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FC2492ED2C4ABCB400101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC2492C22C494D4300101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCE332D92C5AA2C50093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC5FA7DE2C63033F0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FC8D69072CE7D45100283160 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCE1B3012D90DBFD0013E6FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNow; sourceTree = "<group>"; };
 		FC2491622C48A63800101DF3 /* WhereNowTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WhereNowTests; sourceTree = "<group>"; };
 		FC24916C2C48A63800101DF3 /* WhereNowUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WhereNowUITests; sourceTree = "<group>"; };
 		FC2491792C48A63800101DF3 /* WhereNow Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "WhereNow Watch App"; sourceTree = "<group>"; };
@@ -324,6 +399,9 @@
 		FC8D68DD2CE7D33100283160 /* Where Now for AppleTV */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Where Now for AppleTV"; sourceTree = "<group>"; };
 		FC8D68EE2CE7D33400283160 /* Where Now for AppleTVTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Where Now for AppleTVTests"; sourceTree = "<group>"; };
 		FC8D68F82CE7D33500283160 /* Where Now for AppleTVUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Where Now for AppleTVUITests"; sourceTree = "<group>"; };
+		FCE1B2D62D90DBB50013E6FA /* WhereNowMacOS */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WhereNowMacOS; sourceTree = "<group>"; };
+		FCE1B2E82D90DBB70013E6FA /* WhereNowMacOSTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WhereNowMacOSTests; sourceTree = "<group>"; };
+		FCE1B2F22D90DBB70013E6FA /* WhereNowMacOSUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WhereNowMacOSUITests; sourceTree = "<group>"; };
 		FCE332C32C5A9C240093D3EF /* WhereNowWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WhereNowWidget; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -402,6 +480,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FCE1B2D22D90DBB50013E6FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCE1B2E22D90DBB70013E6FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCE1B2EC2D90DBB70013E6FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FCE332BD2C5A9C240093D3EF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -428,6 +527,9 @@
 				FC8D68DD2CE7D33100283160 /* Where Now for AppleTV */,
 				FC8D68EE2CE7D33400283160 /* Where Now for AppleTVTests */,
 				FC8D68F82CE7D33500283160 /* Where Now for AppleTVUITests */,
+				FCE1B2D62D90DBB50013E6FA /* WhereNowMacOS */,
+				FCE1B2E82D90DBB70013E6FA /* WhereNowMacOSTests */,
+				FCE1B2F22D90DBB70013E6FA /* WhereNowMacOSUITests */,
 				FC2492C82C494D8800101DF3 /* Frameworks */,
 				FC2491502C48A63600101DF3 /* Products */,
 			);
@@ -447,6 +549,9 @@
 				FC8D68DC2CE7D33100283160 /* Where Now for AppleTV.app */,
 				FC8D68EB2CE7D33400283160 /* Where Now for AppleTVTests.xctest */,
 				FC8D68F52CE7D33500283160 /* Where Now for AppleTVUITests.xctest */,
+				FCE1B2D52D90DBB50013E6FA /* WhereNowMacOS.app */,
+				FCE1B2E52D90DBB70013E6FA /* WhereNowMacOSTests.xctest */,
+				FCE1B2EF2D90DBB70013E6FA /* WhereNowMacOSUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -697,6 +802,74 @@
 			productReference = FC8D68F52CE7D33500283160 /* Where Now for AppleTVUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		FCE1B2D42D90DBB50013E6FA /* WhereNowMacOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCE1B2F72D90DBB70013E6FA /* Build configuration list for PBXNativeTarget "WhereNowMacOS" */;
+			buildPhases = (
+				FCE1B2D12D90DBB50013E6FA /* Sources */,
+				FCE1B2D22D90DBB50013E6FA /* Frameworks */,
+				FCE1B2D32D90DBB50013E6FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				FCE1B2D62D90DBB50013E6FA /* WhereNowMacOS */,
+			);
+			name = WhereNowMacOS;
+			packageProductDependencies = (
+			);
+			productName = WhereNowMacOS;
+			productReference = FCE1B2D52D90DBB50013E6FA /* WhereNowMacOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FCE1B2E42D90DBB70013E6FA /* WhereNowMacOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCE1B2FA2D90DBB70013E6FA /* Build configuration list for PBXNativeTarget "WhereNowMacOSTests" */;
+			buildPhases = (
+				FCE1B2E12D90DBB70013E6FA /* Sources */,
+				FCE1B2E22D90DBB70013E6FA /* Frameworks */,
+				FCE1B2E32D90DBB70013E6FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FCE1B2E72D90DBB70013E6FA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FCE1B2E82D90DBB70013E6FA /* WhereNowMacOSTests */,
+			);
+			name = WhereNowMacOSTests;
+			packageProductDependencies = (
+			);
+			productName = WhereNowMacOSTests;
+			productReference = FCE1B2E52D90DBB70013E6FA /* WhereNowMacOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FCE1B2EE2D90DBB70013E6FA /* WhereNowMacOSUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCE1B2FD2D90DBB70013E6FA /* Build configuration list for PBXNativeTarget "WhereNowMacOSUITests" */;
+			buildPhases = (
+				FCE1B2EB2D90DBB70013E6FA /* Sources */,
+				FCE1B2EC2D90DBB70013E6FA /* Frameworks */,
+				FCE1B2ED2D90DBB70013E6FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FCE1B2F12D90DBB70013E6FA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FCE1B2F22D90DBB70013E6FA /* WhereNowMacOSUITests */,
+			);
+			name = WhereNowMacOSUITests;
+			packageProductDependencies = (
+			);
+			productName = WhereNowMacOSUITests;
+			productReference = FCE1B2EF2D90DBB70013E6FA /* WhereNowMacOSUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FCE332D12C5A9C260093D3EF /* Build configuration list for PBXNativeTarget "WhereNowWidgetExtension" */;
@@ -730,7 +903,7 @@
 					"com.apple.gamecenter.Dashboard Image",
 					com.apple.gamecenter.MyLeaderboardID,
 				);
-				LastSwiftUpdateCheck = 1610;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					FC24914E2C48A63600101DF3 = {
@@ -769,6 +942,17 @@
 						CreatedOnToolsVersion = 16.1;
 						TestTargetID = FC8D68DB2CE7D33100283160;
 					};
+					FCE1B2D42D90DBB50013E6FA = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					FCE1B2E42D90DBB70013E6FA = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = FCE1B2D42D90DBB50013E6FA;
+					};
+					FCE1B2EE2D90DBB70013E6FA = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = FCE1B2D42D90DBB50013E6FA;
+					};
 					FCE332BF2C5A9C240093D3EF = {
 						CreatedOnToolsVersion = 16.0;
 					};
@@ -801,6 +985,9 @@
 				FC8D68DB2CE7D33100283160 /* Where Now for AppleTV */,
 				FC8D68EA2CE7D33400283160 /* Where Now for AppleTVTests */,
 				FC8D68F42CE7D33500283160 /* Where Now for AppleTVUITests */,
+				FCE1B2D42D90DBB50013E6FA /* WhereNowMacOS */,
+				FCE1B2E42D90DBB70013E6FA /* WhereNowMacOSTests */,
+				FCE1B2EE2D90DBB70013E6FA /* WhereNowMacOSUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -870,6 +1057,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FC8D68F32CE7D33500283160 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCE1B2D32D90DBB50013E6FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCE1B2E32D90DBB70013E6FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCE1B2ED2D90DBB70013E6FA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -956,6 +1164,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FCE1B2D12D90DBB50013E6FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCE1B2E12D90DBB70013E6FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCE1B2EB2D90DBB70013E6FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FCE332BC2C5A9C240093D3EF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1005,6 +1234,16 @@
 			isa = PBXTargetDependency;
 			target = FC8D68DB2CE7D33100283160 /* Where Now for AppleTV */;
 			targetProxy = FC8D68F62CE7D33500283160 /* PBXContainerItemProxy */;
+		};
+		FCE1B2E72D90DBB70013E6FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCE1B2D42D90DBB50013E6FA /* WhereNowMacOS */;
+			targetProxy = FCE1B2E62D90DBB70013E6FA /* PBXContainerItemProxy */;
+		};
+		FCE1B2F12D90DBB70013E6FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCE1B2D42D90DBB50013E6FA /* WhereNowMacOS */;
+			targetProxy = FCE1B2F02D90DBB70013E6FA /* PBXContainerItemProxy */;
 		};
 		FCE332CF2C5A9C260093D3EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1160,7 +1399,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.19;
+				MARKETING_VERSION = 2.20;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1201,7 +1440,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.19;
+				MARKETING_VERSION = 2.20;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1221,6 +1460,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = WhereNow/WhereNow.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow/Preview Content\"";
@@ -1236,7 +1476,6 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app provides data such as weather information and local bird sightings based on your location.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1246,9 +1485,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.19;
+				MARKETING_VERSION = 2.20;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1266,6 +1506,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = WhereNow/WhereNow.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNow/Preview Content\"";
@@ -1281,7 +1522,6 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app provides data such as weather information and local bird sightings based on your location.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1291,9 +1531,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.19;
+				MARKETING_VERSION = 2.20;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1485,7 +1726,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 2.19;
+				MARKETING_VERSION = 2.20;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1517,7 +1758,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 2.19;
+				MARKETING_VERSION = 2.20;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.watchkitapp.WhereNowWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1551,7 +1792,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.19;
+				MARKETING_VERSION = 2.20;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1583,7 +1824,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.19;
+				MARKETING_VERSION = 2.20;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1675,6 +1916,140 @@
 			};
 			name = Release;
 		};
+		FCE1B2F82D90DBB70013E6FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = WhereNowMacOS/WhereNowMacOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"WhereNowMacOS/Preview Content\"";
+				DEVELOPMENT_TEAM = 2BW34YHG9Y;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WhereNowMacOS/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 2.20;
+				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNowMacOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FCE1B2F92D90DBB70013E6FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = WhereNowMacOS/WhereNowMacOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"WhereNowMacOS/Preview Content\"";
+				DEVELOPMENT_TEAM = 2BW34YHG9Y;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WhereNowMacOS/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 2.20;
+				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNowMacOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		FCE1B2FB2D90DBB70013E6FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2BW34YHG9Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNowMacOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WhereNowMacOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WhereNowMacOS";
+			};
+			name = Debug;
+		};
+		FCE1B2FC2D90DBB70013E6FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2BW34YHG9Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNowMacOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WhereNowMacOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WhereNowMacOS";
+			};
+			name = Release;
+		};
+		FCE1B2FE2D90DBB70013E6FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2BW34YHG9Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNowMacOSUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = WhereNowMacOS;
+			};
+			name = Debug;
+		};
+		FCE1B2FF2D90DBB70013E6FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2BW34YHG9Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNowMacOSUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = WhereNowMacOS;
+			};
+			name = Release;
+		};
 		FCE332D22C5A9C260093D3EF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1706,7 +2081,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.19;
+				MARKETING_VERSION = 2.20;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1750,7 +2125,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.19;
+				MARKETING_VERSION = 2.20;
 				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow.WhereNowWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1861,6 +2236,33 @@
 			buildConfigurations = (
 				FC8D69042CE7D33500283160 /* Debug */,
 				FC8D69052CE7D33500283160 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCE1B2F72D90DBB70013E6FA /* Build configuration list for PBXNativeTarget "WhereNowMacOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCE1B2F82D90DBB70013E6FA /* Debug */,
+				FCE1B2F92D90DBB70013E6FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCE1B2FA2D90DBB70013E6FA /* Build configuration list for PBXNativeTarget "WhereNowMacOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCE1B2FB2D90DBB70013E6FA /* Debug */,
+				FCE1B2FC2D90DBB70013E6FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCE1B2FD2D90DBB70013E6FA /* Build configuration list for PBXNativeTarget "WhereNowMacOSUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCE1B2FE2D90DBB70013E6FA /* Debug */,
+				FCE1B2FF2D90DBB70013E6FA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
