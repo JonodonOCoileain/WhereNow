@@ -33,7 +33,7 @@ public struct BirdSightingView: View, Identifiable {
     #else
     @State var route: String?
     #endif
-    @ObservedObject var player = PlayerViewModel()
+    
     @State var sighting: BirdSighting
     @EnvironmentObject var locationData: LocationDataModel
     @EnvironmentObject var birdData: BirdSightingService
@@ -119,40 +119,7 @@ public struct BirdSightingView: View, Identifiable {
                     ScrollView(.horizontal) {
                         HStack {
                             ForEach(audioData.filter({ $0.comName == sighting.comName }).filter({ $0.sciName == sighting.sciName })) { key in
-                                Button(action:{
-                                    if let url = URL(string: key.url) {
-                                        self.player.set(url: url)
-                                        if self.player.isPlaying {
-                                            self.player.pause()
-                                        } else {
-                                            self.player.play()
-                                        }
-                                    }
-                                },label:{
-                                    VStack(alignment: .center, spacing: 2) {
-                                        Image(systemName: "play.circle.fill")
-#if os(watchOS)
-                                            .frame(width: 20, height: 20)
-                                            .clipShape(.rect(cornerRadius: 4))
-                                            .buttonStyle(.automatic)
-#else
-                                            .frame(width: 64, height: 64)
-                                            .clipShape(.rect(cornerRadius: 8))
-                                            .buttonStyle(.borderedProminent)
-#endif
-                                            
-                                        Text("Uploaded by:")
-                                            .font(.caption2)
-                                            .multilineTextAlignment(.center)
-                                        Text(key.uploadedBy.replacingOccurrences(of: "\"", with: ""))
-                                            .font(.caption2)
-                                            .multilineTextAlignment(.center)
-                                    }.onLongPressGesture {
-#if os(iOS)
-                                        UIApplication.shared.open(URL(string: key.citationUrl)!)
-#endif
-                                    }
-                                })
+                                AudioPlaybackButtonView(assetMetadata: key)
                             }
                         }.padding()
                     }
@@ -335,4 +302,88 @@ NSWorkspace.shared.open(url)
             }
                 
     }
+}
+
+public struct AudioPlaybackButtonView: View {
+    @ObservedObject var player = PlayerViewModel()
+    let assetMetadata: BirdSpeciesAssetMetadata
+    public var body: some View {
+            Button(action:{
+                if let url = URL(string: assetMetadata.url) {
+                    self.player.set(url: url)
+                    if self.player.isPlaying {
+                        self.player.pause()
+                    } else {
+                        self.player.play()
+                        bounceAnimation()
+                    }
+                }
+            },label:{
+                VStack(alignment: .center, spacing: 2) {
+                    Image(systemName: player.isPlaying ? "music.quarternote.3" : "play.circle.fill")
+                        .offset(y: bounceHeight?.associatedOffset ?? 0)
+#if os(watchOS)
+                        .frame(width: 20, height: 20)
+                        .clipShape(.rect(cornerRadius: 4))
+                        .buttonStyle(.automatic)
+                    
+#else
+                        .frame(width: 64, height: 64)
+                        .clipShape(.rect(cornerRadius: 8))
+                        .buttonStyle(.borderedProminent)
+#endif
+                    
+                    Text("Uploaded by:")
+                        .font(.caption2)
+                        .multilineTextAlignment(.center)
+                    Text(assetMetadata.uploadedBy.replacingOccurrences(of: "\"", with: ""))
+                        .font(.caption2)
+                        .multilineTextAlignment(.center)
+                }.onLongPressGesture {
+#if os(iOS)
+                    UIApplication.shared.open(URL(string: assetMetadata.citationUrl)!)
+#endif
+                }
+            })
+    }
+    
+    @State var bounceHeight: BounceHeight? = nil
+
+    func bounceAnimation() {
+        withAnimation(Animation.easeOut(duration: 0.3).delay(0)) {
+            bounceHeight = .up100
+        }
+        withAnimation(Animation.easeIn(duration: 0.3).delay(0.34)) {
+            bounceHeight = .base
+        }
+        withAnimation(Animation.easeOut(duration: 0.2).delay(0.64)) {
+            bounceHeight = .up40
+        }
+        withAnimation(Animation.easeIn(duration: 0.2).delay(0.84)) {
+            bounceHeight = .base
+        }
+        withAnimation(Animation.easeOut(duration: 0.1).delay(1.04)) {
+            bounceHeight = .up10
+        }
+        withAnimation(Animation.easeIn(duration: 0.1).delay(1.14)) {
+            bounceHeight = .none
+        }
+    }
+
+}
+
+enum BounceHeight {
+case up100, up40, up10, base
+var associatedOffset: Double {
+    switch self {
+    case .up100:
+        return -10
+    case .up40:
+        return -6
+    case .up10:
+        return -4
+    case .base:
+        return 0
+    }
+}
 }

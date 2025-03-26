@@ -113,37 +113,40 @@ public struct BirdSightingsContainerView: View {
     }
 }
 
-class PlayerViewModel: ObservableObject {
-  var audioPlayer: AVPlayer?
+class PlayerViewModel: NSObject, ObservableObject {
+  var audioPlayer: AVPlayer = AVPlayer()
 
   @Published var isPlaying = false
     
-    init(with url: URL? = nil) {
-        if let url = url {
-            self.audioPlayer = AVPlayer(url: url)
-        }
-    }
-    
     func set(url: URL) {
-        self.audioPlayer = AVPlayer(url: url)
+        let avPlayerItem = AVPlayerItem(url: url)
+        self.audioPlayer = AVPlayer(playerItem: avPlayerItem)
+        NotificationCenter.default
+            .addObserver(self,
+            selector: #selector(playerDidFinishPlaying),
+            name: .AVPlayerItemDidPlayToEndTime,
+            object: self.audioPlayer.currentItem
+        )
     }
     
     func play() {
-        guard let audioPlayer = audioPlayer else { return }
+        try! AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
         audioPlayer.play()
         isPlaying = true
     }
     
     func pause() {
-        guard let audioPlayer = audioPlayer else { return }
         audioPlayer.pause()
         isPlaying = false
     }
     
     func stop() {
-        guard let audioPlayer = audioPlayer else { return }
         audioPlayer.pause()
         audioPlayer.seek(to: .zero)
+        isPlaying = false
+    }
+    
+    @objc func playerDidFinishPlaying(note: NSNotification) {
         isPlaying = false
     }
 }
@@ -426,301 +429,3 @@ public extension MKMultiPoint {
     }
 }
 #endif
-/* audio asset example
- "asset": {
- "ageSex": {},
- "assetFormatCode": "audio",
- "assetId": 549106,
- "assetRestricted": true,
- "assetState": "committed",
- "assetTagCodes": ["call", "production"],
- "assetValid": true,
- "catalogDt": "2020-12-11T00:00:00",
- "catalogUserId": "USER16990",
- "citable": true,
- "citationName": "ML 92022701",
-                 "citationUrl": "https://macaulaylibrary.org/audio/92022701",
-                 "comName": "Bald Eagle",
-                 "countryCode": "US",
-                 "countryName": "United States",
-                 "createDt": "2020-12-02T18:03:02.057",
-                 "createQueued": 1,
-                 "cutLength": 28536,
-                 "digitizeDt": "2020-11-17T00:00:00",
-                 "digitizeUserId": "USER16990",
-                 "ebirdChecklistUrl": "https://ebird.org/ebird/view/checklist/S44087605",
-                 "ebirdSpeciesUrl": "https://ebird.org/species/baleag",
-                 "hasAgeSexData": false,
-                 "lastEditedDt": "2024-06-15T22:53:59.216701",
-                 "latitude": 28.2299949,
-                 "licenseId": "LICENSE4",
-                 "locId": "L857180",
-                 "locName": "River Lakes Conservation Area--Moccasin Island",
-                 "longitude": -80.8110523,
-                 "mediaEditDt": "2020-11-17T00:00:00",
-                 "mediaEditUserId": "USER16990",
-                 "mediaFileName": "Bald Eagle Q4 C US-FL-009 ML92022701 Edit.wav",
-                 "mediaFileSize": 1,
-                 "mimeType": "audio/wav",
-                 "mlBaseDownloadUrl": "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/",
-                 "obsDay": 30,
-                 "obsDt": "2018-03-30",
-                 "obsDtDisplay": "30 Mar 2018",
-                 "obsMonth": 3,
-                 "obsReviewed": false,
-                 "obsValid": true,
-                 "obsYear": 2018,
-                 "parentAssetId": 92022701,
-                 "parentAssetRestricted": false,
-                 "projId": "ML",
-                 "projectId": 1000043,
-                 "quality": 3,
-                 "ratingAverage": 3.0,
-                 "ratingCount": 4,
-                 "ratingRank": 2.5733333333333333,
-                 "renditionTypes": ["audio", "poster", "spectrogram_small"],
-                 "sciName": "Haliaeetus leucocephalus",
-                 "source": "ml",
-                 "speciesCode": "baleag",
-                 "subId": "S44087605",
-                 "subjects": [{
-                     "speciesCode": "baleag",
-                     "subjectTagCodes": ["call"]
-                 }],
-                 "subnational1Code": "US-FL",
-                 "subnational1Name": "Florida",
-                 "subnational2Code": "US-FL-009",
-                 "subnational2Name": "Brevard",
-                 "taxonCategoryCode": "species",
-                 "taxonReportAs": "baleag",
-                 "taxonomicSort": 8187.0,
-                 "userDisplayName": "Paul Marvin",
-                 "userId": "USER640979"
- }
- 
- "asset": {
-                 "ageSex": {
-                     "juvenileUnknownCount": 1
-                 },
-                 "assetFormatCode": "photo",
-                 "assetId": 306062831,
-                 "assetRestricted": false,
-                 "assetReviewed": false,
-                 "assetState": "committed",
-                 "assetTagCodes": ["flying_flight"],
-                 "assetValid": true,
-                 "citable": true,
-                 "citationName": "ML 255379201",
-                 "citationUrl": "https://macaulaylibrary.org/photo/255379201",
-                 "comName": "Bald Eagle",
-                 "countryCode": "US",
-                 "countryName": "United States",
-                 "createDt": "2020-08-13T20:38:53",
-                 "createQueued": 1,
-                 "ebirdChecklistUrl": "https://ebird.org/ebird/view/checklist/S72372921",
-                 "ebirdSpeciesUrl": "https://ebird.org/species/baleag",
-                 "groupId": "G5618064",
-                 "hasAgeSexData": true,
-                 "lastEditedDt": "2024-04-28T22:47:13.358345",
-                 "latitude": 41.7642459,
-                 "licenseId": "LICENSE4",
-                 "locId": "L612903",
-                 "locName": "Erie Marsh Preserve/Gun Club (no access Sep 1-Dec 15)",
-                 "longitude": -83.4719821,
-                 "mediaFileName": "127A3865.jpg",
-                 "mediaFileSize": 257992,
-                 "mimeType": "image/jpeg",
-                 "mlBaseDownloadUrl": "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/",
-                 "obsDay": 13,
-                 "obsDt": "2020-08-13T10:13",
-                 "obsDtDisplay": "13 Aug 2020",
-                 "subId": "OBS967491788",
-                 "obsMonth": 8,
-                 "obsReviewed": false,
-                 "obsTime": 1013,
-                 "obsValid": true,
-                 "obsYear": 2020,
-                 "parentAssetId": 255379201,
-                 "parentAssetRestricted": false,
-                 "ratingAverage": 4.111111111111111,
-                 "ratingCount": 27,
-                 "ratingRank": 3.62269366222544,
-                 "renditionTypes": ["160", "320", "480", "640", "900", "1200", "1800", "2400"],
-                 "sciName": "Haliaeetus leucocephalus",
-                 "source": "bna",
-                 "speciesCode": "baleag",
-                 "subId": "S72372921",
-                 "subjects": [{
-                     "speciesCode": "baleag",
-                     "subjectTagCodes": ["flying_flight"]
-                 }],
-                 "subnational1Code": "US-MI",
-                 "subnational1Name": "Michigan",
-                 "subnational2Code": "US-MI-115",
-                 "subnational2Name": "Monroe",
-                 "taxonCategoryCode": "species",
-                 "taxonReportAs": "baleag",
-                 "taxonomicSort": 8187.0,
-                 "updateUserId": "USER789364",
-                 "userDisplayName": "Benjamin Hack",
-                 "userId": "USER789364"
-             },
-             "caption": "Juveniles have a brown body with brown and white mottled wings. The tail is also mottled with a dark band at the tip.",
-             "captionLocale": "en",
-             "captionsMap": {
-                 "en": {
-                     "localeCode": "en",
-                     "localeText": "Juveniles have a brown body with brown and white mottled wings. The tail is also mottled with a dark band at the tip."
-                 }
-             },
-             "displayOrder": 2,
-             "title": "Juvenile",
-             "titleLocale": "en",
-             "titlesMap": {
-                 "af": {
-                     "localeCode": "af",
-                     "localeText": "Juvenile"
-                 },
-                 "da": {
-                     "localeCode": "da",
-                     "localeText": "Juvenil"
-                 },
-                 "de": {
-                     "localeCode": "de",
-                     "localeText": "juvenil"
-                 },
-                 "en": {
-                     "localeCode": "en",
-                     "localeText": "Juvenile"
-                 },
-                 "es": {
-                     "localeCode": "es",
-                     "localeText": "Juvenil"
-                 },
-                 "fr": {
-                     "localeCode": "fr",
-                     "localeText": "Juvénile"
-                 },
-                 "he": {
-                     "localeCode": "he",
-                     "localeText": "צעיר"
-                 },
-                 "id": {
-                     "localeCode": "id",
-                     "localeText": "Juvenil"
-                 },
-                 "ja": {
-                     "localeCode": "ja",
-                     "localeText": "幼鳥"
-                 },
-                 "ko": {
-                     "localeCode": "ko",
-                     "localeText": "어린새"
-                 },
-                 "ml": {
-                     "localeCode": "ml",
-                     "localeText": "Juvenile"
-                 },
-                 "mr": {
-                     "localeCode": "mr",
-                     "localeText": "Juvenile"
-                 },
-                 "pt": {
-                     "localeCode": "pt",
-                     "localeText": "Juvenil"
-                 },
-                 "ru": {
-                     "localeCode": "ru",
-                     "localeText": "Молодая птица"
-                 },
-                 "th": {
-                     "localeCode": "th",
-                     "localeText": "นกเด็ก"
-                 },
-                 "tr": {
-                     "localeCode": "tr",
-                     "localeText": "genç"
-                 },
-                 "uk": {
-                     "localeCode": "uk",
-                     "localeText": "Ювенільний птах"
-                 },
-                 "zh": {
-                     "localeCode": "zh",
-                     "localeText": "幼鳥"
-                 },
-                 "zu": {
-                     "localeCode": "zu",
-                     "localeText": "Esencane"
-                 },
-                 "zh_CN": {
-                     "localeCode": "zh_CN",
-                     "localeText": "幼鸟"
-                 }
-             }
-         }, {
-             "asset": {
-                 "ageSex": {},
-                 "assetFormatCode": "photo",
-                 "assetId": 306063031,
-                 "assetRestricted": false,
-                 "assetReviewed": true,
-                 "assetState": "committed",
-                 "assetValid": true,
-                 "citable": true,
-                 "citationName": "ML 143694961",
-                 "citationUrl": "https://macaulaylibrary.org/photo/143694961",
-                 "comName": "Bald Eagle",
-                 "countryCode": "US",
-                 "countryName": "United States",
-                 "createDt": "2019-03-04T09:58:21",
-                 "createQueued": 1,
-                 "ebirdChecklistUrl": "https://ebird.org/ebird/view/checklist/S52314531",
-                 "ebirdSpeciesUrl": "https://ebird.org/species/baleag",
-                 "groupId": "G3822514",
-                 "hasAgeSexData": false,
-                 "lastEditedDt": "2022-07-02T17:47:12.33178",
-                 "latitude": 42.549821,
-                 "licenseId": "LICENSE4",
-                 "locId": "L8546048",
-                 "locName": "199 River Rd, Deerfield US-MA (42.5498,-72.5621)",
-                 "longitude": -72.562109,
-                 "mediaFileName": "LY2A0856.jpg",
-                 "mediaFileSize": 5185447,
-                 "mimeType": "image/jpeg",
-                 "mlBaseDownloadUrl": "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/",
-                 "obsComments": "*high. Careful single scan count. Possibly a 9th. All imm",
-                 "obsDay": 2,
-                 "obsDt": "2019-02-02T11:08",
-                 "obsDtDisplay": "02 Feb 2019",
-                 "subId": "OBS705921647",
-                 "obsMonth": 2,
-                 "obsReviewed": true,
-                 "obsTime": 1108,
-                 "obsValid": true,
-                 "obsYear": 2019,
-                 "parentAssetId": 143694961,
-                 "parentAssetRestricted": false,
-                 "ratingAverage": 4.793103448275862,
-                 "ratingCount": 29,
-                 "ratingRank": 4.293360545786059,
-                 "renditionTypes": ["160", "320", "480", "640", "900", "1200", "1800", "2400"],
-                 "sciName": "Haliaeetus leucocephalus",
-                 "source": "bna",
-                 "speciesCode": "baleag",
-                 "subId": "S52314531",
-                 "subjects": [{
-                     "speciesCode": "baleag"
-                 }],
-                 "subnational1Code": "US-MA",
-                 "subnational1Name": "Massachusetts",
-                 "subnational2Code": "US-MA-011",
-                 "subnational2Name": "Franklin",
-                 "taxonCategoryCode": "species",
-                 "taxonReportAs": "baleag",
-                 "taxonomicSort": 8187.0,
-                 "updateUserId": "USER1056900",
-                 "userDisplayName": "Jonathan Eckerson",
-                 "userId": "USER532483"
-             }
- */
