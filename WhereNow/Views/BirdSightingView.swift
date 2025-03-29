@@ -308,58 +308,58 @@ public struct AudioPlaybackButtonView: View {
     @ObservedObject var player = PlayerViewModel()
     let assetMetadata: BirdSpeciesAssetMetadata
     public var body: some View {
-            Button(action:{
-                if let url = URL(string: assetMetadata.url) {
-                    self.player.set(url: url)
-                    if self.player.isPlaying {
-                        self.player.pause()
-                    } else {
-                        self.player.play()
-                        bounceAnimation()
-                    }
-                }
-            },label:{
-                VStack(alignment: .center, spacing: 2) {
-                    Image(systemName: player.isPlaying ? "music.quarternote.3" : "play.circle.fill")
-                        .offset(y: bounceHeight?.associatedOffset ?? 0)
+        Button(action:{
+            if self.player.isPlaying {
+                self.player.pause()
+            } else {
+                self.player.play()
+                bounceAnimation()
+            }
+        },label:{
+            VStack(alignment: .center, spacing: 2) {
+                Image(systemName: player.isPlaying ? "music.quarternote.3" : "play.circle.fill")
+                    .offset(y: bounceHeight?.associatedOffset ?? 0)
 #if os(watchOS)
-                        .frame(width: 20, height: 20)
-                        .clipShape(.rect(cornerRadius: 4))
-                        .buttonStyle(.automatic)
-                    
+                    .frame(width: 20, height: 20)
+                    .clipShape(.rect(cornerRadius: 4))
+                    .buttonStyle(.automatic)
+                
 #else
-                        .frame(width: 64, height: 64)
-                        .clipShape(.rect(cornerRadius: 8))
-                        .buttonStyle(.borderedProminent)
+                    .frame(width: 64, height: 64)
+                    .clipShape(.rect(cornerRadius: 8))
+                    .buttonStyle(.borderedProminent)
 #endif
-                    if player.duration > 0 && player.currentTime > 0 {
-                        ProgressView(value: player.currentTime, total: player.duration)
+                if player.duration > 0 && player.currentTime > 0 {
+                    ProgressView(value: player.currentTime, total: player.duration)
 #if os(watchOS)
-                            .frame(width: 20)
+                        .frame(width: 20)
 #else
-                            .frame(width: 64)
+                        .frame(width: 64)
 #endif
-                        Spacer(minLength: 1)
-                    } else {
-                        Spacer(minLength: 7)
-                    }
-                    
-                    Text("Uploaded by:")
-                        .font(.caption2)
-                        .multilineTextAlignment(.center)
-                    Text(assetMetadata.uploadedBy.replacingOccurrences(of: "\"", with: ""))
-                        .font(.caption2)
-                        .multilineTextAlignment(.center)
-                }.onLongPressGesture {
-#if os(iOS)
-                    UIApplication.shared.open(URL(string: assetMetadata.citationUrl)!)
-#endif
+                    Spacer(minLength: 1)
+                } else {
+                    Spacer(minLength: 7)
                 }
-            })
+                
+                Text("Uploaded by:")
+                    .font(.caption2)
+                    .multilineTextAlignment(.center)
+                Text(assetMetadata.uploadedBy.replacingOccurrences(of: "\"", with: ""))
+                    .font(.caption2)
+                    .multilineTextAlignment(.center)
+            }.onLongPressGesture {
+                self.player.stop()
+            }
+        })
+        .onAppear(perform: {
+            if let url = URL(string: assetMetadata.url) {
+                self.player.set(url: url)
+            }
+        })
     }
     
     @State var bounceHeight: BounceHeight? = nil
-
+    
     func bounceAnimation() {
         withAnimation(Animation.easeOut(duration: 0.3).delay(0)) {
             bounceHeight = .up100
@@ -380,21 +380,21 @@ public struct AudioPlaybackButtonView: View {
             bounceHeight = .none
         }
     }
-
+    
 }
 
 enum BounceHeight {
-case up100, up40, up10, base
-var associatedOffset: Double {
-    switch self {
-    case .up100:
-        return -10
-    case .up40:
-        return -6
-    case .up10:
-        return -4
-    case .base:
-        return 0
+    case up100, up40, up10, base
+    var associatedOffset: Double {
+        switch self {
+        case .up100:
+            return -10
+        case .up40:
+            return -6
+        case .up10:
+            return -4
+        case .base:
+            return 0
+        }
     }
-}
 }

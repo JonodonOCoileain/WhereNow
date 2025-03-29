@@ -139,10 +139,13 @@ class PlayerViewModel: NSObject, ObservableObject {
             print(error)
         }
         audioPlayer.play()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+        if audioPlayer.currentItem?.status == .readyToPlay {
+            currentTime = audioPlayer.currentItem?.currentTime().seconds ?? 0
+        }
+        timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { [weak self] _ in
             if self?.audioPlayer.currentItem?.status == .readyToPlay {
                 self?.duration = self?.audioPlayer.currentItem?.duration.seconds ?? 1
-                self?.currentTime += 0.1
+                self?.currentTime += 0.001
             }
         }
         isPlaying = true
@@ -159,6 +162,7 @@ class PlayerViewModel: NSObject, ObservableObject {
         audioPlayer.seek(to: .zero)
         isPlaying = false
         timer?.invalidate()
+        currentTime = 0
     }
     
     @objc func playerDidFinishPlaying(note: NSNotification) {
