@@ -114,40 +114,57 @@ public struct BirdSightingsContainerView: View {
 }
 
 class PlayerViewModel: NSObject, ObservableObject {
-  var audioPlayer: AVPlayer = AVPlayer()
-
-  @Published var isPlaying = false
+    var audioPlayer: AVPlayer = AVPlayer()
+    
+    @Published var isPlaying = false
+    @Published var duration: Double = 5
+    @Published var currentTime: Double = 0
+    var timer: Timer?
     
     func set(url: URL) {
         let avPlayerItem = AVPlayerItem(url: url)
         self.audioPlayer = AVPlayer(playerItem: avPlayerItem)
         NotificationCenter.default
             .addObserver(self,
-            selector: #selector(playerDidFinishPlaying),
-            name: .AVPlayerItemDidPlayToEndTime,
-            object: self.audioPlayer.currentItem
-        )
+                         selector: #selector(playerDidFinishPlaying),
+                         name: .AVPlayerItemDidPlayToEndTime,
+                         object: self.audioPlayer.currentItem
+            )
     }
     
     func play() {
-        try! AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
+        } catch {
+            print(error)
+        }
         audioPlayer.play()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+            if self?.audioPlayer.currentItem?.status == .readyToPlay {
+                self?.duration = self?.audioPlayer.currentItem?.duration.seconds ?? 1
+                self?.currentTime += 0.1
+            }
+        }
         isPlaying = true
     }
     
     func pause() {
         audioPlayer.pause()
         isPlaying = false
+        timer?.invalidate()
     }
     
     func stop() {
         audioPlayer.pause()
         audioPlayer.seek(to: .zero)
         isPlaying = false
+        timer?.invalidate()
     }
     
     @objc func playerDidFinishPlaying(note: NSNotification) {
         isPlaying = false
+        timer?.invalidate()
+        currentTime = 0
     }
 }
 
@@ -168,12 +185,12 @@ struct FullScreenModalView: View {
     @State var data: BirdSpeciesAssetMetadata
     var body: some View {
         VStack {
-            #if os(macOS)
+#if os(macOS)
             if let image = data.image, let nsImage = NSImage(data: image) {
                 Image(nsImage: nsImage)
                     .resizable()
                     .scaledToFit()
-                    
+                
             } else {
                 let urlString = data.url
                 if let url = URL(string: urlString) {
@@ -184,12 +201,12 @@ struct FullScreenModalView: View {
                     }
                 }
             }
-            #else
+#else
             if let image = data.image, let uiImage = UIImage(data: image) {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFit()
-                    
+                
             } else {
                 let urlString = data.url
                 if let url = URL(string: urlString) {
@@ -200,7 +217,7 @@ struct FullScreenModalView: View {
                     }
                 }
             }
-            #endif
+#endif
             
             if let sciName = data.sciName {
                 Text(sciName)
@@ -215,7 +232,7 @@ struct FullScreenModalView: View {
                 Text("Uploaded by:")
                 Text(uploadedBy.replacingOccurrences(of: "\"", with: ""))
             }
-
+            
             if let description = data.description, description.count > 0 {
                 Text("Description:")
                 Text(description)

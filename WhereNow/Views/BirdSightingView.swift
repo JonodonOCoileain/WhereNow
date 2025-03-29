@@ -332,6 +332,17 @@ public struct AudioPlaybackButtonView: View {
                         .clipShape(.rect(cornerRadius: 8))
                         .buttonStyle(.borderedProminent)
 #endif
+                    if player.duration > 0 && player.currentTime > 0 {
+                        ProgressView(value: player.currentTime, total: player.duration)
+#if os(watchOS)
+                            .frame(width: 20)
+#else
+                            .frame(width: 64)
+#endif
+                        Spacer(minLength: 1)
+                    } else {
+                        Spacer(minLength: 7)
+                    }
                     
                     Text("Uploaded by:")
                         .font(.caption2)
