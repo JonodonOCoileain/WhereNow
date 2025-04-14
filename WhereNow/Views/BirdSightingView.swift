@@ -349,9 +349,12 @@ public struct AudioPlaybackButtonView: View {
                     .multilineTextAlignment(.center)
             }.onLongPressGesture {
                 self.player.stop()
-            }.onDoubleClick {
+            }
+            #if os(macOS)
+            .onDoubleClick {
                 self.player.stop()
             }
+            #endif
         })
         .onAppear(perform: {
             if let url = URL(string: assetMetadata.url) {
@@ -401,6 +404,7 @@ enum BounceHeight {
     }
 }
 
+#if os(macOS)
 extension View {
     /// Adds a double click handler this view (macOS only)
     ///
@@ -452,3 +456,4 @@ class DoubleClickListeningView: NSView {
         }
     }
 }
+#endif
