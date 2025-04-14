@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "FC2491742C48A63800101DF3"
-               BuildableName = "WhereNow Watch App.app"
-               BlueprintName = "WhereNow Watch App"
+               BuildableName = "Where Now for watchOS.app"
+               BlueprintName = "Where Now for watchOS"
                ReferencedContainer = "container:WhereNow.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -30,8 +30,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "FC24914E2C48A63600101DF3"
-               BuildableName = "WhereNow.app"
-               BlueprintName = "WhereNow"
+               BuildableName = "Where Now.app"
+               BlueprintName = "Where Now"
                ReferencedContainer = "container:WhereNow.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -105,8 +105,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FC2491742C48A63800101DF3"
-            BuildableName = "WhereNow Watch App.app"
-            BlueprintName = "WhereNow Watch App"
+            BuildableName = "Where Now for watchOS.app"
+            BlueprintName = "Where Now for watchOS"
             ReferencedContainer = "container:WhereNow.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -126,8 +126,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FC2491742C48A63800101DF3"
-            BuildableName = "WhereNow Watch App.app"
-            BlueprintName = "WhereNow Watch App"
+            BuildableName = "Where Now for watchOS.app"
+            BlueprintName = "Where Now for watchOS"
             ReferencedContainer = "container:WhereNow.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

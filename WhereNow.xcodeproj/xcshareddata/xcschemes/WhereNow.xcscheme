@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "FC24914E2C48A63600101DF3"
-               BuildableName = "WhereNow.app"
-               BlueprintName = "WhereNow"
+               BuildableName = "Where Now.app"
+               BlueprintName = "Where Now"
                ReferencedContainer = "container:WhereNow.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -69,8 +69,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FC24914E2C48A63600101DF3"
-            BuildableName = "WhereNow.app"
-            BlueprintName = "WhereNow"
+            BuildableName = "Where Now.app"
+            BlueprintName = "Where Now"
             ReferencedContainer = "container:WhereNow.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -97,8 +97,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FC24914E2C48A63600101DF3"
-            BuildableName = "WhereNow.app"
-            BlueprintName = "WhereNow"
+            BuildableName = "Where Now.app"
+            BlueprintName = "Where Now"
             ReferencedContainer = "container:WhereNow.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FC2491762C48A63800101DF3 /* WhereNow Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FC2491752C48A63800101DF3 /* WhereNow Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FC2491762C48A63800101DF3 /* Where Now for watchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FC2491752C48A63800101DF3 /* Where Now for watchOS.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FC5FA7CC2C6303190002E2A8 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492C92C494D8800101DF3 /* WidgetKit.framework */; };
 		FC5FA7CD2C6303190002E2A8 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC2492CB2C494D8800101DF3 /* SwiftUI.framework */; };
 		FC5FA7D82C63031B0002E2A8 /* WhereNowWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC5FA7CB2C6303190002E2A8 /* WhereNowWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -105,7 +105,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				FC2491762C48A63800101DF3 /* WhereNow Watch App.app in Embed Watch Content */,
+				FC2491762C48A63800101DF3 /* Where Now for watchOS.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -135,10 +135,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		FC24914F2C48A63600101DF3 /* WhereNow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhereNow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC24914F2C48A63600101DF3 /* Where Now.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Where Now.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC24915F2C48A63800101DF3 /* WhereNowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhereNowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2491692C48A63800101DF3 /* WhereNowUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhereNowUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		FC2491752C48A63800101DF3 /* WhereNow Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WhereNow Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC2491752C48A63800101DF3 /* Where Now for watchOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Where Now for watchOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2491872C48A63900101DF3 /* WhereNow Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WhereNow Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2491912C48A63900101DF3 /* WhereNow Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WhereNow Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2492C92C494D8800101DF3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -147,7 +147,7 @@
 		FC8D68DC2CE7D33100283160 /* Where Now for AppleTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Where Now for AppleTV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC8D68EB2CE7D33400283160 /* Where Now for AppleTVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Where Now for AppleTVTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC8D68F52CE7D33500283160 /* Where Now for AppleTVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Where Now for AppleTVUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FCE1B2D52D90DBB50013E6FA /* WhereNowMacOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhereNowMacOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCE1B2D52D90DBB50013E6FA /* Where Now for macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Where Now for macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCE1B2E52D90DBB70013E6FA /* WhereNowMacOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhereNowMacOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCE1B2EF2D90DBB70013E6FA /* WhereNowMacOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhereNowMacOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WhereNowWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -196,7 +196,7 @@
 				whistle.m4a,
 				WidgetKinds.swift,
 			);
-			target = FC2491742C48A63800101DF3 /* WhereNow Watch App */;
+			target = FC2491742C48A63800101DF3 /* Where Now for watchOS */;
 		};
 		FC2492ED2C4ABCB400101DF3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -206,7 +206,7 @@
 				Views/WatchBirdSightingView.swift,
 				Views/WatchNotableBirdSightingsViews.swift,
 			);
-			target = FC24914E2C48A63600101DF3 /* WhereNow */;
+			target = FC24914E2C48A63600101DF3 /* Where Now */;
 		};
 		FC5FA7DC2C63031B0002E2A8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -340,7 +340,7 @@
 				Views/WhereNowWeatherHStackView.swift,
 				WidgetKinds.swift,
 			);
-			target = FCE1B2D42D90DBB50013E6FA /* WhereNowMacOS */;
+			target = FCE1B2D42D90DBB50013E6FA /* Where Now for macOS */;
 		};
 		FCE332D42C5A9C260093D3EF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -538,10 +538,10 @@
 		FC2491502C48A63600101DF3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FC24914F2C48A63600101DF3 /* WhereNow.app */,
+				FC24914F2C48A63600101DF3 /* Where Now.app */,
 				FC24915F2C48A63800101DF3 /* WhereNowTests.xctest */,
 				FC2491692C48A63800101DF3 /* WhereNowUITests.xctest */,
-				FC2491752C48A63800101DF3 /* WhereNow Watch App.app */,
+				FC2491752C48A63800101DF3 /* Where Now for watchOS.app */,
 				FC2491872C48A63900101DF3 /* WhereNow Watch AppTests.xctest */,
 				FC2491912C48A63900101DF3 /* WhereNow Watch AppUITests.xctest */,
 				FCE332C02C5A9C240093D3EF /* WhereNowWidgetExtension.appex */,
@@ -549,7 +549,7 @@
 				FC8D68DC2CE7D33100283160 /* Where Now for AppleTV.app */,
 				FC8D68EB2CE7D33400283160 /* Where Now for AppleTVTests.xctest */,
 				FC8D68F52CE7D33500283160 /* Where Now for AppleTVUITests.xctest */,
-				FCE1B2D52D90DBB50013E6FA /* WhereNowMacOS.app */,
+				FCE1B2D52D90DBB50013E6FA /* Where Now for macOS.app */,
 				FCE1B2E52D90DBB70013E6FA /* WhereNowMacOSTests.xctest */,
 				FCE1B2EF2D90DBB70013E6FA /* WhereNowMacOSUITests.xctest */,
 			);
@@ -568,9 +568,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		FC24914E2C48A63600101DF3 /* WhereNow */ = {
+		FC24914E2C48A63600101DF3 /* Where Now */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FC24919F2C48A63900101DF3 /* Build configuration list for PBXNativeTarget "WhereNow" */;
+			buildConfigurationList = FC24919F2C48A63900101DF3 /* Build configuration list for PBXNativeTarget "Where Now" */;
 			buildPhases = (
 				FC24914B2C48A63600101DF3 /* Sources */,
 				FC24914C2C48A63600101DF3 /* Frameworks */,
@@ -587,12 +587,12 @@
 			fileSystemSynchronizedGroups = (
 				FC2491512C48A63600101DF3 /* WhereNow */,
 			);
-			name = WhereNow;
+			name = "Where Now";
 			packageProductDependencies = (
 				FC7998772D6FEDD400612615 /* OpenAI */,
 			);
 			productName = WhereNow;
-			productReference = FC24914F2C48A63600101DF3 /* WhereNow.app */;
+			productReference = FC24914F2C48A63600101DF3 /* Where Now.app */;
 			productType = "com.apple.product-type.application";
 		};
 		FC24915E2C48A63800101DF3 /* WhereNowTests */ = {
@@ -641,9 +641,9 @@
 			productReference = FC2491692C48A63800101DF3 /* WhereNowUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		FC2491742C48A63800101DF3 /* WhereNow Watch App */ = {
+		FC2491742C48A63800101DF3 /* Where Now for watchOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FC24919B2C48A63900101DF3 /* Build configuration list for PBXNativeTarget "WhereNow Watch App" */;
+			buildConfigurationList = FC24919B2C48A63900101DF3 /* Build configuration list for PBXNativeTarget "Where Now for watchOS" */;
 			buildPhases = (
 				FC2491712C48A63800101DF3 /* Sources */,
 				FC2491722C48A63800101DF3 /* Frameworks */,
@@ -658,11 +658,11 @@
 			fileSystemSynchronizedGroups = (
 				FC2491792C48A63800101DF3 /* WhereNow Watch App */,
 			);
-			name = "WhereNow Watch App";
+			name = "Where Now for watchOS";
 			packageProductDependencies = (
 			);
 			productName = "WhereNow Watch App";
-			productReference = FC2491752C48A63800101DF3 /* WhereNow Watch App.app */;
+			productReference = FC2491752C48A63800101DF3 /* Where Now for watchOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 		FC2491862C48A63900101DF3 /* WhereNow Watch AppTests */ = {
@@ -802,9 +802,9 @@
 			productReference = FC8D68F52CE7D33500283160 /* Where Now for AppleTVUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		FCE1B2D42D90DBB50013E6FA /* WhereNowMacOS */ = {
+		FCE1B2D42D90DBB50013E6FA /* Where Now for macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FCE1B2F72D90DBB70013E6FA /* Build configuration list for PBXNativeTarget "WhereNowMacOS" */;
+			buildConfigurationList = FCE1B2F72D90DBB70013E6FA /* Build configuration list for PBXNativeTarget "Where Now for macOS" */;
 			buildPhases = (
 				FCE1B2D12D90DBB50013E6FA /* Sources */,
 				FCE1B2D22D90DBB50013E6FA /* Frameworks */,
@@ -817,11 +817,11 @@
 			fileSystemSynchronizedGroups = (
 				FCE1B2D62D90DBB50013E6FA /* WhereNowMacOS */,
 			);
-			name = WhereNowMacOS;
+			name = "Where Now for macOS";
 			packageProductDependencies = (
 			);
 			productName = WhereNowMacOS;
-			productReference = FCE1B2D52D90DBB50013E6FA /* WhereNowMacOS.app */;
+			productReference = FCE1B2D52D90DBB50013E6FA /* Where Now for macOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 		FCE1B2E42D90DBB70013E6FA /* WhereNowMacOSTests */ = {
@@ -974,10 +974,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				FC24914E2C48A63600101DF3 /* WhereNow */,
+				FC24914E2C48A63600101DF3 /* Where Now */,
 				FC24915E2C48A63800101DF3 /* WhereNowTests */,
 				FC2491682C48A63800101DF3 /* WhereNowUITests */,
-				FC2491742C48A63800101DF3 /* WhereNow Watch App */,
+				FC2491742C48A63800101DF3 /* Where Now for watchOS */,
 				FC2491862C48A63900101DF3 /* WhereNow Watch AppTests */,
 				FC2491902C48A63900101DF3 /* WhereNow Watch AppUITests */,
 				FCE332BF2C5A9C240093D3EF /* WhereNowWidgetExtension */,
@@ -985,7 +985,7 @@
 				FC8D68DB2CE7D33100283160 /* Where Now for AppleTV */,
 				FC8D68EA2CE7D33400283160 /* Where Now for AppleTVTests */,
 				FC8D68F42CE7D33500283160 /* Where Now for AppleTVUITests */,
-				FCE1B2D42D90DBB50013E6FA /* WhereNowMacOS */,
+				FCE1B2D42D90DBB50013E6FA /* Where Now for macOS */,
 				FCE1B2E42D90DBB70013E6FA /* WhereNowMacOSTests */,
 				FCE1B2EE2D90DBB70013E6FA /* WhereNowMacOSUITests */,
 			);
@@ -1197,27 +1197,27 @@
 /* Begin PBXTargetDependency section */
 		FC2491612C48A63800101DF3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FC24914E2C48A63600101DF3 /* WhereNow */;
+			target = FC24914E2C48A63600101DF3 /* Where Now */;
 			targetProxy = FC2491602C48A63800101DF3 /* PBXContainerItemProxy */;
 		};
 		FC24916B2C48A63800101DF3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FC24914E2C48A63600101DF3 /* WhereNow */;
+			target = FC24914E2C48A63600101DF3 /* Where Now */;
 			targetProxy = FC24916A2C48A63800101DF3 /* PBXContainerItemProxy */;
 		};
 		FC2491782C48A63800101DF3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FC2491742C48A63800101DF3 /* WhereNow Watch App */;
+			target = FC2491742C48A63800101DF3 /* Where Now for watchOS */;
 			targetProxy = FC2491772C48A63800101DF3 /* PBXContainerItemProxy */;
 		};
 		FC2491892C48A63900101DF3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FC2491742C48A63800101DF3 /* WhereNow Watch App */;
+			target = FC2491742C48A63800101DF3 /* Where Now for watchOS */;
 			targetProxy = FC2491882C48A63900101DF3 /* PBXContainerItemProxy */;
 		};
 		FC2491932C48A63900101DF3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FC2491742C48A63800101DF3 /* WhereNow Watch App */;
+			target = FC2491742C48A63800101DF3 /* Where Now for watchOS */;
 			targetProxy = FC2491922C48A63900101DF3 /* PBXContainerItemProxy */;
 		};
 		FC5FA7D72C63031B0002E2A8 /* PBXTargetDependency */ = {
@@ -1237,12 +1237,12 @@
 		};
 		FCE1B2E72D90DBB70013E6FA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FCE1B2D42D90DBB50013E6FA /* WhereNowMacOS */;
+			target = FCE1B2D42D90DBB50013E6FA /* Where Now for macOS */;
 			targetProxy = FCE1B2E62D90DBB70013E6FA /* PBXContainerItemProxy */;
 		};
 		FCE1B2F12D90DBB70013E6FA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FCE1B2D42D90DBB50013E6FA /* WhereNowMacOS */;
+			target = FCE1B2D42D90DBB50013E6FA /* Where Now for macOS */;
 			targetProxy = FCE1B2F02D90DBB70013E6FA /* PBXContainerItemProxy */;
 		};
 		FCE332CF2C5A9C260093D3EF /* PBXTargetDependency */ = {
@@ -1926,19 +1926,20 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNowMacOS/Preview Content\"";
-				DEVELOPMENT_TEAM = 2BW34YHG9Y;
+				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhereNowMacOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
-				MARKETING_VERSION = 2.26.1;
-				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNowMacOS;
+				MARKETING_VERSION = 2.26.3;
+				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1956,19 +1957,20 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WhereNowMacOS/Preview Content\"";
-				DEVELOPMENT_TEAM = 2BW34YHG9Y;
+				DEVELOPMENT_TEAM = KB8WXAHJCD;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WhereNowMacOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Where Now!";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
-				MARKETING_VERSION = 2.26.1;
-				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNowMacOS;
+				MARKETING_VERSION = 2.26.3;
+				PRODUCT_BUNDLE_IDENTIFIER = OCoileain.Jon.WhereNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2150,7 +2152,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FC24919B2C48A63900101DF3 /* Build configuration list for PBXNativeTarget "WhereNow Watch App" */ = {
+		FC24919B2C48A63900101DF3 /* Build configuration list for PBXNativeTarget "Where Now for watchOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FC24919C2C48A63900101DF3 /* Debug */,
@@ -2159,7 +2161,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FC24919F2C48A63900101DF3 /* Build configuration list for PBXNativeTarget "WhereNow" */ = {
+		FC24919F2C48A63900101DF3 /* Build configuration list for PBXNativeTarget "Where Now" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FC2491A02C48A63900101DF3 /* Debug */,
@@ -2240,7 +2242,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FCE1B2F72D90DBB70013E6FA /* Build configuration list for PBXNativeTarget "WhereNowMacOS" */ = {
+		FCE1B2F72D90DBB70013E6FA /* Build configuration list for PBXNativeTarget "Where Now for macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FCE1B2F82D90DBB70013E6FA /* Debug */,

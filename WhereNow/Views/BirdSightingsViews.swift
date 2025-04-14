@@ -37,10 +37,14 @@ struct BirdSightingsViews: View {
                     .multilineTextAlignment(.leading)
                     .padding([.horizontal])
                     .lineLimit(3)
+#if os(iOS) || os(tvOS) || os(watchOS)
                 HStack {
+                    
                     Text("Sightings search radius")
                         .font(.system(size: titleSize))
                         .multilineTextAlignment(.leading)
+                    
+                    
                     Picker(selection: $birdData.searchRadius, label: Text("Sightings search radius")
                         .font(.system(size: titleSize))
                         .multilineTextAlignment(.leading)
@@ -51,6 +55,27 @@ struct BirdSightingsViews: View {
                         }
                     }
                 }
+                #else
+                VStack {
+                    
+                    Text("Sightings search radius in miles")
+                        .font(.system(size: titleSize))
+                        .multilineTextAlignment(.leading)
+                        .padding([.top])
+                    
+                    
+                    Picker(selection: $birdData.searchRadius, label: Text("")
+                        .font(.system(size: titleSize))
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom))
+                    {
+                        ForEach(0 ..< BirdSightingsViews.DistanceCount) {
+                            index in
+                            Text("\(BirdSightingsViews.Distance[index])").tag(BirdSightingsViews.Distance[index])
+                        }
+                    }.frame(width: 300)
+                }
+                #endif
                 Spacer()
                 ScrollView(.horizontal) {
                     HStack(alignment:.top) {
@@ -133,11 +158,13 @@ class PlayerViewModel: NSObject, ObservableObject {
     }
     
     func play() {
+        #if os(iOS) || os(tvOS) || os(watchOS)
         do {
             try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
         } catch {
             print(error)
         }
+        #endif
         audioPlayer.play()
         if audioPlayer.currentItem?.status == .readyToPlay {
             currentTime = audioPlayer.currentItem?.currentTime().seconds ?? 0
