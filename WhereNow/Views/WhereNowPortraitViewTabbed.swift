@@ -22,52 +22,57 @@ struct WhereNowPortraitViewTabbed: View {
     @State var timeCounter:Double = 0.0
     
     var body: some View {
-        TabView {
-            BirdSightingsViews()
-                .tabItem {
-                    Label("Hear Now!", systemImage: "bird")
-                }
-                .accessibilityIdentifier("Hear Now!")
-            
-            LocationViewTab()
-                .tabItem {
-                    Label("Here Now!", systemImage: "mappin.and.ellipse")
-                }
-                .accessibilityIdentifier("Here Now!")
-            
-            WeatherViewTab()
-                .tabItem {
-                    Label("Weather Now!", systemImage: "sun.min")
-                }
-                .accessibilityIdentifier("Weather Now!")
-            if includeGame {
-                GameView()
+        if locationData.currentLocation
+            == nil {
+            AnyView(Text("Location data required..."))
+        } else {
+            TabView {
+                BirdSightingsViews()
                     .tabItem {
-                        Label("Game Now!", systemImage: "gamecontroller")
+                        Label("Hear Now!", systemImage: "bird")
                     }
-                    .accessibilityIdentifier("Game Now!")
-            }
-        }
-        .accessibilityIdentifier("Tab View")
-        .padding([.top, .bottom], reversePadding ? -25 : 0)
-        .onReceive(timer) { input in
-            if timeCounter >= 2.0 {
-                timeCounter = 0
-            }
-            timeCounter = timeCounter + WhereNowView.countTime * 2
-        }
-        .onAppear() {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: {
-                if let locationCoordinate = locationData.currentLocation?.coordinate {
-                    weatherData.cacheForecasts(using: locationCoordinate)
-                    birdData.cacheNotableSightings(using: locationCoordinate)
+                    .accessibilityIdentifier("Hear Now!")
+                
+                LocationViewTab()
+                    .tabItem {
+                        Label("Here Now!", systemImage: "mappin.and.ellipse")
+                    }
+                    .accessibilityIdentifier("Here Now!")
+                
+                WeatherViewTab()
+                    .tabItem {
+                        Label("Weather Now!", systemImage: "sun.min")
+                    }
+                    .accessibilityIdentifier("Weather Now!")
+                if includeGame {
+                    GameView()
+                        .tabItem {
+                            Label("Game Now!", systemImage: "gamecontroller")
+                        }
+                        .accessibilityIdentifier("Game Now!")
                 }
-            })
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2, execute: {
-                if let locationCoordinate = locationData.currentLocation?.coordinate {
-                    birdData.cacheSightings(using: locationCoordinate)
+            }
+            .accessibilityIdentifier("Tab View")
+            .padding([.top, .bottom], reversePadding ? -25 : 0)
+            .onReceive(timer) { input in
+                if timeCounter >= 2.0 {
+                    timeCounter = 0
                 }
-            })
+                timeCounter = timeCounter + WhereNowView.countTime * 2
+            }
+            .onAppear() {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: {
+                    if let locationCoordinate = locationData.currentLocation?.coordinate {
+                        weatherData.cacheForecasts(using: locationCoordinate)
+                        birdData.cacheNotableSightings(using: locationCoordinate)
+                    }
+                })
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2, execute: {
+                    if let locationCoordinate = locationData.currentLocation?.coordinate {
+                        birdData.cacheSightings(using: locationCoordinate)
+                    }
+                })
+            }
         }
     }
 }

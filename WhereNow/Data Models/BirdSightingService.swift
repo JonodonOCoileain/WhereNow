@@ -72,7 +72,6 @@ class BirdSightingService: ObservableObject, Observable {
         speciesMedia.removeAll()
         birdSeenCommonDescription = nil
         notableBirdsSeenCommonDescription = nil
-        deleteFileDirectory()
     }
     
     func resetRequestHistory() {
@@ -85,149 +84,9 @@ class BirdSightingService: ObservableObject, Observable {
         metadataRequests.removeAll()
     }
     //set the name of the new folder
-    private let birdFilesFolderURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent("BirdFiles")
-    func createFileDirectory() {
-        do
-        {
-            try FileManager.default.createDirectory(at: birdFilesFolderURL, withIntermediateDirectories: true)
-        }
-        catch let error as NSError
-        {
-            NSLog("Unable to create directory \(error.debugDescription)")
-        }
-    }
+    //private let birdFilesFolderURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent("BirdFiles")
     
-    func deleteFileDirectory() {
-        do
-        {
-            try FileManager.default.removeItem(at: birdFilesFolderURL)
-        }
-        catch let error as NSError
-        {
-            NSLog("Unable to create directory \(error.debugDescription)")
-        }
-    }
-    
-    func saveBirdFile(data: Data, metaData: BirdSpeciesAssetMetadata) {
-        var isDirectory : ObjCBool = true
-        if !FileManager.default.fileExists(atPath: birdFilesFolderURL.path(), isDirectory: &isDirectory) {
-            self.createFileDirectory()
-        }
-        let name = String(metaData.hashValue)
-        guard let directoryName = metaData.comName ?? metaData.sciName else {
-            Logger.assetMetadata.error("Could not generate asset data folder name for \(metaData.description ?? "Undescribed metadata")")
-            return
-        }
-        let directory = birdFilesFolderURL.appendingPathComponent(directoryName)
-        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        
-        let extensionString = metaData.assetFormatCode
-        let fileURL = directory.appendingPathComponent(name).appendingPathExtension(extensionString)
-        
-        do {
-            try data.write(to: fileURL)
-            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in
-                self?.savedImages += 1
-            })
-        } catch {
-            print(error)
-        }
-    }
-    
-    func retrieveData(of dataArray: [BirdSpeciesAssetMetadata]) {
-        for metadata in dataArray {
-            if let url = URL(string: metadata.url) {
-                
-                let request = URLRequest(url: url)
-                
-                let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-                    if let data = data {
-                        self?.saveBirdFile(data: data, metaData: metadata)
-                    }
-                }
-                task.resume()
-            }
-        }
-    }
-    
-    func getDataOfBird(metadata: BirdSpeciesAssetMetadata) -> Data? {
-        let name = String(metadata.hashValue)
-        guard let directoryName = metadata.comName ?? metadata.sciName else {
-            Logger.assetMetadata.error("Could not generate asset data folder name for \(metadata.description ?? "Undescribed metadata")")
-            return nil
-        }
-        let directory = try! FileManager.default
-            .url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            .appendingPathComponent(directoryName)
-        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        
-        let extensionString = metadata.assetFormatCode
-        let fileURL = directory.appendingPathComponent(name).appendingPathExtension(extensionString)
-        
-        if FileManager.default.fileExists(atPath: fileURL.path()) {
-            do {
-                return try Data(contentsOf: fileURL, options: [])
-            } catch {
-                print(error.localizedDescription)
-                return nil
-            }
-        } else {
-            return nil
-        }
-    }
-    
-    func downloadFileCompletionHandler(urlstring: String, named: String, completion: @escaping (URL?, Error?) -> Void) {
-        
-        let url = URL(string: urlstring)!
-        let documentsUrl =  try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-        let destinationUrl = documentsUrl.appendingPathComponent(named)
-        print(destinationUrl)
-        
-        if FileManager().fileExists(atPath: destinationUrl.path) {
-            print("File already exists [\(destinationUrl.path)]")
-            //            try! FileManager().removeItem(at: destinationUrl)
-            completion(destinationUrl, nil)
-            return
-        }
-        
-        let request = URLRequest(url: url)
-        
-        
-        let task = URLSession.shared.downloadTask(with: request) { tempFileUrl, response, error in
-            //            print(tempFileUrl, response, error)
-            if error != nil {
-                completion(nil, error)
-                return
-            }
-            
-            if let response = response as? HTTPURLResponse {
-                if response.statusCode == 200 {
-                    if let tempFileUrl = tempFileUrl {
-                        print("download finished")
-                        try! FileManager.default.moveItem(at: tempFileUrl, to: destinationUrl)
-                        completion(destinationUrl, error)
-                    } else {
-                        completion(nil, error)
-                    }
-                    
-                }
-            }
-            
-        }
-        task.resume()
-    }
-    
-    func makeAudioRequest(using coordinate: CLLocationCoordinate2D) -> URLRequest? {
-        let typeAudio = URLQueryItem(name: "type", value: "audio")
-        let queryItems:[URLQueryItem] = [typeAudio]
-        guard let baseURL = URL(string:BirdSightingService.recentsURLString) else { return nil}
-        let finalURL = baseURL.appending(queryItems: queryItems)
-        var request = URLRequest(url: finalURL)
-        request.addValue("\(BirdSightingService.cornellUOrnithologyAPIKey)", forHTTPHeaderField: "X-eBirdApiToken")
-        return request
-    }
-    
-    func makeRequest(using coordinate: CLLocationCoordinate2D) -> URLRequest? {
+    func makeRecentsRequest(using coordinate: CLLocationCoordinate2D) -> URLRequest? {
         let latitudeURLQueryItem = URLQueryItem(name: "lat", value: String(coordinate.latitude))
         let longitudeURLQueryItem = URLQueryItem(name: "lng", value: String(coordinate.longitude))
         let sortingURLQueryItem = URLQueryItem(name: "sort", value: "date")
@@ -257,7 +116,7 @@ class BirdSightingService: ObservableObject, Observable {
     var cachingSightings: Bool = false
     func cacheSightings(using coordinate: CLLocationCoordinate2D) {
         if !cachingSightings {
-            guard let request = makeRequest(using: coordinate) else { return }
+            guard let request = makeRecentsRequest(using: coordinate) else { return }
             let dataTask = URLSession(configuration: .ephemeral).dataTask(with: request, completionHandler: { [weak self] data, response, error in
                 guard let data = data else {
                     print(error?.localizedDescription ?? "Error retrieving forecast data")
@@ -286,7 +145,7 @@ class BirdSightingService: ObservableObject, Observable {
     }
     
     func asyncCacheSightings(using coordinate: CLLocationCoordinate2D) async {
-        guard let request = makeRequest(using: coordinate) else { return }
+        guard let request = makeRecentsRequest(using: coordinate) else { return }
         do {
             let data = try await URLSession(configuration: .ephemeral).data(for: request).0
             do {
@@ -310,7 +169,7 @@ class BirdSightingService: ObservableObject, Observable {
     }
     
     func getSightings(using coordinate: CLLocationCoordinate2D) async -> [BirdSighting] {
-        guard let request = makeRequest(using: coordinate) else { return []}
+        guard let request = makeRecentsRequest(using: coordinate) else { return []}
         do {
             let data = try await URLSession(configuration: .ephemeral).data(for: request).0
             let decodedSightings = try JSONDecoder().decode([BirdSighting].self, from: data)
@@ -326,10 +185,6 @@ class BirdSightingService: ObservableObject, Observable {
     var cachingNotables: Bool = false
     func cacheNotableSightings(using coordinate: CLLocationCoordinate2D) {
         if !cachingNotables {
-            var isDirectory : ObjCBool = true
-            if !FileManager.default.fileExists(atPath: birdFilesFolderURL.path(), isDirectory: &isDirectory) {
-                self.createFileDirectory()
-            }
             guard let request = makeNotablesRequest(using: coordinate) else { return }
             let dataTask = URLSession(configuration: .ephemeral).dataTask(with: request, completionHandler: { [weak self] data, response, error in
                 guard let data = data else {

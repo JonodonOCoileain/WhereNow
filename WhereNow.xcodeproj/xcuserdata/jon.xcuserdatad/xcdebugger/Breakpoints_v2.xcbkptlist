@@ -62,10 +62,40 @@
             filePath = "WhereNow/Data Models/BirdSightingService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "317"
-            endingLineNumber = "317"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
             landmarkName = "getSightings(using:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "82515092-5A10-4517-9EB4-91BDB0AB1081 - c53bd7ee58b16b9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for Where_Now_for_macOS.BirdSightingService.getSightings(using: __C.CLLocationCoordinate2D) async -&gt; Swift.Array&lt;Where_Now_for_macOS.BirdSighting&gt;"
+                  moduleName = "Where Now for macOS.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "317"
+                  endingLineNumber = "317">
+               </Location>
+               <Location
+                  uuid = "82515092-5A10-4517-9EB4-91BDB0AB1081 - c53bd7ee58be06a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for Where_Now_for_macOS.BirdSightingService.getSightings(using: __C.CLLocationCoordinate2D) async -&gt; Swift.Array&lt;Where_Now_for_macOS.BirdSighting&gt;"
+                  moduleName = "Where Now for macOS.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jon/Library/Mobile%20Documents/com~apple~CloudDocs/WhereNow/WhereNow/Data%20Models/BirdSightingService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "176"
+                  endingLineNumber = "176">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
