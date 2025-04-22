@@ -24,9 +24,11 @@ struct WhereNowView: View {
     @EnvironmentObject var birdData: BirdSightingService
     @Environment(\.scenePhase) var scenePhase
     @State var tabViewSelected: Bool = true
-    
     var body: some View {
-        if ([CLAuthorizationStatus.restricted, CLAuthorizationStatus.denied].contains(where: {$0 == locationData.manager.authorizationStatus})) {
+        if NetworkModel.shared.getNetworkState()
+            != true {
+            AnyView(Text("Network connection required"))
+        } else if ([CLAuthorizationStatus.restricted, CLAuthorizationStatus.denied].contains(where: {$0 == locationData.manager.authorizationStatus})) {
             LocationAccessDisabledView()
         } else {
             Group {
