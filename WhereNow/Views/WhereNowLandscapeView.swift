@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct WhereNowLandscapeView: View {
     static var countTime:Double = 0.1
@@ -43,11 +44,13 @@ struct WhereNowLandscapeView: View {
                         VStack {
                             HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Here now!")
                             HStack {
-                                if let image = self.locationData.image {
-                                    MapSnapshotView(image: image)
-                                        .scaleEffect(showLocation ? 1 : 0)
-                                        .animation(.easeInOut, value: showLocation)
-                                        .frame(width: 240, height: 240)
+                                if let coordinate = locationData.currentLocation?.coordinate {
+                                    Map {
+                                        Marker("Here", coordinate: coordinate)
+                                    }
+                                    .scaleEffect(showLocation ? 1 : 0)
+                                    .animation(.easeInOut, value: showLocation)
+                                    .frame(width: 240, height: 240)
                                 }
                                 Text(self.locationData.addressesVeryLongFlag)
                                     .multilineTextAlignment(.center)

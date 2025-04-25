@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct WhereNowPortraitView: View {
     static var countTime:Double = 0.1
@@ -65,12 +66,11 @@ struct WhereNowPortraitView: View {
                             VStack {
                                 Text(self.locationData.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
                                     .multilineTextAlignment(.center)
-#if os(watchOS)
-#else
-                                if let image = self.locationData.image {
-                                    MapSnapshotView(image: image)
+                                if let coordinate = locationData.currentLocation?.coordinate {
+                                    Map {
+                                        Marker("Here", coordinate: coordinate)
+                                    }
                                 }
-#endif
                             }
                             .scaleEffect(showLocation ? 1 : 0)
                             .offset(y: hideLocationTime > showLocationTime ? -200 * (Date().timeIntervalSince1970 - hideLocationTime)/0.35 : (hideLocationTime < showLocationTime && showLocationTime >= 0.35+Date().timeIntervalSince1970  ? -10 * (showLocationTime - Date().timeIntervalSince1970)/0.35 : 0))

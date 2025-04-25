@@ -9,6 +9,7 @@ import SwiftUI
 #if canImport(OpenAI)
 import OpenAI
 #endif
+import MapKit
 
 struct LocationViewTab: View {
     @EnvironmentObject var locationData: LocationDataModel
@@ -42,11 +43,11 @@ struct LocationViewTab: View {
             VStack {
                 Text(self.locationData.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
                     .multilineTextAlignment(.center)
-#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
-                if let image = self.locationData.image {
-                    MapSnapshotView(image: image)
+                if let coordinate = locationData.currentLocation?.coordinate {
+                    Map {
+                        Marker("Here", coordinate: coordinate)
+                    }
                 }
-#endif
 #if canImport(OpenAI)
                 if openAIDescription.count > 0 {
                     Text("OpenAI says: \n\(openAIDescription)")
