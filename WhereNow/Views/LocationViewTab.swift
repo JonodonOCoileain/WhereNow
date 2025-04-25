@@ -13,6 +13,7 @@ import MapKit
 
 struct LocationViewTab: View {
     @EnvironmentObject var locationData: LocationDataModel
+    @EnvironmentObject var birdData: BirdSightingService
 #if canImport(OpenAI)
     let openAI = OpenAI(apiToken: "sk-svcacct-M1ecwlvlJF9AWuO3eyl5woX2xl2BIYQhuu_T2erVswHzxA8riFSwVHsJTBE3WIqJT3BlbkFJujXWhdiTuCbOZSo2cJDwdn3c0yqJIezlJYUtD-d1kJOiFoEHgI4e5aqJ9G4F1ikA")
     @State var timeAskedOpenAI: Date?
@@ -44,9 +45,16 @@ struct LocationViewTab: View {
                 Text(self.locationData.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
                     .multilineTextAlignment(.center)
                 if let coordinate = locationData.currentLocation?.coordinate {
-                    Map {
+                    Map() {
                         Marker("Here", coordinate: coordinate)
+                        
+                        ForEach(self.birdData.sightings) { sighting in
+                            if let lat = sighting.lat, let lng = sighting.lng {
+                                Marker(sighting.comName ?? "bird", systemImage: "bird.fill", coordinate: CLLocationCoordinate2D(latitude: Double(lat), longitude: Double(lng)))
+                            }
+                        }
                     }
+                    .frame(minHeight: 300)
                 }
 #if canImport(OpenAI)
                 if openAIDescription.count > 0 {

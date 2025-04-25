@@ -71,10 +71,10 @@ struct WhereNowPortraitView: View {
                                         Marker("Here", systemImage: "location", coordinate: coordinate)
                                         ForEach(self.birdData.sightings) { sighting in
                                             if let lat = sighting.lat, let lng = sighting.lng {
-                                                Marker("\(sighting.species)", systemImage: "bird.fill", coordinate: CLLocationCoordinate2D(latitude: Double(lat)!, longitude: Double(lng)!))
+                                                Marker(sighting.comName ?? "bird", systemImage: "bird.fill", coordinate: CLLocationCoordinate2D(latitude: Double(lat), longitude: Double(lng)))
                                             }
                                         }
-                                    }
+                                    }.frame(minHeight: 300)
                                 }
                             }
                             .scaleEffect(showLocation ? 1 : 0)
