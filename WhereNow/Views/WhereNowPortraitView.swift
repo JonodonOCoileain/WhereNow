@@ -69,6 +69,11 @@ struct WhereNowPortraitView: View {
                                 if let coordinate = locationData.currentLocation?.coordinate {
                                     Map() {
                                         Marker("Here", systemImage: "location", coordinate: coordinate)
+                                        ForEach(self.birdData.sightings) { sighting in
+                                            if let lat = sighting.lat, let lng = sighting.lng {
+                                                Marker("\(sighting.species)", systemImage: "bird.fill", coordinate: CLLocationCoordinate2D(latitude: Double(lat)!, longitude: Double(lng)!))
+                                            }
+                                        }
                                     }
                                 }
                             }
