@@ -45,8 +45,8 @@ struct WhereNowLandscapeView: View {
                             HeaderView(isPresenting: $showLocation, showTimeTracker: $showLocationTime,  hideTimeTracker: $hideLocationTime, title: "Here now!")
                             HStack {
                                 if let coordinate = locationData.currentLocation?.coordinate {
-                                    Map {
-                                        Marker("Here", coordinate: coordinate)
+                                    Map() {
+                                        Marker("Here", systemImage: "location", coordinate: coordinate)
                                     }
                                     .scaleEffect(showLocation ? 1 : 0)
                                     .animation(.easeInOut, value: showLocation)

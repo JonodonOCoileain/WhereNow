@@ -67,8 +67,8 @@ struct WhereNowPortraitView: View {
                                 Text(self.locationData.addresses.compactMap({$0.formattedCommonVeryLongFlag()}).joined(separator: "\n\n"))
                                     .multilineTextAlignment(.center)
                                 if let coordinate = locationData.currentLocation?.coordinate {
-                                    Map {
-                                        Marker("Here", coordinate: coordinate)
+                                    Map() {
+                                        Marker("Here", systemImage: "location", coordinate: coordinate)
                                     }
                                 }
                             }
