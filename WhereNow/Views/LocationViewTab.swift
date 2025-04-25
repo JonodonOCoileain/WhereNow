@@ -46,7 +46,7 @@ struct LocationViewTab: View {
                     .multilineTextAlignment(.center)
                 if let coordinate = locationData.currentLocation?.coordinate {
                     Map() {
-                        Marker("Here", coordinate: coordinate)
+                        Marker("Here", systemImage: "location", coordinate: coordinate)
                         
                         ForEach(self.birdData.sightings) { sighting in
                             if let lat = sighting.lat, let lng = sighting.lng {
