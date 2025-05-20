@@ -130,8 +130,8 @@ struct TVBirdSightingsViews: View {
 
 public struct TVBirdSightingView: View {
     private let flexible = [
-        GridItem(.flexible(minimum: 30, maximum: 120)),
-        GridItem(.flexible(minimum: 30, maximum: 120))
+        GridItem(.flexible(minimum: 100, maximum: 220)),
+        GridItem(.flexible(minimum: 100, maximum: 220))
     ]
     let geometry: GeometryProxy
     @State private var isPresented: Bool = false
@@ -164,13 +164,14 @@ public struct TVBirdSightingView: View {
                                         .resizable()
                                         .scaledToFill()
                                 }
-                                .frame(width: 28, height: 28)
+                                .frame(width: 100, height: 100)
                             }
                             Text(imageData.uploadedBy.replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: " ", with: "\n"))
                                 .lineLimit(2)
                                 .font(.system(size: smallSize))
                                 .fixedSize(horizontal: true, vertical: false)
                         }
+                        .frame(width: 200, height: 200)
                         .clipped()
                         .onTapGesture {
                             selectedDetailTitle = sighting.sciName
@@ -180,7 +181,6 @@ public struct TVBirdSightingView: View {
                         }
                     }
                 })
-                .frame(width: geometry.size.width - 4, height: 90)
                 .padding(.bottom)
             } else {
                 Text(Fun.eBirdjis.randomElement() ?? "")

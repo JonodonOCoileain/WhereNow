@@ -69,7 +69,7 @@ public struct BirdSightingView: View, Identifiable {
                 let photosData = relatedData.filter({$0.assetFormatCode == "photo"})
                 if photosData.count > 0 {
                     ScrollView(.horizontal) {
-                        LazyHStack(alignment: .center) {
+                        HStack(alignment: .center) {
                             ForEach(photosData, id: \.self) { imageData in
                                 Button(action: {
                                     selectedDetailTitle = sighting.sciName
@@ -105,7 +105,7 @@ public struct BirdSightingView: View, Identifiable {
                                     }
                                 })
                             }
-                        }
+                        }.padding()
                     }
                 } else {
                     Text(Fun.eBirdjis.randomElement() ?? "")
