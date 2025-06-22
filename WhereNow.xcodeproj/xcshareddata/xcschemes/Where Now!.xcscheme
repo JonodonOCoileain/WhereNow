@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "FC8D68DB2CE7D33100283160"
-               BuildableName = "Where Now for AppleTV.app"
-               BlueprintName = "Where Now for AppleTV"
+               BuildableName = "Where Now!.app"
+               BlueprintName = "Where Now!"
                ReferencedContainer = "container:WhereNow.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -69,8 +69,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FC8D68DB2CE7D33100283160"
-            BuildableName = "Where Now for AppleTV.app"
-            BlueprintName = "Where Now for AppleTV"
+            BuildableName = "Where Now!.app"
+            BlueprintName = "Where Now!"
             ReferencedContainer = "container:WhereNow.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -86,8 +86,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FC8D68DB2CE7D33100283160"
-            BuildableName = "Where Now for AppleTV.app"
-            BlueprintName = "Where Now for AppleTV"
+            BuildableName = "Where Now!.app"
+            BlueprintName = "Where Now!"
             ReferencedContainer = "container:WhereNow.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

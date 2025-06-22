@@ -36,12 +36,30 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
 
 
 class CarPlayHelloWorld {
+    let locationData = LocationDataModel()
+    let birdData = BirdSightingService()
+    
+    init() {
+        locationData.start()
+        if let currentLocation = locationData.currentLocation {
+            birdData.cacheNotableSightings(using: currentLocation.coordinate, and: true)
+        }
+    }
+    
     var template: CPListTemplate {
-        return CPListTemplate(title: "Hello world", sections: [self.section])
+        return CPListTemplate(title: "Where Now", sections: [self.section])
     }
     
     var items: [CPListItem] {
-        return [CPListItem(text:"Hello world", detailText: "The world of CarPlay", image: UIImage(systemName: "globe"))]
+        let cpListItems: [CPListItem] = birdData.notableSightings.map({CPListItem(text: $0.comName, detailText: $0.locId)})
+        
+        /*for item in cpListItems {
+            if let item = birdData.speciesMedia.first(where: { $0.comName == item.text }) {
+                
+            }
+        }*/
+        
+        return cpListItems
     }
     
     private var section: CPListSection {

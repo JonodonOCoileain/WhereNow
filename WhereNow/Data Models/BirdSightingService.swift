@@ -183,7 +183,7 @@ class BirdSightingService: ObservableObject, Observable {
     }
     
     var cachingNotables: Bool = false
-    func cacheNotableSightings(using coordinate: CLLocationCoordinate2D) {
+    func cacheNotableSightings(using coordinate: CLLocationCoordinate2D, and metadata: Bool = false) {
         if !cachingNotables {
             guard let request = makeNotablesRequest(using: coordinate) else { return }
             let dataTask = URLSession(configuration: .ephemeral).dataTask(with: request, completionHandler: { [weak self] data, response, error in
@@ -201,7 +201,11 @@ class BirdSightingService: ObservableObject, Observable {
                         }
                     }
                     let notableSightings = Array(sightingsToSave.reversed())
-                    
+                    if metadata {
+                        for sighting in notableSightings {
+                            self?.requestWebsiteAssetMetadataOf(sighting: sighting)
+                        }
+                    }
                     DispatchQueue.main.async { [weak self] in
                         self?.notableSightings = notableSightings
                         self?.cachingNotables = false

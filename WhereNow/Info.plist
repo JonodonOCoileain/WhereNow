@@ -19,8 +19,6 @@
 	</array>
 	<key>CFBundleGetInfoString</key>
 	<string></string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>LSApplicationQuerySchemes</key>
 	<array>
 		<string>comgooglemaps</string>
@@ -48,11 +46,9 @@
 					<key>UISceneClassName</key>
 					<string>CPTemplateApplicationScene</string>
 					<key>UISceneConfigurationName</key>
-					<string>CarPlaySceneDelegate</string>
+					<string>CarPlay Configuration</string>
 					<key>UISceneDelegateClassName</key>
-					<string>carPlayTest.CarPlaySceneDelegate</string>
-					<key>UISceneStoryboardFile</key>
-					<string></string>
+					<string>$(PRODUCT_MODULE_NAME).CarPlaySceneDelegate</string>
 				</dict>
 			</array>
 		</dict>

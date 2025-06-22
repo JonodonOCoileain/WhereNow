@@ -127,8 +127,13 @@ public struct BirdSightingsContainerView: View {
                     .overlay(.purple)
                     .padding(.top)
                 ForEach(sightings.enumeratedArray(), id: \.element) { index, sighting in
+                    #if os(tvOS)
+                    TVOSBirdSightingView(index: index, sighting: sighting, notables: notables)
+                        .padding([.bottom, .leading, .trailing])
+                    #else
                     BirdSightingView(index: index, sighting: sighting, notables: notables)
                         .padding([.bottom, .leading, .trailing])
+                    #endif
                     Divider()
                         .overlay(.purple)
                 }

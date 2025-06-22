@@ -48,13 +48,13 @@ struct WhereNowTV: View {
                             Label("Weather Now!", systemImage: "sun.min")
                         }
                     
-                    VStack {
+                    /*VStack {
                         Text("For location services, enter your location below:")
                         TextField("Location (exempli gratia: address)", text: $addressInfo).padding([.horizontal, .bottom])
                     }
                     .tabItem {
                         Label("Settings Now!", systemImage: "gear")
-                    }
+                    }*/
                 }
                 .padding([.top, .bottom], reversePadding ? -25 : 0)
                 .onReceive(timer) { input in
@@ -113,8 +113,13 @@ struct TVBirdSightingsViews: View {
                 ScrollView(.vertical) {
                     VStack(alignment: .center, content: {
                         ForEach(birdData.notableSightings.enumeratedArray(), id: \.element) { index, sighting in
+                            #if os(tvOS)
+                            TVOSBirdSightingView(index: index, sighting: sighting, notables: true)
+                                .frame(width: geometry.size.width - 100)
+                            #else
                             BirdSightingView(index: index, sighting: sighting, notables: true)
                                 .frame(width: geometry.size.width - 100)
+                            #endif
                         }
                     })
                     .frame(minWidth: 100, maxWidth: geometry.size.width - 100, minHeight: 250)
